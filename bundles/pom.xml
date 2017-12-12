@@ -1,0 +1,223 @@
+<!--
+    Copyright (c) 2018: Victor Toni
+   
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+   
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the Eclipse
+    Public License, v. 2.0 are satisfied:
+        GNU General Public License, version 2 with the GNU Classpath Exception
+    which is available at
+        https://www.gnu.org/software/classpath/license.html
+   
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+   
+    Contributors:
+        Victor Toni - initial setup
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.kromo.lambdabus</groupId>
+        <artifactId>lambdabus-root</artifactId>
+        <version>0.9.0</version>
+    </parent>
+
+    <artifactId>lambdabus-bundles</artifactId>
+    <packaging>pom</packaging>
+
+    <name>LambdaBus Bundles</name>
+
+    <modules>
+        <module>lambdabus-api</module>
+        <module>lambdabus-test</module>
+        <module>lambdabus-impl</module>
+    </modules>
+
+    <build>
+        <!-- configured plugins -->
+        <pluginManagement>
+            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
+            <plugins>
+                <plugin>
+                    <!-- copy artifacts to the main directory -->
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <executions>
+                        <!-- copy all JARs to the main directory -->
+                        <execution>
+                            <id>copy-class-and-source-JARs</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>copy</goal>
+                            </goals>
+                            <configuration>
+                                <artifactItems>
+                                    <!-- JARs containing classes -->
+                                    <artifactItem>
+                                        <groupId>${project.groupId}</groupId>
+                                        <artifactId>${project.artifactId}</artifactId>
+                                        <version>${project.version}</version>
+                                        <type>${project.packaging}</type>
+                                    </artifactItem>
+                                    <!-- JARs containing source files -->
+                                    <artifactItem>
+                                        <groupId>${project.groupId}</groupId>
+                                        <artifactId>${project.artifactId}</artifactId>
+                                        <version>${project.version}</version>
+                                        <classifier>sources</classifier>
+                                    </artifactItem>
+                                </artifactItems>
+                                <outputDirectory>${lib.directory}</outputDirectory>
+                            </configuration>
+                        </execution>
+                        <!-- copy all JavaDoc JARs to the main directory -->
+                        <execution>
+                            <id>copy-JavaDoc-JARs</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>copy</goal>
+                            </goals>
+                            <configuration>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>${project.groupId}</groupId>
+                                        <artifactId>${project.artifactId}</artifactId>
+                                        <version>${project.version}</version>
+                                        <type>javadoc</type>
+                                        <classifier>javadoc</classifier>
+                                    </artifactItem>
+                                </artifactItems>
+                                <outputDirectory>${javadoc.directory}</outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>report-only</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <append>true</append>
+                    </configuration>
+                    <executions>
+                        <!-- activate the JaCoCo agent so that it runs during all tests -->
+                        <execution>
+                            <id>prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>jacoco-site</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+             </plugins>
+        </pluginManagement>
+
+        <!-- common plugins to run -->
+        <plugins>
+            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
+
+            <!-- enforce required version of JDK and Maven -->
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <!-- required to enable support of "bundle" packaging -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <!-- activate the JaCoCo agent so that it runs during all tests -->
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <defaultGoal>clean install</defaultGoal>
+    </build>
+
+    <reporting>
+        <plugins>
+            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <configuration>
+                    <!-- we want to have all reports of the modules -->
+                    <aggregate>true</aggregate>
+                    <!-- also set this to link to generated source reports -->
+                    <linkXRef>true</linkXRef>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <!-- select non-aggregate reports -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>

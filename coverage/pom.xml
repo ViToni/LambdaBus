@@ -1,0 +1,118 @@
+<!--
+    Copyright (c) 2018: Victor Toni
+   
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+   
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the Eclipse
+    Public License, v. 2.0 are satisfied:
+        GNU General Public License, version 2 with the GNU Classpath Exception
+    which is available at
+        https://www.gnu.org/software/classpath/license.html
+   
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+   
+    Contributors:
+        Victor Toni - initial setup
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.kromo.lambdabus</groupId>
+        <artifactId>lambdabus-root</artifactId>
+        <version>0.9.0</version>
+     </parent>
+
+    <artifactId>lambdabus-coverage</artifactId>
+    <name>LambdaBus Code Coverage</name>
+    <description>Module aggregating test coverage for the whole project.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-test</artifactId>
+            <version>${lambdabus.test.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-api</artifactId>
+            <version>${lambdabus.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-impl</artifactId>
+            <version>${lambdabus.impl.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <!--aggregated unit test coverage report -->
+                    <execution>
+                        <id>aggregate-reports-ut</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <title>${project.name}: Coverage of Unit Tests</title>
+                            <footer>Code Coverage Report for LambdaBus ${project.version}</footer>
+                            <append>true</append>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate-ut</outputDirectory>
+                            <dataFileExcludes>
+                                <dataFileExclude>**/target/jacoco-it.exec</dataFileExclude>
+                            </dataFileExcludes>
+                        </configuration>
+                    </execution>
+                    <!-- aggregated integration test coverage report -->
+                    <execution>
+                        <id>aggregate-reports-it</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <title>${project.name}: Coverage of Integration Tests</title>
+                            <footer>Code Coverage Report for LambdaBus ${project.version}</footer>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate-it</outputDirectory>
+                            <dataFileExcludes>
+                                <dataFileExclude>**/target/jacoco.exec</dataFileExclude>
+                            </dataFileExcludes>
+                        </configuration>
+                    </execution>
+                    <!-- aggregated overall test coverage report -->
+                    <execution>
+                        <id>aggregate-reports-all</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <title>${project.name}: Overall Coverage</title>
+                            <footer>Code Coverage Report for LambdaBus ${project.version}</footer>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate-all</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>
