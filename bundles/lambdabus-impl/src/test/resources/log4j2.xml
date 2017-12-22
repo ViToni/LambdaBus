@@ -32,6 +32,7 @@
         <Logger name="org.kromo.lambdabus.util.DispatchingUtilTest$dispatchEventSafelyTest" level="off" additivity="true"/>
         <Logger name="org.kromo.lambdabus.util.DispatchingUtilTest$dispatchEventToSubscriberTest" level="off" additivity="true"/>
         <Logger name="org.kromo.lambdabus.util.DispatchingUtilTest$dispatchEventToSubscriberThreadedPerEventTest" level="off" additivity="true"/>
+        <Logger name="org.kromo.lambdabus.util.DispatchingUtilTest$dispatchEventToSubscriberThreadedPerSubscriberTest" level="off" additivity="true"/>
 
         <Root level="ERROR">
             <AppenderRef ref="Console" />

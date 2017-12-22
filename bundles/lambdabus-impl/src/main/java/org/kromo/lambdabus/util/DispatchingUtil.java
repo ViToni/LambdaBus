@@ -245,6 +245,78 @@ public final class DispatchingUtil {
                 defaultLogger);
     }
 
+    /**
+     * Dispatches an event to a {@link Collection} of matching {@link Consumer}
+     * while catching potential exceptions. Dispatching is done in one
+     * {@link Thread} per subscriber.
+     * 
+     * @param <T>
+     *            type of event
+     * @param event
+     *            non-{@code null} object to dispatch
+     * @param eventSubscriberCollection
+     *            non-empty {@link Collection} of non-{@code null}
+     *            {@link Consumer} of type {@code T} to which the event should
+     *            be dispatched
+     * @param executor
+     *            {@link Executor} which will be used to execute the dispatching
+     *            tasks
+     * @param logger
+     *            to be used in case of an {@link Exception}
+     */
+    private final <T> void internalDispatchEventToSubscriberThreadedPerSubscriber(
+            final T event,
+            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Executor executor,
+            final Logger logger
+    ) {
+        for (final Consumer<T> eventSubscriber : eventSubscriberCollection) {
+            /**
+             * Create a task for each subscriber to be informed so that long
+             * running subscriber processes don't block others.
+             */
+            final Runnable dispatchingTask = () -> internalDispatchEventSafely(event, eventSubscriber, logger);
+            try {
+                /**
+                 * Execute the dispatching task per subscriber in its own
+                 * thread.
+                 */
+                executor.execute(dispatchingTask);
+            } catch (final RejectedExecutionException e) {
+                logger.error("Failed to execute subscriber dispatching task for event: {}", event, e);
+            }
+        }
+    }
+
+    /**
+     * Dispatches an event to a {@link Collection} of matching {@link Consumer}
+     * while catching potential exceptions. Dispatching is done in one
+     * {@link Thread} per subscriber.
+     * 
+     * @param <T>
+     *            type of event
+     * @param event
+     *            non-{@code null} object to dispatch
+     * @param eventSubscriberCollection
+     *            non-empty {@link Collection} of non-{@code null}
+     *            {@link Consumer} of type {@code T} to which the event should
+     *            be dispatched
+     * @param executor
+     *            {@link Executor} which will be used to execute the dispatching
+     *            tasks
+     */
+    private final <T> void internalDispatchEventToSubscriberThreadedPerSubscriber(
+            final T event,
+            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Executor executor
+    ) {
+        internalDispatchEventToSubscriberThreadedPerSubscriber(
+                event,
+                eventSubscriberCollection,
+                executor,
+                defaultLogger);
+    }
+
     //##########################################################################
     // Statically exposed methods
     //##########################################################################
@@ -413,6 +485,66 @@ public final class DispatchingUtil {
                 event,
                 eventSubscriberCollection,
                 executor);
+    }
+
+    /**
+     * Dispatches an event to a {@link Collection} of matching {@link Consumer}
+     * while catching potential exceptions.
+     * 
+     * @param <T>
+     *            type of event
+     * @param event
+     *            non-{@code null} object to dispatch
+     * @param eventSubscriberCollection
+     *            non-empty {@link Collection} of non-{@code null}
+     *            {@link Consumer} of type {@code T} to which the event should
+     *            be dispatched
+     * @param executor
+     *            {@link Executor} which will be used to execute the dispatching
+     *            tasks
+     * @param logger
+     *            to be used in case of an {@link Exception}
+     */
+    public static <T> void dispatchEventToSubscriberThreadedPerSubscriber(
+            final T event,
+            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Executor executor,
+            final Logger logger
+    ) {
+        INSTANCE.internalDispatchEventToSubscriberThreadedPerSubscriber(
+                event,
+                eventSubscriberCollection,
+                executor,
+                logger
+        );
+    }
+
+    /**
+     * Dispatches an event to a {@link Collection} of matching {@link Consumer}
+     * while catching potential exceptions.
+     * 
+     * @param <T>
+     *            type of event
+     * @param event
+     *            non-{@code null} object to dispatch
+     * @param eventSubscriberCollection
+     *            non-empty {@link Collection} of non-{@code null}
+     *            {@link Consumer} of type {@code T} to which the event should
+     *            be dispatched
+     * @param executor
+     *            {@link Executor} which will be used to execute the dispatching
+     *            tasks
+     */
+    public static <T> void dispatchEventToSubscriberThreadedPerSubscriber(
+            final T event,
+            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Executor executor
+    ) {
+        INSTANCE.internalDispatchEventToSubscriberThreadedPerSubscriber(
+                event,
+                eventSubscriberCollection,
+                executor
+        );
     }
 
 }
