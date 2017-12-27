@@ -78,6 +78,7 @@
         <lambdabus.test.version>${lambdabus.version}</lambdabus.test.version>
         <lambdabus.api.version>${lambdabus.version}</lambdabus.api.version>
         <lambdabus.impl.version>${lambdabus.version}</lambdabus.impl.version>
+        <lambdabus.impl.opt.version>${lambdabus.version}</lambdabus.impl.opt.version>
 
         <!-- overwriting user name for manifest file -->
         <user.name>kromo.org</user.name>

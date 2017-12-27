@@ -47,6 +47,11 @@
             <artifactId>lambdabus-impl</artifactId>
             <version>${lambdabus.impl.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-impl-opt</artifactId>
+            <version>${lambdabus.impl.opt.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

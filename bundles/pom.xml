@@ -36,6 +36,7 @@
         <module>lambdabus-api</module>
         <module>lambdabus-test</module>
         <module>lambdabus-impl</module>
+        <module>lambdabus-impl-opt</module>
     </modules>
 
     <build>
