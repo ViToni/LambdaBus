@@ -38,6 +38,7 @@
         <module>lambdabus-impl</module>
         <module>lambdabus-impl-opt</module>
         <module>lambdabus-dispatching-bus</module>
+        <module>lambdabus-dispatcher-opt</module>
     </modules>
 
     <build>

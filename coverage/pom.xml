@@ -57,6 +57,11 @@
             <artifactId>lambdabus-dispatching-bus</artifactId>
             <version>${lambdabus.dispatching.bus.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-dispatcher-opt</artifactId>
+            <version>${lambdabus.dispatcher.opt.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

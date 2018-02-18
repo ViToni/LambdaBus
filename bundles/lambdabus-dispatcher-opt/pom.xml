@@ -1,0 +1,171 @@
+<!--
+    Copyright (c) 2018: Victor Toni
+   
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+   
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the Eclipse
+    Public License, v. 2.0 are satisfied:
+        GNU General Public License, version 2 with the GNU Classpath Exception
+    which is available at
+        https://www.gnu.org/software/classpath/license.html
+   
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+   
+    Contributors:
+        Victor Toni - initial setup
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.kromo.lambdabus</groupId>
+        <artifactId>lambdabus-bundles</artifactId>
+        <version>0.9.0</version>
+    </parent>
+
+    <artifactId>lambdabus-dispatcher-opt</artifactId>
+    <name>LambdaBus EventDispatcher Implementation (optional)</name>
+    <description>Implementation of EventsDispatcher API supporting asynchronous and non-blocking event dispatching.</description>
+    <packaging>bundle</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>lambdabus-api</artifactId>
+                <version>${lambdabus.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>lambdabus-impl</artifactId>
+                <version>${lambdabus.impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>lambdabus-dispatching-bus</artifactId>
+                <version>${lambdabus.dispatching.bus.version}</version>
+            </dependency>
+            <!-- Dependencies for testing -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>lambdabus-api</artifactId>
+                <version>${lambdabus.api.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>lambdabus-impl</artifactId>
+                <version>${lambdabus.impl.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>lambdabus-dispatching-bus</artifactId>
+                <version>${lambdabus.dispatching.bus.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>lambdabus-test</artifactId>
+                <version>${lambdabus.test.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-dispatching-bus</artifactId>
+        </dependency>
+        <!-- Dependencies for testing -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-api</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-impl</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-dispatching-bus</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+ 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <configuration>
+                        <!-- define custom values -->
+                        <instructions>
+                            <Export-Package>
+                                org.kromo.lambdabus.dispatcher.impl.opt
+                            </Export-Package>
+                        </instructions>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!-- configure plugins in addition to the ones in the parent POM -->
+        <plugins>
+            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
+            <!-- copy artifacts to the main directory -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <defaultGoal>clean install spotbugs:spotbugs</defaultGoal>
+    </build>
+
+</project>
