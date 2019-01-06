@@ -111,6 +111,7 @@
                             <Export-Package>
                                 org.kromo.lambdabus.impl,
                                 org.kromo.lambdabus.queue,
+                                org.kromo.lambdabus.queue.impl,
                                 org.kromo.lambdabus.util
                             </Export-Package>
                         </instructions>
