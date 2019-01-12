@@ -20,24 +20,20 @@
 package org.kromo.lambdabus.impl.opt;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.impl.concurrent.DaemonThreadFactory;
+import org.kromo.lambdabus.impl.AbstractLambdaBus;
 import org.kromo.lambdabus.impl.concurrent.DaemonThreadPoolExecutor;
+import org.kromo.lambdabus.queue.EventQueue;
 import org.kromo.lambdabus.queue.QueuedEvent;
+import org.kromo.lambdabus.queue.impl.SharableEventQueue;
 import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
@@ -51,19 +47,23 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  *
  */
 public class QueuedLambdaBus
-    extends AbstractThreadedLambdaBus {
+    extends AbstractLambdaBus {
 
     private static final ThreadingMode DEFAULT_THREADING_MODE = ThreadingMode.ASYNC;
-    private static final EnumSet<ThreadingMode> SUPPORTED_THREADING_MODES = EnumSet.allOf(ThreadingMode.class);
+    /**
+     * The {@link Set} of supported {@link ThreadingMode}s of this {@link EventDispatcher}.
+     * As an event can be dispatched directly ({@link ThreadingMode#SYNC}) or in the {@link Thread} of
+     * the {@link EventQueue} ({@link ThreadingMode#ASYNC}) this is the smallest possible {@link Set}.
+     */
+    private static final Set<ThreadingMode> DEFAULT_SUPPORTED_THREADING_MODES = EnumSet.of( //
+            ThreadingMode.SYNC, //
+            ThreadingMode.ASYNC //
+    );
 
-    private static final AtomicInteger INSTANCE_COUNT = new AtomicInteger();
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private final BlockingQueue<QueuedEvent<?>> eventQueue;
-
-    private final ExecutorService queueExecutorService;
-    private final Future<?> queueProcessingFuture;
+    /**
+     * Queue holding events (and associated information) to be dispatched.
+     */
+    private final EventQueue eventQueue;
 
     /**
      * Prepares a queuing threaded {@code LambdaBus} instance.
@@ -77,37 +77,39 @@ public class QueuedLambdaBus
      * 
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
-     *            when posting to the bus (unsupported modes used in 
+     *            when posting to the bus (unsupported modes used in
      *            {@link #post(Object, ThreadingMode)} will be mapped to this
      *            one)
-     * @throws IllegalArgumentException
-     *             if {@code defaultThreadingMode} is not supported (not contained
-     *             within {@link #SUPPORTED_THREADING_MODES}
      * @throws NullPointerException
      *             if {@code defaultThreadingMode} is {@code null}
+     * @throws IllegalArgumentException
+     *             if {@code defaultThreadingMode} is not supported (not contained
+     *             within the calculated supported {@link ThreadingMode}s
+     * @see QueuedLambdaBus#calculateSupportedThreadingModes(EventQueue)
      */
     public QueuedLambdaBus(final ThreadingMode defaultThreadingMode) {
         this(
                 Objects.requireNonNull(defaultThreadingMode, "'defaultThreadingMode' must not be null"),
-                new DaemonThreadPoolExecutor(
-                        new LinkedBlockingQueue<>()
-                )
+                new SharableEventQueue( //
+                        new DaemonThreadPoolExecutor( //
+                                new LinkedBlockingQueue<>() //
+                        ) //
+                ) //
         );
     }
 
     /**
      * Prepares a queuing threaded {@code LambdaBus} instance.
      * 
-     * @param executorService
-     *            non-{@code null} {@link ExecutorService} used to execute the
-     *            dispatching jobs
+     * @param eventQueue
+     *            non-{@code null} {@link EventQueue} used to queue and dispatch events
      * @throws NullPointerException
-     *             if {@code executorService} is {@code null}
+     *             if {@code eventQueue} is {@code null}
      */
-    public QueuedLambdaBus(final ExecutorService executorService) {
+    public QueuedLambdaBus(final EventQueue eventQueue) {
         this(
                 DEFAULT_THREADING_MODE,
-                executorService);
+                eventQueue);
     }
 
     /**
@@ -115,47 +117,36 @@ public class QueuedLambdaBus
      * 
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
-     *            when posting to the bus (unsupported modes used in 
+     *            when posting to the bus (unsupported modes used in
      *            {@link #post(Object, ThreadingMode)} will be mapped to this
      *            one)
-     * @param executorService
-     *            non-{@code null} {@link ExecutorService} used to execute the
-     *            dispatching jobs
+     * @param eventQueue
+     *            non-{@code null} {@link EventQueue} used to queue and dispatch events
      * @throws NullPointerException
-     *             if any of {@code defaultThreadingMode} or {@code executorService}
+     *             if any of {@code defaultThreadingMode} or {@code eventQueue}
      *             is {@code null}
      * @throws IllegalArgumentException
      *             if {@code defaultThreadingMode} is not supported (not contained
-     *             within {@link #SUPPORTED_THREADING_MODES}
+     *             within the calculated supported {@link ThreadingMode}s
+     * @see QueuedLambdaBus#calculateSupportedThreadingModes(EventQueue)
      */
     public QueuedLambdaBus(
             final ThreadingMode defaultThreadingMode,
-            final ExecutorService executorService
+            final EventQueue eventQueue
     ) {
         super(
                 Objects.requireNonNull(defaultThreadingMode, "'defaultThreadingMode' must not be null"),
-                SUPPORTED_THREADING_MODES,
-                Objects.requireNonNull(executorService, "'executorService' must not be null")
+                calculateSupportedThreadingModes( //
+                        Objects.requireNonNull(eventQueue, "'eventQueue' must not be null")
+                ) //
         );
 
-        eventQueue = Objects.requireNonNull(
-                createBlockingQueue(),
-                "createdBlockingQueue() must not return null");
-
-        final String threadFactoryName= getClass().getSimpleName() + "-" + INSTANCE_COUNT.incrementAndGet();
-        final ThreadFactory threadFactory = new DaemonThreadFactory(threadFactoryName);
-
-        queueExecutorService = Executors.newSingleThreadExecutor(threadFactory);
-        queueProcessingFuture = queueExecutorService.submit((Runnable) this::takeEventsFromQueueAndTryToDispatch);
+        this.eventQueue = eventQueue;
     }
 
     @Override
-    protected void preExecutorShutdownHook() {
-        if(!queueExecutorService.isShutdown()) {
-            final boolean mayInteruptIfRunning = true;
-            queueProcessingFuture.cancel(mayInteruptIfRunning);
-            queueExecutorService.shutdownNow();
-        }
+    protected void cleanupBeforeClose() {
+        eventQueue.close();
     }
 
     @Override
@@ -173,7 +164,7 @@ public class QueuedLambdaBus
     /**
      * Either dispatches the given event directly (in case of
      * {@link ThreadingMode#SYNC}) or adds the event, its subscribed
-     * {@link Consumer}s and the {@link ThreadingMode} to the internal queue for
+     * {@link Consumer}s and the {@link ThreadingMode} to the internal {@link EventQueue} for
      * further processing.
      * 
      * <p>
@@ -238,46 +229,12 @@ public class QueuedLambdaBus
             final Collection<Consumer<T>> eventSubscriberCollection,
             final ThreadingMode supportedThreadingMode
     ) {
-        final QueuedEvent<T> qEvent = new QueuedEvent<>(
+        final QueuedEvent<T> queuedEvent = new QueuedEvent<>(
                 event,
                 eventSubscriberCollection,
                 supportedThreadingMode
         );
-        try {
-            eventQueue.put(qEvent);
-        } catch (final InterruptedException e) {
-            if (!isClosed()) {
-                logger.warn("Interrupted while trying to insert event into queue. Event might be lost: {}", event);
-            }
-            // restore interrupted state
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    /**
-     * Waits for events to appear in the queue and tries to dispatch them.
-     */
-    private final <T> void takeEventsFromQueueAndTryToDispatch() {
-        while (!isClosed()) {
-            try {
-                @SuppressWarnings("unchecked")
-                final QueuedEvent<T> qEvent = (QueuedEvent<T>) eventQueue.take();
-                dispatchEventToSubscriber(
-                        qEvent.event,
-                        qEvent.eventSubscriberCollection,
-                        qEvent.threadingMode
-                );
-            } catch (final InterruptedException e) {
-                if (!isClosed()) {
-                    logger.warn("Interrupted while trying to get event from queue.");
-                }
-                // restore interrupted state
-                Thread.currentThread().interrupt();
-            }
-        }
-        if (!eventQueue.isEmpty()) {
-            logger.warn("Stopped with events still in queue: {}", eventQueue);
-        }
+        eventQueue.add(queuedEvent);
     }
 
     //##########################################################################
@@ -285,64 +242,30 @@ public class QueuedLambdaBus
     //##########################################################################
 
     /**
-     * Creates a new {@link BlockingQueue} to pass events from the main thread
-     * to internal worker.
-     * <p>
-     * Note:<br>
-     * This method is abstract on purpose so the implementing party makes a
-     * choice fitting its dispatching strategy.
-     * </p>
+     * Creates a {@link Set} of {@link ThreadingMode} by combining our
+     * {@link #DEFAULT_SUPPORTED_THREADING_MODES}s with the {@link ThreadingMode}s supported by the
+     * {@link EventQueue}.<br>
+     * As an event can be dispatched directly ({@link ThreadingMode#SYNC}) or in the {@link Thread} of
+     * the {@link EventQueue} ({@link ThreadingMode#ASYNC}) this is the smallest possible
+     * {@link Set}.<br>
+     * If the {@link EventQueue} is using an {@link ExecutorService} additionally
+     * <ul>
+     * <li>{@link ThreadingMode#ASYNC_PER_EVENT}</li>
+     * <li>{@link ThreadingMode#ASYNC_PER_SUBSCRIBER}</li>
+     * </ul>
+     * might be supported.
      * 
-     * @param <E>
-     *            the type of elements held in this {@link BlockingQueue}
-     * @return {@link BlockingQueue}
+     * @param eventQueue
+     *            {@link EventQueue} used to calculated the unified {@link Set} of
+     *            {@link ThreadingMode}s
+     * @return {@link Set} of {@link ThreadingMode}
      */
-    protected <E> BlockingQueue<E> createBlockingQueue() {
-        /*
-         * Using the LinkedBlockingQueue works as a buffer for high load peaks.
-         * Alternatively one could use a SynchronousQueue for smaller workloads
-         * which might prove to be a bit more responsive.
-         */
-        return new LinkedBlockingQueue<>();
-    }
+    protected static Set<ThreadingMode> calculateSupportedThreadingModes(final EventQueue eventQueue) {
+        final Set<ThreadingMode> threadingModes = EnumSet.copyOf(DEFAULT_SUPPORTED_THREADING_MODES);
 
-    /**
-     * Dispatches queued event to subscribed {@link Consumer}s.
-     * 
-     * @param <T>
-     *            type of posted event
-     * @param event
-     *            non-{@code null} object
-     * @param eventSubscriberCollection
-     *            {@link Collection} of {@link Consumer}s registered for the
-     *            {@link Class} of the event
-     * @param supportedThreadingMode
-     *            how the event should be dispatched
-     */
-    protected <T> void dispatchEventToSubscriber(
-        final T event,
-        final Collection<Consumer<T>> eventSubscriberCollection,
-        final ThreadingMode supportedThreadingMode
-    ) {
-        switch (supportedThreadingMode) {
-            case ASYNC_PER_SUBSCRIBER:
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
-                        event,
-                        eventSubscriberCollection,
-                        getExecutor());
-                return;
-            case ASYNC_PER_EVENT:
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
-                        event,
-                        eventSubscriberCollection,
-                        getExecutor());
-                return;
-            default:
-                DispatchingUtil.dispatchEventToSubscriber(
-                        event,
-                        eventSubscriberCollection);
-                return;
-        }
+        threadingModes.addAll(eventQueue.getSupportedThreadingModes());
+
+        return Collections.unmodifiableSet(threadingModes);
     }
 
 }

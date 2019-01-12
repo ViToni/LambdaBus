@@ -77,10 +77,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>lambdabus-impl</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
         <!-- Dependencies for testing -->
         <dependency>
             <groupId>${project.groupId}</groupId>

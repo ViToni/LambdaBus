@@ -22,6 +22,7 @@ package org.kromo.lambdabus.impl.opt;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,55 +34,53 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import org.kromo.lambdabus.LambdaBus;
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.impl.concurrent.NonTerminatingExecutorService;
+import org.kromo.lambdabus.impl.AbstractLambdaBusContract;
+import org.kromo.lambdabus.queue.EventQueue;
+import org.kromo.lambdabus.queue.NonClosingEventQueue;
+import org.kromo.lambdabus.queue.impl.SharableEventQueue;
 
 /**
- * Testing {@link QueuedLambdaBus} reusing tests from
- * {@link AbstractThreadedLambdaBusContract}. Custom test are added for
- * {@link QueuedLambdaBus} constructors.
+ * Testing {@link QueuedLambdaBus} reusing tests from {@link AbstractLambdaBusContract}.
+ * <p>
+ * Custom test are added for {@link QueuedLambdaBus} constructors.
  * 
  * @author Victor Toni - initial implementation
  *
  */
 public class QueuedLambdaBusTest
-    extends AbstractThreadedLambdaBusContract<QueuedLambdaBus> {
+    extends AbstractLambdaBusContract<QueuedLambdaBus> {
 
     protected QueuedLambdaBus createLambdaBus() {
         return new QueuedLambdaBus();
     }
 
-    @DisplayName("Constructor with non-terminating decorated ExecutorService")
+    @DisplayName("Constructor with EventQueue")
     @Test
-    public void constructorWithExternalExecutorService() {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-        final ExecutorService nonTerminatingExecutorService = new NonTerminatingExecutorService(executorService);
-        try {
+    public void constructorWithEventQueue() {
+        try (final EventQueue eventQueue = new SharableEventQueue()) {
             assertDoesNotThrow(
                     () -> {
-                        try (final LambdaBus lb = new QueuedLambdaBus(nonTerminatingExecutorService)) {}
+                        try (final LambdaBus lb = new QueuedLambdaBus(eventQueue)) {}
                     }
             );
-            assertFalse(executorService.isShutdown(), "Non-terminating decorated ExecutorService must not be shutdown");
-        } finally {
-            executorService.shutdownNow();
         }
     }
 
-    @DisplayName("Constructor with default ThreadingMode and non-terminating decorated ExecutorService")
-    @ParameterizedTest(name = "Constructor with ThreadingMode.{0} as default and non-terminating decorated ExecutorService")
+    @DisplayName("Constructor with default ThreadingMode and EventQueue")
+    @ParameterizedTest(name = "Constructor with ThreadingMode.{0} as default and EventQueue")
     @EnumSource(ThreadingMode.class)
-    public void constructorWithDefaultThreadingModeAndExternalExecutorService(
+    public void constructorWithDefaultThreadingModeAndEventQueue(
             final ThreadingMode defaultThreadingMode
     ) {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-        final ExecutorService nonTerminatingExecutorService = new NonTerminatingExecutorService(executorService);
-        try {
+        // since this tests will use all possible ThreadingModes
+        // we need to provide an ExecutorService for ASYNC_PER_EVENT and ASYNC_PER_SUBSCRIBER
+        final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        try (final EventQueue eventQueue = new SharableEventQueue(executorService)) {
             assertDoesNotThrow(
                     () -> {
-                        try (final LambdaBus lb = new QueuedLambdaBus(defaultThreadingMode, nonTerminatingExecutorService)) {}
+                        try (final LambdaBus lb = new QueuedLambdaBus(defaultThreadingMode, eventQueue)) {}
                     }
             );
-            assertFalse(executorService.isShutdown(), "Non-terminating decorated ExecutorService must not be shutdown");
         } finally {
             executorService.shutdownNow();
         }
@@ -90,52 +89,68 @@ public class QueuedLambdaBusTest
     @Test
     @DisplayName("Constructor with null ThreadingMode throws NullPointerException")
     public void constructorNullThreadingModeThrowsNPE() {
-        final ThreadingMode defaultThreadingMode = null;
+        final ThreadingMode nullDefaultThreadingMode = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final LambdaBus lb = new QueuedLambdaBus(defaultThreadingMode)) {}
+                    try (final LambdaBus lb = new QueuedLambdaBus(nullDefaultThreadingMode)) {}
                 }
         );
 
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-        try {
+        
+        try (final EventQueue eventQueue = new SharableEventQueue()) {
             assertThrows(
                     NullPointerException.class,
                     () -> {
-                        try (final LambdaBus lb = new QueuedLambdaBus(defaultThreadingMode, executorService)) {}
+                        try (final LambdaBus lb = new QueuedLambdaBus(nullDefaultThreadingMode, eventQueue)) {}
                     }
             );
-        } finally {
-            executorService.shutdownNow();
         }
     }
 
-    @DisplayName("Constructor with null ExecutorService throws NullPointerException")
-    public void constructorNullExecutorServiceThrowsNPE() {
-        final ExecutorService nullExecutorService = null;
+    @DisplayName("Constructor with null EventQueue throws NullPointerException")
+    public void constructorNullEventQueueThrowsNPE() {
+        final EventQueue nullEventQueue = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final LambdaBus lb = new QueuedLambdaBus(nullExecutorService)) {}
+                    try (final LambdaBus lb = new QueuedLambdaBus(nullEventQueue)) {}
                 }
         );
     }
 
 
-    @DisplayName("Constructor with default ThreadingMode and null ExecutorService throws NullPointerException")
-    @ParameterizedTest(name = "Constructor with ThreadingMode.{0} as default and null ExecutorService throws NullPointerException")
+    @DisplayName("Constructor with default ThreadingMode and null EventQueue throws NullPointerException")
+    @ParameterizedTest(name = "Constructor with ThreadingMode.{0} as default and null EventQueue throws NullPointerException")
     @EnumSource(ThreadingMode.class)
-    public void constructorNullExecutorServiceThrowsNPE(
+    public void constructorNullEventQueueThrowsNPE(
             final ThreadingMode defaultThreadingMode
     ) {
-        final ExecutorService nullExecutorService = null;
+        final EventQueue nullEventQueue = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final LambdaBus lb = new QueuedLambdaBus(defaultThreadingMode, nullExecutorService)) {}
+                    try (final LambdaBus lb = new QueuedLambdaBus(defaultThreadingMode, nullEventQueue)) {}
                 }
         );
+    }
+
+    @DisplayName("Closing QueuedLambdaBus closes EventQueue")
+    @Test
+    public void eventQueueGetsClosed() {
+        try (final EventQueue eventQueue = new SharableEventQueue()) {
+            final EventQueue nonClosingEventQueue = new NonClosingEventQueue(eventQueue);
+            assertDoesNotThrow(
+                    () -> {
+                        try (final LambdaBus lb = new QueuedLambdaBus(nonClosingEventQueue)) {
+                            assertFalse(nonClosingEventQueue.isClosed(), "Non-closing decorated EventQueue must not be closed");
+                            assertFalse(eventQueue.isClosed(), "EventQueue must not be closed");
+                        }
+                    }
+            );
+            assertTrue(nonClosingEventQueue.isClosed(), "Non-closing decorated EventQueue must be closed");
+            assertFalse(eventQueue.isClosed(), "EventQueue must not be closed");
+        }
     }
 
 }
