@@ -17,7 +17,7 @@
  * Contributors:
  *     Victor Toni - initial implementation
  *******************************************************************************/
-package org.kromo.lambdabus.impl.opt;
+package org.kromo.lambdabus.impl;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -29,7 +29,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.impl.AbstractLambdaBus;
 import org.kromo.lambdabus.impl.concurrent.DaemonThreadPoolExecutor;
 import org.kromo.lambdabus.queue.EventQueue;
 import org.kromo.lambdabus.queue.QueuedEvent;

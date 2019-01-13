@@ -29,7 +29,7 @@
 
     <artifactId>lambdabus-impl</artifactId>
     <name>LambdaBus Implementation</name>
-    <description>Implementation of LambdaBus API including an implementation for synchronous event dispatching.</description>
+    <description>Implementation of LambdaBus API including implementations for synchronous and asynchronous event dispatching.</description>
     <packaging>bundle</packaging>
 
     <dependencyManagement>

@@ -17,7 +17,7 @@
  * Contributors:
  *     Victor Toni - initial implementation
  *******************************************************************************/
-package org.kromo.lambdabus.impl.opt;
+package org.kromo.lambdabus.impl;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,7 +34,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import org.kromo.lambdabus.LambdaBus;
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.impl.AbstractLambdaBusContract;
 import org.kromo.lambdabus.queue.EventQueue;
 import org.kromo.lambdabus.queue.NonClosingEventQueue;
 import org.kromo.lambdabus.queue.impl.SharableEventQueue;
