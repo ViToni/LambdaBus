@@ -23,9 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,6 +31,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.kromo.lambdabus.ThreadingMode;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
 import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
+import org.kromo.lambdabus.queue.EventQueue;
+import org.kromo.lambdabus.queue.impl.SharableEventQueue;
 
 /**
  * Testing {@link QueuedEventDispatcher} reusing tests from
@@ -59,26 +58,26 @@ public class QueuedEventDispatcherTest
     }
 
     @Test
-    @DisplayName("Constructor - (ExecutorService)")
+    @DisplayName("Constructor - (EventQueue)")
     public void constructorWithExecutorService() {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(executorService)) {
+        final EventQueue eventQueue = new SharableEventQueue();
+        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(eventQueue)) {
             assertFalse(eventDispatcher.isClosed(), "Created 'QueuedEventDispatcher' must not be closed.");
-            assertFalse(executorService.isShutdown(), "External ExecutorService must not be shutdown");
+            assertFalse(eventQueue.isClosed(), "External 'EventQueue' must not be closed");
         } finally {
-            executorService.shutdownNow();
+            eventQueue.close();
         }
-        assertTrue(executorService.isShutdown(), "External ExecutorService must be shutdown");
+        assertTrue(eventQueue.isClosed(), "External 'EventQueue' must be closed");
     }
 
     @Test
-    @DisplayName("Constructor - null ExecutorService throws NullPointerException")
+    @DisplayName("Constructor - null EventQueue throws NullPointerException")
     public void constructorNullExecutorServiceThrowsNPE() {
-        final ExecutorService nullExecutorService = null;
+        final EventQueue nullEventQueue = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(nullExecutorService)) {}
+                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(nullEventQueue)) {}
                 }
         );
     }
@@ -89,11 +88,11 @@ public class QueuedEventDispatcherTest
     public void constructorNullExecutorServiceThrowsNPE(
             final ThreadingMode defaultThreadingMode
     ) {
-        final ExecutorService nullExecutorService = null;
+        final EventQueue nullEventQueue = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(defaultThreadingMode, nullExecutorService)) {}
+                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(defaultThreadingMode, nullEventQueue)) {}
                 }
         );
     }
@@ -109,16 +108,16 @@ public class QueuedEventDispatcherTest
                 }
         );
 
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
+        final EventQueue eventQueue = new SharableEventQueue();
         try {
             assertThrows(
                     NullPointerException.class,
                     () -> {
-                        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(defaultThreadingMode, executorService)) {}
+                        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(defaultThreadingMode, eventQueue)) {}
                     }
             );
         } finally {
-            executorService.shutdownNow();
+            eventQueue.close();
         }
     }
 
