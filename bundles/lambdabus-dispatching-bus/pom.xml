@@ -29,7 +29,7 @@
 
     <artifactId>lambdabus-dispatching-bus</artifactId>
     <name>LambdaBus EventDispatcher Implementation</name>
-    <description>Implementation of a LambdaBus API using composition including an EventDispatcher implementation for synchronous event dispatching.</description>
+    <description>Implementation of a LambdaBus API using composition including EventDispatcher implementations for synchronous and asynchronous event dispatching.</description>
     <packaging>bundle</packaging>
 
     <dependencyManagement>
