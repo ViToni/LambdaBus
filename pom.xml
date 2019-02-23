@@ -95,17 +95,17 @@
         <deployment.url>file://${project.build.directory}/staging/</deployment.url>
 
         <!-- dependency versions -->
-        <sl4j.version>1.7.25</sl4j.version>
+        <sl4j.version>1.7.26</sl4j.version>
 
         <!-- dependency versions for tests and examples-->
-        <log4j.version>2.11.0</log4j.version>
+        <log4j.version>2.11.2</log4j.version>
 
         <!-- dependency versions for tests only -->
-        <junit.jupiter.version>5.2.0</junit.jupiter.version>
-        <junit.platform.version>1.2.0</junit.platform.version>
-        <mockito.version>2.18.0</mockito.version>
-        <spotbugs.version>3.1.6</spotbugs.version>
-        <jacoco.version>0.8.1</jacoco.version>
+        <junit.jupiter.version>5.4.0</junit.jupiter.version>
+        <junit.platform.version>1.4.0</junit.platform.version>
+        <mockito.version>2.25.0</mockito.version>
+        <spotbugs.version>3.1.12</spotbugs.version>
+        <jacoco.version>0.8.3</jacoco.version>
 
         <!-- SpotBugs options -->
         <spotbugs.effort>Max</spotbugs.effort>
@@ -115,24 +115,24 @@
         <maven.enforcer.plugin.version>3.0.0-M2</maven.enforcer.plugin.version>
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
-        <maven.javadoc.plugin.version>3.0.1</maven.javadoc.plugin.version>
-        <maven.jar.plugin.version>3.1.0</maven.jar.plugin.version>
-        <maven.assembly.plugin.version>3.1.0</maven.assembly.plugin.version>
-        <maven.install.plugin.version>2.5.2</maven.install.plugin.version>
-        <maven.jxr.plugin.version>2.5</maven.jxr.plugin.version>
-        <maven.dependency.plugin.version>3.1.0</maven.dependency.plugin.version>
+        <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
+        <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
+        <maven.assembly.plugin.version>3.1.1</maven.assembly.plugin.version>
+        <maven.install.plugin.version>3.0.0-M1</maven.install.plugin.version>
+        <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
+        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
         <maven.site.plugin.version>3.7.1</maven.site.plugin.version>
         <maven.project.info.reports.plugin.version>3.0.0</maven.project.info.reports.plugin.version>
 
-        <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
-        <maven.surefire.report.plugin.version>2.22.0</maven.surefire.report.plugin.version>
+        <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
+        <maven.surefire.report.plugin.version>3.0.0-M3</maven.surefire.report.plugin.version>
 
-        <maven.failsafe.plugin.version>2.22.0</maven.failsafe.plugin.version>
+        <maven.failsafe.plugin.version>3.0.0-M3</maven.failsafe.plugin.version>
 
         <!-- versions for additional plugins -->
-        <felix.maven.plugin.version>3.5.1</felix.maven.plugin.version>
-        <spotbugs.maven.plugin.version>3.1.6</spotbugs.maven.plugin.version>
-        <versions.maven.plugin.version>2.5</versions.maven.plugin.version>
+        <felix.maven.plugin.version>4.1.0</felix.maven.plugin.version>
+        <spotbugs.maven.plugin.version>3.1.11</spotbugs.maven.plugin.version>
+        <versions.maven.plugin.version>2.7</versions.maven.plugin.version>
         <directory.maven.plugin.version>0.3.1</directory.maven.plugin.version>
 
     </properties>
