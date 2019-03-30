@@ -105,7 +105,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
 
     @Test
     @DisplayName("Exceptions from RunnableForNullEvent are not propagated")
-    public void exceptionsFromRunnableForNullEventAreNotPropagated() throws InterruptedException {
+    public void exceptionsFromRunnableForNullEventAreNotPropagated() {
         try (final AbstractLambdaBus lb = createLambdaBus()) {
             assertTrue(lb.hasRunnableForNullEvent(), "Should have a Runnable for null events");
 

@@ -48,7 +48,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,7 +58,6 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -235,28 +233,28 @@ public class DispatchingUtilTest {
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
         @Test
-        public void dispatchEventToSubscriberWithCustomLogger() throws InterruptedException {
+        public void dispatchEventToSubscriberWithCustomLogger() {
             final boolean useDefaultLogger = false;
             final boolean testExceptionsToo = false;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionsToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithDefaultLogger() throws InterruptedException {
+        public void dispatchEventToSubscriberWithDefaultLogger() {
             final boolean useDefaultLogger = true;
             final boolean testExceptionsToo = false;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionsToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithCustomLoggerWithExceptions() throws InterruptedException {
+        public void dispatchEventToSubscriberWithCustomLoggerWithExceptions() {
             final boolean useDefaultLogger = false;
             final boolean testExceptionsToo = true;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionsToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithDefaultLoggerWithExceptions() throws InterruptedException {
+        public void dispatchEventToSubscriberWithDefaultLoggerWithExceptions() {
             final boolean useDefaultLogger = true;
             final boolean testExceptionsToo = true;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionsToo);
@@ -269,7 +267,7 @@ public class DispatchingUtilTest {
         private void dispatchEventToSubscriber(
                 final boolean useDefaultLogger,
                 final boolean testExceptionsToo
-        ) throws InterruptedException {
+        ) {
             final int eventCount = DEFAULT_EVENT_COUNT;
             final int evenEventCount = eventCount / 2 + eventCount % 2;
             final int oddEventCount = eventCount / 2 ;
@@ -351,7 +349,7 @@ public class DispatchingUtilTest {
                 final boolean useDefaultLogger,
                 final int exceptionThrowingSubscriberCount,
                 final Class<? extends Exception> exceptionClass
-        ) throws InterruptedException {
+        ) {
             final Logger spyLogger = useDefaultLogger ? null : Mockito.spy(new SpyableLogger(logger)) ;
 
             dispatchEventAndAssert(
@@ -432,7 +430,7 @@ public class DispatchingUtilTest {
         }
 
         @Test
-        public void dispatchEventToSubscriber_RejectedExecutionException() throws InterruptedException {
+        public void dispatchEventToSubscriber_RejectedExecutionException() {
             final int threadPoolSize = ONE;
             final Logger spyLogger = spy(new SpyableLogger(logger)) ;
 
@@ -538,28 +536,28 @@ public class DispatchingUtilTest {
         }
 
         @Test
-        public void dispatchEventToSubscriberWithCustomLogger() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithCustomLogger() {
             final boolean useDefaultLogger = false;
             final boolean testExceptionToo = false;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithDefaultLogger() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithDefaultLogger() {
             final boolean useDefaultLogger = true;
             final boolean testExceptionToo = false;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithCustomLoggerWithExceptions() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithCustomLoggerWithExceptions() {
             final boolean useDefaultLogger = false;
             final boolean testExceptionToo = true;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithDefaultLoggerWithExceptions() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithDefaultLoggerWithExceptions() {
             final boolean useDefaultLogger = true;
             final boolean testExceptionToo = true;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
@@ -572,7 +570,7 @@ public class DispatchingUtilTest {
         private void dispatchEventToSubscriber(
                 final boolean useDefaultLogger,
                 final boolean testExceptionToo
-        ) throws InterruptedException, ExecutionException, TimeoutException {
+        ) {
             final int eventCount = DEFAULT_EVENT_COUNT;
             final int evenEventCount = eventCount / 2 + eventCount % 2;
             final int oddEventCount = eventCount / 2 ;
@@ -671,7 +669,7 @@ public class DispatchingUtilTest {
                 final Class<? extends Exception> exceptionClass,
                 final int exceptionThrowingSubscriberCount,
                 final Executor executor
-        ) throws ExecutionException, InterruptedException, TimeoutException {
+        ) {
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             if (useDefaultLogger) {
                 DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
@@ -779,7 +777,7 @@ public class DispatchingUtilTest {
         }
 
         @Test
-        public void dispatchEventToSubscriber_RejectedExecutionException() throws InterruptedException {
+        public void dispatchEventToSubscriber_RejectedExecutionException() {
             final Logger spyLogger = spy(new SpyableLogger(logger)) ;
 
             final int subscriberCount = DEFAULT_SUBSCRIBER_COUNT;
@@ -884,28 +882,28 @@ public class DispatchingUtilTest {
         }
 
         @Test
-        public void dispatchEventToSubscriberWithCustomLogger() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithCustomLogger() {
             final boolean useDefaultLogger = false;
             final boolean testExceptionToo = false;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithDefaultLogger() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithDefaultLogger() {
             final boolean useDefaultLogger = true;
             final boolean testExceptionToo = false;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithCustomLoggerWithExceptions() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithCustomLoggerWithExceptions() {
             final boolean useDefaultLogger = false;
             final boolean testExceptionToo = true;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
         @Test
-        public void dispatchEventToSubscriberWithDefaultLoggerWithExceptions() throws InterruptedException, ExecutionException, TimeoutException {
+        public void dispatchEventToSubscriberWithDefaultLoggerWithExceptions() {
             final boolean useDefaultLogger = true;
             final boolean testExceptionToo = true;
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
@@ -918,7 +916,7 @@ public class DispatchingUtilTest {
         private void dispatchEventToSubscriber(
                 final boolean useDefaultLogger,
                 final boolean testExceptionToo
-        ) throws InterruptedException, ExecutionException, TimeoutException {
+        ) {
             final int eventCount = DEFAULT_EVENT_COUNT;
             final int evenEventCount = eventCount / 2 + eventCount % 2;
             final int oddEventCount = eventCount / 2 ;
@@ -1047,7 +1045,7 @@ public class DispatchingUtilTest {
                 final Class<? extends Exception> exceptionClass,
                 final int exceptionThrowingSubscriberCount,
                 final Executor executor
-        ) throws ExecutionException, InterruptedException, TimeoutException {
+        ) {
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             if (useDefaultLogger) {
                 DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(

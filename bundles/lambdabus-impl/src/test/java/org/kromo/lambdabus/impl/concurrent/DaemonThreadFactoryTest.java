@@ -151,7 +151,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("ThreadPriority is not inherited and set to custom value")
-    public void ThreadPriority_is_not_inherited_and_set_to_custom_value() throws InterruptedException {
+    public void ThreadPriority_is_not_inherited_and_set_to_custom_value() {
         final String factoryName = getClass().getSimpleName();
         final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
         final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName, threadGroup);
@@ -289,7 +289,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("toString changes on new Thread (because it contains stats)")
-    public void toString_changes_on_new_Thread() throws InterruptedException {
+    public void toString_changes_on_new_Thread() {
         final int count = 100;
         final Set<String> strings = new HashSet<>(count+1);
 
@@ -312,7 +312,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("toString output is reproducible")
-    public void toString_output_is_reproducible() throws InterruptedException {
+    public void toString_output_is_reproducible() {
         final int factoryCount = 13;
         final int threadCount = 17;
 

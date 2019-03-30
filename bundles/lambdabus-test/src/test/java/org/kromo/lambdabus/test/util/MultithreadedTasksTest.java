@@ -114,7 +114,7 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excuteTaskThrowsIllegalArgumentExceptionIfNTimesSmallerThanOne(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);
 
         final int nTimes = 0; // not an allowed value
@@ -129,7 +129,7 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excuteTaskThrowsNullPointerExceptionIfTaskIsNull(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);
 
         final int nTimes = 1;
@@ -173,13 +173,13 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excutionsCountDoesNotExceedHugeCount(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_HUGE, executionPolicy);
     }
 
     @Test
     public void excutionsCountDoesNotExceedHugeCount(
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_HUGE, null);
     }
 
@@ -187,13 +187,13 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excutionsCountDoesNotExceedLargeCount(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_LARGE, executionPolicy);
     }
 
     @Test
     public void excutionsCountDoesNotExceedLargeCount(
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_LARGE, null);
     }
 
@@ -201,13 +201,13 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excutionsCountDoesNotExceedSmallCount(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_SMALL, executionPolicy);
     }
 
     @Test
     public void excutionsCountDoesNotExceedSmallCount(
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_SMALL, null);
     }
 
@@ -215,13 +215,13 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excutionsCountDoesNotExceedEqualCount(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_EQUAL, executionPolicy);
     }
 
     @Test
     public void excutionsCountDoesNotExceedEqualCount(
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_EQUAL, null);
     }
 
@@ -229,13 +229,13 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excutionsCountDoesNotExceedTinyCount(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_TINY, executionPolicy);
     }
 
     @Test
     public void excutionsCountDoesNotExceedTinyCount(
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_TINY, null);
     }
 
@@ -243,13 +243,13 @@ public class MultithreadedTasksTest {
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void excutionsDoesNotExceedCountOfOne(
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_ONE, executionPolicy);
     }
 
     @Test
     public void excutionsDoesNotExceedCountOfOne(
-    ) throws InterruptedException {
+    ) {
         executionsCountDoesNotExceedCount(N_TIMES_ONE, null);
     }
 
@@ -260,7 +260,7 @@ public class MultithreadedTasksTest {
     private void executionsCountDoesNotExceedCount(
             final int eventCount,
             final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) throws InterruptedException {
+    ) {
         final AtomicInteger counter = new AtomicInteger();
         final Set<Integer> threadHashCodes = ConcurrentHashMap.newKeySet();
 

@@ -95,7 +95,7 @@ public class NonTerminatingExecutorService
     public boolean awaitTermination( //
             final long timeout, //
             final TimeUnit unit //
-    ) throws InterruptedException {
+    ) {
         final long futureTime = System.nanoTime() + unit.toNanos(timeout);
 
         // very naive approach, might need some love
