@@ -36,11 +36,11 @@ import org.kromo.lambdabus.dispatcher.impl.AbstractEventDispatcher;
 /**
  * Defines tests for behavioral aspects expected from implementations of the
  * {@link EventDispatcher} interface.
- * 
+ *
  * @param <EventDispatcherType>
  *            type to test which implements the {@link EventDispatcher}
  *            interface
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

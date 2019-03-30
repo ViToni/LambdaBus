@@ -51,7 +51,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  * As {@link QueuedEvent}s contain the event itself and its consumers (at the time the event has
  * been published) this queue can be shared among low-throughput event-bus instances, blocking
  * consumer might block all event-busses though.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -66,7 +66,7 @@ public class SharableEventQueue
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * Queue holding events (including associated information) to be dispatched. 
+     * Queue holding events (including associated information) to be dispatched.
      */
     private final BlockingQueue<QueuedEvent<?>> eventQueue = new LinkedBlockingQueue<>();
 
@@ -103,7 +103,7 @@ public class SharableEventQueue
     /**
      * Prepares a {@code SharableDispatchingEventQueue} instance which can dispatch events in the queue
      * processing thread.
-     * 
+     *
      * @param dispatchingExecutorService
      *            non-{@code null} {@link ExecutorService} used to execute the dispatching jobs
      * @throws NullPointerException
@@ -123,7 +123,7 @@ public class SharableEventQueue
 
     /**
      * Prepares a threaded {@code EventDispatcher} instance.
-     * 
+     *
      * @param optionalDispatchingExecutorService
      *            non-{@code null} {@link ExecutorService} used to execute the dispatching jobs
      */
@@ -133,14 +133,14 @@ public class SharableEventQueue
         this.optionalDispatchingExecutorService = Objects.requireNonNull(optionalDispatchingExecutorService, "'optionalDispatchingExecutorService' must not be null");
 
         if (optionalDispatchingExecutorService.isPresent() && optionalDispatchingExecutorService.get().isShutdown()) {
-            throw new IllegalStateException("'dispatchingExecutorService' must not be shutdown");            
+            throw new IllegalStateException("'dispatchingExecutorService' must not be shutdown");
         }
 
         queueExecutorService = createDedicatedSingleThreadedExecutor();
         queueExecutorService.execute(this::takeEventsFromQueueAndTryToDispatch);
-        
+
         final List<ThreadingMode> threadingModes = new ArrayList<>();
-        
+
         // dispatching in the queue processing loop is ASYNC
         threadingModes.add(ThreadingMode.ASYNC);
 
@@ -150,7 +150,7 @@ public class SharableEventQueue
             threadingModes.add(ThreadingMode.ASYNC_PER_EVENT);
             threadingModes.add(ThreadingMode.ASYNC_PER_SUBSCRIBER);
         }
-        
+
         supportedThreadingModes = Collections.unmodifiableSet( //
                 EnumSet.copyOf(threadingModes)
         );
@@ -168,7 +168,7 @@ public class SharableEventQueue
 
     /**
      * Gets the closed state of the event dispatcher.
-     * 
+     *
      * @return returns {@code true} if {@link #close()} has been called,
      *         {@code false} otherwise
      */
@@ -196,9 +196,10 @@ public class SharableEventQueue
 
     /**
      * Gets the supported {@link ThreadingMode}s of the event queue.
-     * 
+     *
      * @return {@link Set} of supported {@link ThreadingMode}s
      */
+    @Override
     public final Set<ThreadingMode> getSupportedThreadingModes() {
         return supportedThreadingModes;
     }
@@ -230,13 +231,13 @@ public class SharableEventQueue
 
     /**
      * Dispatch queued event to subscribed {@link Consumer}s.
-     * 
+     *
      * <p>
      * Implementation note:<br>
      * As this method is doing the dispatching within the queue processing thread
      * it might delay dispatching base on the behavior of the consumers.
      * <p>
-     * 
+     *
      * @param <T>
      *            type of posted event
      * @param queuedEvent
@@ -276,7 +277,7 @@ public class SharableEventQueue
     /**
      * Creates an {@link ExecutorService} which provides a daemon thread with an unique name (to this
      * class).
-     * 
+     *
      * @return setup daemon thread {@link ExecutorService}
      */
     private final ExecutorService createDedicatedSingleThreadedExecutor() {

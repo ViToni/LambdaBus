@@ -30,7 +30,7 @@ import org.kromo.lambdabus.impl.AbstractLambdaBus;
  * The {@link DispatchingLambdaBus} uses a strategy pattern to change
  * dispatching behavior. Dispatching is delegated to an implementation of the
  * {@link EventDispatcher}.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  *
  */

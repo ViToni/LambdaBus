@@ -29,10 +29,10 @@ import org.kromo.lambdabus.ThreadingMode;
  * requested {@link ThreadingMode}.<br>
  * This class does not do any checks on the data as it is just used as tuple for
  * queuing.
- * 
+ *
  * @param <T>
  *            type of event
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -45,7 +45,7 @@ public final class QueuedEvent<T> {
     /**
      * Creates an instance which holds required information for deferred processing
      * of an event.
-     * 
+     *
      * @param event
      *            which has been posted to the bus
      * @param eventSubscriberCollection

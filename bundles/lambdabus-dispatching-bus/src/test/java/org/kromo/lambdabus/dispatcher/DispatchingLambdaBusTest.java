@@ -32,7 +32,7 @@ import org.kromo.lambdabus.ThreadingMode;;
 
 /**
  * Test for the {@link DispatchingLambdaBus}
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

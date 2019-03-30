@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Some basic tests for {@link NullEventPublisherLogger}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
 public class NullEventPublisherLoggerTest {
-    
+
     /*
      * Number used to test removal of stack-trace elements.
      */

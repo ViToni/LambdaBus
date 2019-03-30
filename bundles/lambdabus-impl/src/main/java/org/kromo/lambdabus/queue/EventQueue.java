@@ -32,7 +32,7 @@ import org.kromo.lambdabus.ThreadingMode;
  * As {@link QueuedEvent}s contain the event itself and its registered consumers (at the time the
  * event has been published) implementations might be shared among event-bus instances to reduce the
  * number of needed {@link Thread}s. Blocking consumer might block all event-busses though.
- * 
+ *
  * @author Victor Toni - initial API
  *
  */
@@ -40,14 +40,14 @@ public interface EventQueue extends AutoCloseable {
 
     /**
      * Gets the supported {@link ThreadingMode}s of the event queue.
-     * 
+     *
      * @return {@link Set} of supported {@link ThreadingMode}s
      */
     Set<ThreadingMode> getSupportedThreadingModes();
 
     /**
      * Adds an event for asynchronous dispatching.
-     * 
+     *
      * @param <T>
      *            type of event to be dispatched
      * @param queuedEvent
@@ -63,11 +63,12 @@ public interface EventQueue extends AutoCloseable {
      * Closes the queue and does cleanup of internal {@link Executor} (if any).<br>
      * This method is expected to be idempotent.
      */
+    @Override
     void close();
 
     /**
      * Gets the closed state of the event queue.
-     * 
+     *
      * @return returns {@code true} if {@link #close()} has been called yet, {@code false} otherwise
      */
     boolean isClosed();

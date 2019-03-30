@@ -38,7 +38,7 @@ import org.kromo.lambdabus.dispatcher.EventDispatcher;
  * <ul>
  * <li>{@link #dispatchEventToSubscriber(Object, Collection, ThreadingMode)}</li>
  * </ul>
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -62,7 +62,7 @@ public abstract class AbstractEventDispatcher
 
     /**
      * Initialize the defaults.
-     * 
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default when
      *            posting to the bus (unsupported modes will be mapped to this one)
@@ -80,7 +80,7 @@ public abstract class AbstractEventDispatcher
 
     /**
      * Initialize the defaults.
-     * 
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default when
      *            posting to the bus (unsupported modes will be mapped to this one)
@@ -144,12 +144,12 @@ public abstract class AbstractEventDispatcher
      * {@link ThreadingMode#SYNC}) or adds the event, its subscribed
      * {@link Consumer}s and the {@link ThreadingMode} to the internal queue for
      * further processing.
-     * 
+     *
      * <p>
      * All parameters are non-{@code null} because the calling method has
      * checked them already.
      * </p>
-     * 
+     *
      * @param <T>
      *            type of posted event
      * @param event
@@ -180,18 +180,20 @@ public abstract class AbstractEventDispatcher
 
     /**
      * Gets the default {@link ThreadingMode} of the event dispatcher.
-     * 
+     *
      * @return {@link ThreadingMode} used as default
      */
+    @Override
     public final ThreadingMode getDefaultThreadingMode() {
         return defaultThreadingMode;
     }
 
     /**
      * Gets the supported {@link ThreadingMode}s of the event dispatcher.
-     * 
+     *
      * @return {@link Set} of supported {@link ThreadingMode}s
      */
+    @Override
     public final Set<ThreadingMode> getSupportedThreadingModes() {
         return this.supportedThreadingModes;
     }

@@ -41,7 +41,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  * </ul>
  * Unsupported {@link ThreadingMode}s ({@link ThreadingMode#ASYNC}) and will be
  * mapped to the default {@link ThreadingMode#ASYNC_PER_EVENT}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -68,7 +68,7 @@ public class ThreadedEventDispatcher
 
     /**
      * Prepares a threaded {@code EventDispatcher} instance.
-     * 
+     *
      * @param executorService
      *            non-{@code null} {@link ExecutorService} used to execute the
      *            dispatching jobs

@@ -24,7 +24,7 @@ package org.kromo.lambdabus;
  * from the {@link AutoCloseable#close()} method.<br>
  * The {@link #close()} method does not do any IO operations and is used as a
  * simple was to unsubscribe from the {@link LambdaBus}.
- * 
+ *
  * @author Victor Toni - initial API
  *
  */
@@ -33,14 +33,14 @@ public interface Subscription
 
     /**
      * Returns the class the subscription has been created for.
-     * 
+     *
      * @return {@link Class} of events the subscriptions has been created for
      */
     Class<?> forClass();
 
     /**
      * Returns whether the subscription has been closed already.
-     * 
+     *
      * @return {@code true } if closed has been called already, {@code false}
      *         otherwise
      */

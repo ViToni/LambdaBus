@@ -26,7 +26,7 @@ import org.kromo.lambdabus.ThreadingMode;
 
 /**
  * Helper class to centralize logging about usage of unsupported {@link ThreadingMode}s.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  *
  */

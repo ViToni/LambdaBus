@@ -81,7 +81,7 @@ import org.kromo.lambdabus.test.util.SpyableLogger;
 
 /**
  * Test cases for dispatching of events by {@link DispatchingUtil}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -1130,7 +1130,7 @@ public class DispatchingUtilTest {
 
     /**
      * Compiler infers <E> to a RuntimeException. Now we can throw everything!
-     * 
+     *
      * @param <E>
      *            type of exception to throw
      * @param e
@@ -1155,7 +1155,7 @@ public class DispatchingUtilTest {
      * Delay with a bit of randomness.<br>
      * Internally it uses a recursive Fibonaicci function to to find a new
      * sequence index for a second call to the Fibonacci sequence.
-     * 
+     *
      * @param minIndex
      *            minimum index of the first Fibonacci sequence value
      */
@@ -1170,7 +1170,7 @@ public class DispatchingUtilTest {
      * Recursive Fibonacci implementation. Used to introduce some delay into
      * consumers.<br>
      * {@link Thread#sleep(long)} does not seem to be fine grained enough.
-     * 
+     *
      * @param index
      *            of value in Fibonacci sequence
      * @return value of Fibonacci at {@code index}
@@ -1208,6 +1208,7 @@ public class DispatchingUtilTest {
             this.exceptionLatch = Objects.requireNonNull(exceptionLatch, "'exceptionLatch' must not be null");
         }
 
+        @Override
         public int hashCode() {
             int tmpHashCode = 37;
             tmpHashCode *= id.hashCode() + 17;

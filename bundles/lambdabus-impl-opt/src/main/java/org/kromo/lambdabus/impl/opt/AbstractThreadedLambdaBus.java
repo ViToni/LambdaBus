@@ -32,7 +32,7 @@ import org.kromo.lambdabus.impl.AbstractLambdaBus;
 /**
  * Base class providing functionality for implementing multi-threaded versions of the
  * {@link LambdaBus}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -48,7 +48,7 @@ public abstract class AbstractThreadedLambdaBus
 
     /**
      * Prepares a threaded {@code LambdaBus} instance for use by sub-classes.
-     * 
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
      *            when posting to the bus (unsupported modes will be mapped to
@@ -101,7 +101,7 @@ public abstract class AbstractThreadedLambdaBus
     /**
      * Gets the {@link ExecutorService} of this instance. It is exposed as an {@link Executor}
      * only because it's supposed to be used only to submit dispatching tasks.
-     * 
+     *
      * @return non-{@code null} {@link ExecutorService} as {@link Executor}
      */
     protected final Executor getExecutor() {

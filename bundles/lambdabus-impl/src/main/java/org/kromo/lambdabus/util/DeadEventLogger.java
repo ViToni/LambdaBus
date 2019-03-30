@@ -26,7 +26,7 @@ import org.kromo.lambdabus.DeadEvent;
 
 /**
  * Class used to log events for which no subscriber was found.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  *
  */
@@ -37,7 +37,7 @@ public final class DeadEventLogger {
     /**
      * Logs events (wrapped inside a {@link DeadEvent}) for which no subscriber
      * was found.
-     * 
+     *
      * @param deadEvent
      *            container for event for without subscriber
      */

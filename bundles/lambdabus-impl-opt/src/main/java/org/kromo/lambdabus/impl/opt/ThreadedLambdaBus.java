@@ -41,7 +41,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  * </ul>
  * Unsupported {@link ThreadingMode}s ({@link ThreadingMode#ASYNC}) and will be
  * mapped to the default {@link ThreadingMode#ASYNC_PER_EVENT}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -64,10 +64,10 @@ public class ThreadedLambdaBus
 
     /**
      * Prepares a threaded {@code LambdaBus} instance.
-     * 
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
-     *            when posting to the bus (unsupported modes used in 
+     *            when posting to the bus (unsupported modes used in
      *            {@link #post(Object, ThreadingMode)} will be mapped to this
      *            one)
      * @throws IllegalArgumentException
@@ -90,7 +90,7 @@ public class ThreadedLambdaBus
 
     /**
      * Prepares a threaded {@code LambdaBus} instance.
-     * 
+     *
      * @param executorService
      *            non-{@code null} {@link ExecutorService} used to execute the
      *            dispatching jobs
@@ -106,10 +106,10 @@ public class ThreadedLambdaBus
 
     /**
      * Prepares a threaded {@code LambdaBus} instance.
-     * 
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
-     *            when posting to the bus (unsupported modes used in 
+     *            when posting to the bus (unsupported modes used in
      *            {@link #post(Object, ThreadingMode)} will be mapped to this
      *            one)
      * @param executorService

@@ -36,7 +36,7 @@ import org.kromo.lambdabus.ThreadingMode;
  * As {@link QueuedEvent}s contain the event itself and its registered consumers (at the time the
  * event has been published) this queue can be shared among event-bus instances to reduce the number
  * of needed {@link Thread}s. Blocking consumer might block all event-busses though.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -44,12 +44,12 @@ public class NonClosingEventQueue
     implements EventQueue {
 
     private final Logger logger = LoggerFactory.getLogger(NonClosingEventQueue.class);
-    
+
     private final EventQueue eventQueue;
-    
+
     private final AtomicBoolean isClosed;
-    
-    public NonClosingEventQueue(final EventQueue eventQueue) {    
+
+    public NonClosingEventQueue(final EventQueue eventQueue) {
         this.eventQueue = Objects.requireNonNull(eventQueue, "'eventQueue' must not be null");
         this.isClosed = new AtomicBoolean(eventQueue.isClosed());
     }
@@ -73,7 +73,7 @@ public class NonClosingEventQueue
 
     /**
      * Gets the closed state of the event queue.
-     * 
+     *
      * @return returns {@code true} if {@link #close()} has been called yet, {@code false} otherwise
      */
     @Override

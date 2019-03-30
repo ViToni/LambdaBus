@@ -38,13 +38,14 @@ import org.kromo.lambdabus.queue.impl.SharableEventQueue;
  * Testing {@link QueuedEventDispatcher} reusing tests from
  * {@link EventDispatcherContract}. Custom test are added for
  * {@link QueuedEventDispatcher} constructors.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
 public class QueuedEventDispatcherTest
     extends EventDispatcherContract<QueuedEventDispatcher> {
 
+    @Override
     protected QueuedEventDispatcher createEventDispatcher() {
         return new QueuedEventDispatcher();
     }

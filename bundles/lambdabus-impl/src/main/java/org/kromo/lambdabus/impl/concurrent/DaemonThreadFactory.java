@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * are not shutdown explicitly, they might run forever. Using this
  * {@link ThreadFactory} avoids the necessity to do the shutdown manually
  * because it returns only daemon threads.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -65,7 +65,7 @@ public class DaemonThreadFactory
 
     /**
      * Creates a new instance.
-     * 
+     *
      * @param factoryName
      *            will be the prefix of the created {@link Thread}s name
      * @throws NullPointerException
@@ -77,7 +77,7 @@ public class DaemonThreadFactory
 
     /**
      * Creates a new instance.
-     * 
+     *
      * @param factoryName
      *            will be the prefix of the created {@link Thread}s name
      * @param threadPriority
@@ -97,7 +97,7 @@ public class DaemonThreadFactory
 
     /**
      * Creates a new instance.
-     * 
+     *
      * @param factoryName
      *            will be the prefix of the created {@link Thread}s name
      * @param threadGroup
@@ -114,7 +114,7 @@ public class DaemonThreadFactory
 
     /**
      * Creates a new instance.
-     * 
+     *
      * @param factoryName
      *            will be the prefix of the created {@link Thread}s name
      * @param threadGroup
@@ -186,6 +186,7 @@ public class DaemonThreadFactory
         }
     }
 
+    @Override
     public String toString() {
         return
                 getClass().getSimpleName() +

@@ -23,13 +23,14 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
 
 /**
  * Tests for the {@link SynchronousEventDispatcher}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
 public class SynchronousEventDispatcherTest
     extends EventDispatcherContract<SynchronousEventDispatcher> {
 
+    @Override
     protected SynchronousEventDispatcher createEventDispatcher() {
         return new SynchronousEventDispatcher();
     }

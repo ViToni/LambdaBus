@@ -55,9 +55,9 @@ import org.kromo.lambdabus.test.util.MultithreadedTasks;
  *
  * @param <LambdaBusType>
  *            type to test which implements the {@link LambdaBus} interface
- * 
+ *
  * @author Victor Toni - initial implementation
- * 
+ *
  */
 public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
@@ -133,7 +133,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * Provider for all variations of {@link LambdaBus#post(Object)} and
      * {@link LambdaBus#post(Object, ThreadingMode)} so that we can write only ONE parameterized
      * test per use case.
-     * 
+     *
      * @return {@link Stream} of {@link Arguments} used for parameterized tests
      */
     protected static final Stream<Arguments> getPostMethodsWithNames() {
@@ -143,7 +143,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Method must be implemented to return an instance of the {@link LambdaBus} implementation to
      * be tested if it adheres to this contract.
-     * 
+     *
      * @return an instance of the {@link LambdaBus} implementation to be tested
      */
     protected abstract LambdaBusType createLambdaBus();
@@ -669,13 +669,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Tests that events can be posted to the bus without exceptions when no
      * subscriber is subscribed.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -705,13 +705,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Tests that events can be posted to the bus without exceptions when a
      * subscriber is subscribed.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -747,13 +747,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Tests that if subscriber throw exceptions during event dispatching the other subscriber will
      * still see the event.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -799,7 +799,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertHasSubscriber(lb, A.class);
             assertNoSubscriber(lb, B.class, C.class);
 
-            final int subscriberCount = 
+            final int subscriberCount =
                     EXCEPTION_THROWING_SUBSCRIBER_COUNT + ONE +
                     EXCEPTION_THROWING_SUBSCRIBER_COUNT + ONE;
 
@@ -824,16 +824,16 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Tests that subscriber which were subscribed by class can receive events.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
-     * 
+     *
      */
     @ParameterizedTest(name = "{1} dispatches to handler subscribed by class")
     @MethodSource("getPostMethodsWithNames")
@@ -930,13 +930,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Tests that subscriber which were subscribed by interface can receive events.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -1028,13 +1028,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Tests that subscriber which were subscribed by class can receive events.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -1227,13 +1227,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Test that events cannot be posted to the bus after it has been closed.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -1266,13 +1266,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Tests that a handler which has been unsubscribed does not receive any events anymore.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -1375,13 +1375,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Tests that an unsubscribed handler is not used with other subscribed handler (for same type) present.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -1472,13 +1472,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Tests that handler subscribed by class override handler subscribed by interface.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -1582,13 +1582,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Tests that handler subscribed by interface override handler subscribed by interface in order
      * of appearance.
-     * 
+     *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
      *            {@link LambdaBus#post(Object, ThreadingMode)} so that this
      *            test can be used for both (including all values of
      *            {@link ThreadingMode})
-     * 
+     *
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
@@ -1685,7 +1685,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Abstraction of the LambdaBus.post(Object, ThreadingMode) method used for
      * parameterized tests.
-     * 
+     *
      * @param threadingModeHint
      *            {@link Enum} indicating the bus how the event should be
      *            dispatched, if the value is not supported the default behavior
@@ -1701,7 +1701,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Abstraction of the LambdaBus.post(Object) method used for parameterized tests.
-     * 
+     *
      * @return {@link LambdaBus#post(Object)} as {@link BiConsumer}
      */
     protected static BiConsumer<LambdaBus, Object> getPostMethod() {
@@ -1711,7 +1711,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Create events, post them to the bus using multiple threads and wait until they get
      * dispatched.
-     * 
+     *
      * @param <T>
      *            type of the event
      * @param lb
@@ -1752,7 +1752,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Create ONE event, post it to the bus and wait until it gets dispatched.
-     * 
+     *
      * @param <T>
      *            type of the event
      * @param lb
@@ -1783,7 +1783,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Asserts that the supplied {@link Class}es have subscribed handlers for the given
      * {@link LambdaBus}.
-     * 
+     *
      * @param lb
      *            {@link LambdaBus} to check
      * @param clazzes
@@ -1801,7 +1801,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Asserts that the supplied {@link Class}es do NOT have subscribed handlers for the given
      * {@link LambdaBus}.
-     * 
+     *
      * @param lb
      *            {@link LambdaBus} to check
      * @param clazzes
@@ -1819,7 +1819,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Asserts that the supplied {@link LambdaBus} has no subscriber, for the
      * common classes /interfaces used for testing.
-     * 
+     *
      * @param lb
      *            {@link LambdaBus} to check
      */
@@ -1872,6 +1872,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             this.doneLatch = Objects.requireNonNull(doneLatch, "'doneLatch' must not be null");
         }
 
+        @Override
         public void process() {
             doneLatch.countDown();
         }
@@ -1937,7 +1938,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Handler for events of type {@link A}.<br>
      * Increments the {@link #handleA_counter}.
-     * 
+     *
      * @param a
      *            event to handle
      */
@@ -1952,7 +1953,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * Handler for events of type {@link A}. Used to test if other subscriber
      * for the same event are called if one throws an exception.<br>
      * Increments the {@link #aExceptionCounter}.
-     * 
+     *
      * @param a
      *            event to handle
      * @throws RuntimeException
@@ -1972,7 +1973,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Handler for events of type {@link A1Interface}.<br>
      * Increments the {@link #handleA1Interface_counter}.
-     * 
+     *
      * @param a1Interface
      *            event to handle
      */
@@ -1987,7 +1988,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * Handler for events of type {@link A1Interface}. Used to test if other
      * subscriber for the same event are called if one throws an exception.<br>
      * Increments the {@link #a1InterfaceExceptionCounter}.
-     * 
+     *
      * @param a1Interface
      *            event to handle
      * @throws RuntimeException
@@ -2007,7 +2008,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Handler for events of type {@link A2Interface}.<br>
      * Increments the {@link #handleA2Interface_counter}.
-     * 
+     *
      * @param a2Interface
      *            event to handle
      */
@@ -2022,7 +2023,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * Handler for events of type {@link A2Interface}. Used to test if other
      * subscriber for the same event are called if one throws an exception.<br>
      * Increments the {@link #handleA2InterfaceException_counter}.
-     * 
+     *
      * @param a2Interface
      *            event
      * @throws RuntimeException
@@ -2042,7 +2043,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Handler for events of type {@link B}.<br>
      * Increments the {@link #handleB_counter}.
-     * 
+     *
      * @param b
      *            event to handle
      */
@@ -2056,7 +2057,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Handler for events of type {@link B1Interface}.<br>
      * Increments the {@link #handleB1Interface_counter}.
-     * 
+     *
      * @param b1Interface
      *            event to handle
      */
@@ -2070,7 +2071,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Handler for events of type {@link C}.<br>
      * Increments the {@link #handleC_counter}.
-     * 
+     *
      * @param c
      *            event to handle
      */
@@ -2084,7 +2085,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Handler for events of type {@link C1Interface}.<br>
      * Increments the {@link #handleC1Interface_counter}.
-     * 
+     *
      * @param c1Interface
      *            event to handle
      */

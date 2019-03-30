@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link SimpleThreadFactory}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

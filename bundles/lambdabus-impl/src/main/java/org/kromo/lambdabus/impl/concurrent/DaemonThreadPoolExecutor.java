@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * This {@link ThreadPoolExecutor} uses a {@link ThreadFactory} which returns
  * only daemon threads avoiding having to wait for the threads to finish when
  * the application should quit gracefully.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

@@ -42,13 +42,14 @@ import org.kromo.lambdabus.queue.impl.SharableEventQueue;
  * Testing {@link QueuedLambdaBus} reusing tests from {@link AbstractLambdaBusContract}.
  * <p>
  * Custom test are added for {@link QueuedLambdaBus} constructors.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
 public class QueuedLambdaBusTest
     extends AbstractLambdaBusContract<QueuedLambdaBus> {
 
+    @Override
     protected QueuedLambdaBus createLambdaBus() {
         return new QueuedLambdaBus();
     }
@@ -96,7 +97,7 @@ public class QueuedLambdaBusTest
                 }
         );
 
-        
+
         try (final EventQueue eventQueue = new SharableEventQueue()) {
             assertThrows(
                     NullPointerException.class,

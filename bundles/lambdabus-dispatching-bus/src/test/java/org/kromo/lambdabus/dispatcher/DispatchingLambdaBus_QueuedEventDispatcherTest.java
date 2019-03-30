@@ -25,13 +25,14 @@ import org.kromo.lambdabus.dispatcher.impl.QueuedEventDispatcher;
 /**
  * Test for the {@link DispatchingLambdaBus} using the
  * {@link QueuedEventDispatcher}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
-public class DispatchingLambdaBus_QueuedEventDispatcherTest 
+public class DispatchingLambdaBus_QueuedEventDispatcherTest
     extends LambdaBusContract<DispatchingLambdaBus> {
 
+    @Override
     protected DispatchingLambdaBus createLambdaBus() {
         return new DispatchingLambdaBus(new QueuedEventDispatcher());
     }

@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link DeadEvent} class.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

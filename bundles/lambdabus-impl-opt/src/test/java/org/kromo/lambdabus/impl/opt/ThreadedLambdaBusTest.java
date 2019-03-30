@@ -35,7 +35,7 @@ import org.kromo.lambdabus.impl.concurrent.NonTerminatingExecutorService;
 
 /**
  * Tests for the {@link ThreadedLambdaBus}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

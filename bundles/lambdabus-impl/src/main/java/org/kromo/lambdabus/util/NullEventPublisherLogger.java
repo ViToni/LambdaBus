@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class used to detect which publisher posted a {@code null} event.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  *
  */
@@ -52,7 +52,7 @@ public class NullEventPublisherLogger {
 
     /**
      * Track down the source of the {@code null} event and log it.
-     * 
+     *
      * <p>Implementation note:<br>
      * Tracking down is done by creating an {@link Exception} and following the stack-trace.
      * Since this might be "expensive" it's only activated when TRACE level is enabled for logging.

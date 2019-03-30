@@ -28,7 +28,7 @@ import org.kromo.lambdabus.util.ThreadingAssertions;
 
 /**
  * Tests for the {@link SynchronousLambdaBus}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

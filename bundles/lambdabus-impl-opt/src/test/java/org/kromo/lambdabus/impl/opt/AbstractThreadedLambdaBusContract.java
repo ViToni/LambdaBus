@@ -24,10 +24,10 @@ import org.kromo.lambdabus.impl.AbstractLambdaBusContract;
 
 /**
  * Extends the behavioral contract of the {@link LambdaBus}.<br>
- * 
+ *
  * @param <LambdaBusType>
  *            type to test which extends {@link AbstractThreadedLambdaBus}
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

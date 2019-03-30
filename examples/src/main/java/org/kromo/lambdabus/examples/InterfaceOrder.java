@@ -16,7 +16,7 @@ public class InterfaceOrder {
 
     public static void main(String[] args) {
         final Class<SomeImpl> clazz = SomeImpl.class;
-        
+
         printClassInformation(clazz, "");
     }
 

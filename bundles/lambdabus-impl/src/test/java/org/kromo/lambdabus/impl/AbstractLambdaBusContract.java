@@ -43,11 +43,11 @@ import org.kromo.lambdabus.LambdaBusContract;
  * Extends the behavioral contract of the {@link LambdaBus} by extending
  * {@link AbstractLambdaBus} with custom tests. This class should be extended
  * for tests of sub-classes of {@link AbstractLambdaBus}
- * 
+ *
  * @param <LambdaBusType>
  *            type to test which extends the {@link AbstractLambdaBus} class
  *            (and implements the {@link LambdaBus} interface)
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

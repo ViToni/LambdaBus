@@ -37,15 +37,15 @@ public final class DeadEvent {
 
     /**
      * The object for which no subscriber could be found.
-     * <p> 
+     * <p>
      * Since the member is final it is made public instead of using a getter.
-     * </p> 
+     * </p>
      */
     public final Object event;
 
     /**
      * Creates an instance with the given event.
-     * 
+     *
      * @param event
      *            non-{@code null} object
      * @throws NullPointerException

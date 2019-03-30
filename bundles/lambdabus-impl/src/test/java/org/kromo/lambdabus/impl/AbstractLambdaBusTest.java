@@ -47,7 +47,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  * Tests for {@link AbstractLambdaBus}.<br>
  * Since this is an abstract class we use a trivial private implementation (with
  * its own tests) to test the behavior of the abstract class.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

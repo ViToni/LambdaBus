@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 /**
  * {@link ThreadFactory} implementation creating daemon threads with normal priority
  * ({@link Thread#NORM_PRIORITY}) and custom naming.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  *
  */
@@ -41,7 +41,7 @@ public class SimpleThreadFactory
 
     /**
      * Creates a new instance.
-     * 
+     *
      * @param threadNamePrefix
      *            prefix for all threads names.
      */
@@ -53,7 +53,7 @@ public class SimpleThreadFactory
 
     /**
      * Creates a new instance.
-     * 
+     *
      * @param threadNameSupplier
      *            {@link Supplier} of {@link String}s for threads names.
      */
@@ -78,7 +78,7 @@ public class SimpleThreadFactory
     /**
      * {@link ThreadFactory} implementation creating daemon threads with normal priority
      * ({@link Thread#NORM_PRIORITY}) and custom naming.
-     * 
+     *
      * @author Victor Toni
      *
      */
@@ -98,7 +98,7 @@ public class SimpleThreadFactory
 
         /**
          * Creates a new instance.
-         * 
+         *
          * @param threadNamePrefix
          *            prefix for all threads names.
          */

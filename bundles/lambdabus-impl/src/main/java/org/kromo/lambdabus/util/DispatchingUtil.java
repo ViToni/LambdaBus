@@ -32,7 +32,7 @@ import org.kromo.lambdabus.LambdaBus;
 /**
  * Helper class which consolidates dispatching logic so that it can be reused by different
  * {@link LambdaBus} implementations.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  *
  */
@@ -49,7 +49,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Consumer} while catching any exception if
      * thrown, {@link Error}s are not caught.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -87,7 +87,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Consumer} while catching any exception if
      * thrown, {@link Error}s are not caught.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -112,7 +112,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -144,7 +144,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -172,22 +172,22 @@ public final class DispatchingUtil {
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions. Dispatching is done in one
      * {@link Thread} per event.
-     * 
+     *
      * @param <T>
      *            type of event
-     * 
+     *
      * @param event
      *            non-{@code null} object to dispatch
-     * 
+     *
      * @param eventSubscriberCollection
      *            non-empty {@link Collection} of non-{@code null}
      *            {@link Consumer} of type {@code T} to which the event should
      *            be dispatched
-     * 
+     *
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
-     * 
+     *
      * @param logger
      *            to be used in case of an {@link Exception}
      */
@@ -220,7 +220,7 @@ public final class DispatchingUtil {
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions. Dispatching is done in one
      * {@link Thread} per event.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -249,7 +249,7 @@ public final class DispatchingUtil {
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions. Dispatching is done in one
      * {@link Thread} per subscriber.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -292,7 +292,7 @@ public final class DispatchingUtil {
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions. Dispatching is done in one
      * {@link Thread} per subscriber.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -324,7 +324,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Consumer} while catching any exception if
      * thrown, {@link Error}s are not caught.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -352,7 +352,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Consumer} while catching any exception if
      * thrown, {@link Error}s are not caught.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -376,7 +376,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}s
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -406,7 +406,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}s
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -432,7 +432,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -463,7 +463,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -490,7 +490,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -522,7 +522,7 @@ public final class DispatchingUtil {
     /**
      * Dispatches an event to a {@link Collection} of matching {@link Consumer}
      * while catching potential exceptions.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event

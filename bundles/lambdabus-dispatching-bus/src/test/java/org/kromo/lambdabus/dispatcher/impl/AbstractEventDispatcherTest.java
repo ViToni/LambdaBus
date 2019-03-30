@@ -40,11 +40,11 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
 
 /**
  * Tests for the {@link AbstractEventDispatcher}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
-public class AbstractEventDispatcherTest extends 
+public class AbstractEventDispatcherTest extends
     EventDispatcherContract<AbstractEventDispatcher> {
 
     protected static final int ONE = 1;

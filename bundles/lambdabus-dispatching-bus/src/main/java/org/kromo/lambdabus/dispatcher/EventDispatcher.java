@@ -28,7 +28,7 @@ import org.kromo.lambdabus.ThreadingMode;
 /**
  * Implementing this interface allows to customize the behavior of the event bus
  * without implementing the event bus itself.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  */
 public interface EventDispatcher
@@ -36,7 +36,7 @@ public interface EventDispatcher
 
     /**
      * Dispatches an event to the {@link Collection} of its subscriber.
-     * 
+     *
      * @param <T>
      *            the type of the event
      * @param event
@@ -58,21 +58,21 @@ public interface EventDispatcher
 
     /**
      * Gets the default {@link ThreadingMode} of this dispatcher.
-     * 
+     *
      * @return {@link ThreadingMode} used as default
      */
     ThreadingMode getDefaultThreadingMode();
 
     /**
      * Gets the supported {@link ThreadingMode}s of this dispatcher.
-     * 
+     *
      * @return {@link Set} of supported {@link ThreadingMode}s
      */
     Set<ThreadingMode> getSupportedThreadingModes();
 
     /**
      * Gets the closed state of the event dispatcher.
-     * 
+     *
      * @return returns {@code true} if {@link #close()} has been called,
      *         {@code false} otherwise
      */

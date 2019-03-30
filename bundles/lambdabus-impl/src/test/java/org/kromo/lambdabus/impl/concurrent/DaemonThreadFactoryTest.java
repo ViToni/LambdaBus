@@ -47,7 +47,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for the {@link DaemonThreadFactory}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

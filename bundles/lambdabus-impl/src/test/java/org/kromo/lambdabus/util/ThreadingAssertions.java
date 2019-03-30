@@ -45,7 +45,7 @@ import org.kromo.lambdabus.test.util.MultithreadedTasks;
 
 /**
  * Helper to assert how events are dispatched.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -69,7 +69,7 @@ public final class ThreadingAssertions {
      * Test that all events are processed in order.<br>
      * If posting would be asynchronously a previous {@link CompletableFuture}
      * might be not complete yet.
-     * 
+     *
      * @param eventCount
      *            number of events to create
      * @param lambdaBusSupplier
@@ -121,7 +121,7 @@ public final class ThreadingAssertions {
      * Events posted to the synchronously are directly dispatched to their
      * subscriber means in the same thread.<br>
      * This is tested by this test.<br>
-     * 
+     *
      * @param eventCount
      *            number of events to create
      * @param threadCount

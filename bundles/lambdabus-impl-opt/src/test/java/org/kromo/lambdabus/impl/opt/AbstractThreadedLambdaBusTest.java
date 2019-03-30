@@ -54,7 +54,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
 /**
  * Tests the abstract {@link AbstractThreadedLambdaBus} class by using a simple
  * sub-class to instantiate it.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */

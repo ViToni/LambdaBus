@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutorService;
  * events.
  * <p>As event subscriber might be blocking when an event is dispatched to them
  * specific events might be posted with a non-default {@link ThreadingMode}.</p>
- * 
+ *
  * @author Victor Toni - initial API
  *
  */

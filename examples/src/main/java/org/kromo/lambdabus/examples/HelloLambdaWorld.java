@@ -8,7 +8,7 @@ import org.kromo.lambdabus.impl.SynchronousLambdaBus;
 public class HelloLambdaWorld {
 
     public static void main(String[] args) {
-        // SyncLambdaBus is the simplest LambdaBus 
+        // SyncLambdaBus is the simplest LambdaBus
         final LambdaBus lb = new SynchronousLambdaBus();
 
         /*

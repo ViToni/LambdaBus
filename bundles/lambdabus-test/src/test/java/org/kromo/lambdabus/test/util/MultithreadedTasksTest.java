@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Testing that {@link MultithreadedTasks} is executing tasks in parallel and does not exceed the count
  * of tasks to be executed.
- * 
+ *
  * @author Victor Toni - initial implementation
- * 
+ *
  */
 public class MultithreadedTasksTest {
 

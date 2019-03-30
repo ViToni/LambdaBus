@@ -33,13 +33,14 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
 
 /**
  * Tests for the {@link ThreadedEventDispatcher}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
 public class ThreadedEventDispatcherTest
     extends EventDispatcherContract<ThreadedEventDispatcher> {
 
+    @Override
     protected ThreadedEventDispatcher createEventDispatcher() {
         return new ThreadedEventDispatcher();
     }

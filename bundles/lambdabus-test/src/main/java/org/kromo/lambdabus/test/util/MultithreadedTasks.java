@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Helper class to execute a task multiple times and in parallel. It is supposed to start all
  * threads at the same time.
- * 
+ *
  * @author Victor Toni - initial API and implementation
  */
 public class MultithreadedTasks {
@@ -75,7 +75,7 @@ public class MultithreadedTasks {
 
     /**
      * Create a configured instance.
-     * 
+     *
      * @param maxThreads
      *            max number of threads used to execute tasks
      */
@@ -87,7 +87,7 @@ public class MultithreadedTasks {
 
     /**
      * Create a configured instance.
-     * 
+     *
      * @param maxThreads
      *            max number of threads used to execute tasks
      * @param threadNamePrefix
@@ -108,7 +108,7 @@ public class MultithreadedTasks {
 
     /**
      * Execute given task {@code N} times.
-     * 
+     *
      * @param nTimes
      *            number of times to execute task
      * @param task
@@ -124,7 +124,7 @@ public class MultithreadedTasks {
 
     /**
      * Execute given task {@code N} times.
-     * 
+     *
      * @param nTimes
      *            number of times to execute task
      * @param task

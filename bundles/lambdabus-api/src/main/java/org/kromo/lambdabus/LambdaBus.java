@@ -25,7 +25,7 @@ import java.util.function.Consumer;
  * This interface defines the API of an event bus using class types as
  * implicit topics for which {@link Consumer}s can be subscribed. Events
  * are published by posting them to the bus using the {@link #post(Object)}
- * or {@link #post(Object, ThreadingMode)} method defined in the interface. 
+ * or {@link #post(Object, ThreadingMode)} method defined in the interface.
  * <blockquote><pre>{@code
 final LambdaBus lb = ...
 
@@ -35,7 +35,7 @@ lb.subscribe(String.class, System.out::println);
 // publish a "String" event by posting to the bus
 lb.post("Hello World.");
  * }</pre></blockquote>
- * 
+ *
  * <h2>Using method references</h2>
  * <p>
  * Another approach is to use a reference to the {@link #post(Object)} method so that
@@ -55,14 +55,14 @@ lb.post("Hello Old World.");
 // using method references avoids needing to "know" about the event bus
 postRef.accept("Hello Lambda World.");
  * }</pre></blockquote>
- * 
+ *
  * <h2>Subscription and subscriber lookup</h2>
  * <p>
  * Subscription is mainly based on classes but {@link Consumer}s might also subscribe
  * to an interface. Interface lookup will occur only if no subscriber for the
  * class of the event has been found.<br>
  * The event bus will scan the event's class for its directly implemented interfaces, lookup
- * of sub-classes and interfaces of sub-classes is omitted for simplicity and performance 
+ * of sub-classes and interfaces of sub-classes is omitted for simplicity and performance
  * reasons.</p>
  * <blockquote><pre>{@code
 class BaseImpl
@@ -71,17 +71,17 @@ class BaseImpl
 class SubImpl extends BaseImpl
     implements X, Y, Z {}
  * }</pre></blockquote>
- * 
+ *
  * Subscriber for {@code BaseImpl} will receive only events of type {@code BaseImpl},
  * events of sub-classes such as {@code SubImpl} won't match.<br>
- * Subscriptions for {@code A}, {@code B} or {@code C} will only receive events of type 
+ * Subscriptions for {@code A}, {@code B} or {@code C} will only receive events of type
  * {@code BaseImpl} if there is no {@link Consumer} subscribed for {@code BaseImpl}.<br>
- * Lookup of subscriber will occur in order of appearance in the class file, e.g. for an 
+ * Lookup of subscriber will occur in order of appearance in the class file, e.g. for an
  * event of type {@code BaseImpl} lookup will search in this order for matching subscriber:<br>
  * <blockquote>
  * BaseImpl =&gt; A=&gt; B =&gt; C
  * </blockquote>
- * First match wins. If there is no subscriber for {@code BaseImpl} but subscriber for {@code B} 
+ * First match wins. If there is no subscriber for {@code BaseImpl} but subscriber for {@code B}
  * and {@code C} an event of type {@code BaseImpl} will be dispatched only to subscriber of
  * {@code B} as the {@code B} interface is mentioned before the {@code C} interface.<br>
  * <p>
@@ -90,14 +90,14 @@ class SubImpl extends BaseImpl
  * Events of type {@code SomeImpl} will never be dispatched to subscriber of {@code BaseImpl},
  * {@code A}, {@code B} or {@code C}.
  * </p>
- * 
+ *
  * <h2>Dead events - events without subscriber</h2>
  * Events for which no subscriber could be found (neither class nor directly implemented interfaces)
  * will be posted to the bus wrapped in an instance of {@link DeadEvent}.<br>
  * To avoid creation of unused objects a {@link DeadEvent} should be created only if there is a subscriber
  * for the {@link DeadEvent} class.<br>
  * A use case could be to log such events to detect missing subscriptions.
- * 
+ *
  * <h2>Publisher &amp; Subscriber</h2>
  * <p>
  * The {@link LambdaBus#post(Object)} can be passed as a method reference in form of a {@link Consumer}.<br>
@@ -111,8 +111,8 @@ final Consumer<?> postRef = lb::post;
 // using method references avoids needing to "know" about the event bus
 postRef.accept("Hello Lambda World.");
 }</pre></blockquote>
- * 
- * 
+ *
+ *
  * <p>
  * A subscriber is just a {@link Consumer} associated with a class or interface and does not need any changes
  * on the side of the subscriber.<br>
@@ -143,9 +143,9 @@ lb.subscribe(String.class, (str) -> System.out.println("Received event: " + str)
  * Implementation of this interface have to adhere to the contract specified by
  * the tests in the class {@code LambdaBusContract}.
  * </p>
- * 
+ *
  * @author Victor Toni - initial API
- * 
+ *
  */
 public interface LambdaBus
     extends AutoCloseable {
@@ -158,7 +158,7 @@ public interface LambdaBus
      * directly implemented interfaces of the event. Dispatching will occur for the
      * first matching interface if any was found.
      * </p>
-     * 
+     *
      * @param <T>
      *            type of the event
      * @param event
@@ -176,7 +176,7 @@ public interface LambdaBus
      * directly implemented interfaces of the event. Dispatching will occur for the
      * first matching interface if any was found.
      * </p>
-     * 
+     *
      * @param <T>
      *            type of the event
      * @param event
@@ -194,14 +194,14 @@ public interface LambdaBus
 
     /**
      * Subscribe a consumer for events of a given class or interface.
-     * 
+     *
      * <p>
      * By convention the {@link Class} of an event is evaluated first for subscriber lookup.<br>
      * If there are is matching subscriber for the {@code Class} of an event the directly
      * implemented interfaces of the event will be evaluated in order of appearance.<br>
      * Dispatching will occur for the first matching interface if any was found.
      * </p>
-     * 
+     *
      * @param <T>
      *            the type of events subscription is for
      * @param eventClass
@@ -219,7 +219,7 @@ public interface LambdaBus
     /**
      * Checks if there is any {@link Consumer} subscribed for the given
      * {@link Class}.
-     * 
+     *
      * @param <T>
      *            the type of event
      * @param eventClass
@@ -234,9 +234,10 @@ public interface LambdaBus
      * Posting events to the bus or subscribing to the bus after
      * {@link #close()} is expected to throw {@link IllegalStateException}.
      * </p>
-     * 
+     *
      * @throws IllegalStateException
      *             if the bus has been closed already
      */
+    @Override
     void close();
 }
