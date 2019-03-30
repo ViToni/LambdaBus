@@ -19,17 +19,14 @@
  *******************************************************************************/
 package org.kromo.lambdabus;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for the {@link DeadEvent} class.
@@ -119,7 +116,7 @@ public class DeadEventTest {
         final Object event = new Object();
         final DeadEvent deadEvent = new DeadEvent(event);
 
-        assertTrue(event == deadEvent.event, "Events are not identical");
+        assertSame(event, deadEvent.event, "Events are not identical");
     }
 
 }

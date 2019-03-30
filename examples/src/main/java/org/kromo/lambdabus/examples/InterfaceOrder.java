@@ -1,15 +1,15 @@
 package org.kromo.lambdabus.examples;
 
 public class InterfaceOrder {
-    private static interface A {}
-    private static interface B {}
-    private static interface C {}
+    private interface A {}
+    private interface B {}
+    private interface C {}
     private static class SuperImpl
         implements A, B, C {}
 
-    private static interface M {}
-    private static interface N {}
-    private static interface O {}
+    private interface M {}
+    private interface N {}
+    private interface O {}
     private static class SomeImpl
         extends SuperImpl
         implements M, N, O {}

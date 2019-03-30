@@ -136,7 +136,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      *
      * @return {@link Stream} of {@link Arguments} used for parameterized tests
      */
-    protected static final Stream<Arguments> getPostMethodsWithNames() {
+    protected static Stream<Arguments> getPostMethodsWithNames() {
         return POST_METHODS_WITH_NAMES.stream();
     }
 
@@ -1852,12 +1852,12 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Interface used for testing.
      */
-    protected static interface A1Interface extends Processable { }
+    protected interface A1Interface extends Processable { }
 
     /**
      * Interface used for testing.
      */
-    protected static interface A2Interface extends Processable { }
+    protected interface A2Interface extends Processable { }
 
     /**
      * Class implementing two interfaces ({@link A1Interface}
@@ -1881,12 +1881,12 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Interface used for testing.
      */
-    protected static interface B1Interface extends Processable { }
+    protected interface B1Interface extends Processable { }
 
     /**
      * Interface used for testing.
      */
-    protected static interface B2Interface extends Processable { }
+    protected interface B2Interface extends Processable { }
 
     /**
      * Sub-Class of {@link A} implementing two interfaces ({@link B1Interface}
@@ -1904,12 +1904,12 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Interface used for testing.
      */
-    protected static interface C1Interface extends Processable { }
+    protected interface C1Interface extends Processable { }
 
     /**
      * Interface used for testing.
      */
-    protected static interface C2Interface extends Processable { }
+    protected interface C2Interface extends Processable { }
 
     /**
      * Sub-Class of {@link B} implementing two interfaces ({@link B1Interface}

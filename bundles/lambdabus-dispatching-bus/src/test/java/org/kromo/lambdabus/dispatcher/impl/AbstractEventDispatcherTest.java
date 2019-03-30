@@ -150,13 +150,13 @@ public class AbstractEventDispatcherTest extends
     private final static class TestingAbstractEventDispatcher
         extends AbstractEventDispatcher {
 
-        protected TestingAbstractEventDispatcher(
+        TestingAbstractEventDispatcher(
                 final ThreadingMode defaultThreadingMode
         ) {
             super(defaultThreadingMode);
         }
 
-        protected TestingAbstractEventDispatcher(
+        TestingAbstractEventDispatcher(
                 final ThreadingMode defaultThreadingMode,
                 final Set<ThreadingMode> supportedThreadingModes
         ) {
@@ -164,7 +164,7 @@ public class AbstractEventDispatcherTest extends
         }
 
         @Override
-        protected final <T> void internalDispatchEventToSubscriber(
+        protected <T> void internalDispatchEventToSubscriber(
                 final T event,
                 final Collection<Consumer<T>> eventSubscriberCollection,
                 final ThreadingMode supportedThreadingMode

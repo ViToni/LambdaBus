@@ -63,7 +63,7 @@ public final class DispatchingUtil {
      *             if the eventSubscriber throws it while handling the event,
      *             {@link Exception}s are caught and logged
      */
-    private final <T> void internalDispatchEventSafely(
+    private <T> void internalDispatchEventSafely(
             final T event,
             final Consumer<? super T> eventSubscriber,
             final Logger logger
@@ -99,7 +99,7 @@ public final class DispatchingUtil {
      *             if the eventSubscriber throws it while handling the event,
      *             {@link Exception}s are caught and logged
      */
-    private final <T> void internalDispatchEventSafely(
+    private <T> void internalDispatchEventSafely(
             final T event,
             final Consumer<? super T> eventSubscriber
     ) {
@@ -128,7 +128,7 @@ public final class DispatchingUtil {
      *             while handling the event, {@link Exception}s are caught and
      *             logged
      */
-    private final <T> void internalDispatchEventToSubscriber(
+    private <T> void internalDispatchEventToSubscriber(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection,
             final Logger logger
@@ -158,7 +158,7 @@ public final class DispatchingUtil {
      *             while handling the event, {@link Exception}s are caught and
      *             logged
      */
-    private final <T> void internalDispatchEventToSubscriber(
+    private <T> void internalDispatchEventToSubscriber(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection
     ) {
@@ -191,7 +191,7 @@ public final class DispatchingUtil {
      * @param logger
      *            to be used in case of an {@link Exception}
      */
-    private final <T> void internalDispatchEventToSubscriberThreadedPerEvent(
+    private <T> void internalDispatchEventToSubscriberThreadedPerEvent(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection,
             final Executor executor,
@@ -233,7 +233,7 @@ public final class DispatchingUtil {
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
      */
-    private final <T> void internalDispatchEventToSubscriberThreadedPerEvent(
+    private <T> void internalDispatchEventToSubscriberThreadedPerEvent(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection,
             final Executor executor
@@ -264,7 +264,7 @@ public final class DispatchingUtil {
      * @param logger
      *            to be used in case of an {@link Exception}
      */
-    private final <T> void internalDispatchEventToSubscriberThreadedPerSubscriber(
+    private <T> void internalDispatchEventToSubscriberThreadedPerSubscriber(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection,
             final Executor executor,
@@ -305,7 +305,7 @@ public final class DispatchingUtil {
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
      */
-    private final <T> void internalDispatchEventToSubscriberThreadedPerSubscriber(
+    private <T> void internalDispatchEventToSubscriberThreadedPerSubscriber(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection,
             final Executor executor

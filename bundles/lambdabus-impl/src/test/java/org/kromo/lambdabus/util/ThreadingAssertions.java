@@ -61,7 +61,7 @@ public final class ThreadingAssertions {
     /**
      * Timeout used to wait for published events to complete
      */
-    protected static final int DEFAULT_TIMEOUT_MILLIS = 500;
+    private static final int DEFAULT_TIMEOUT_MILLIS = 500;
 
     private static final AtomicInteger INSTANCE_COUNT = new AtomicInteger();
 

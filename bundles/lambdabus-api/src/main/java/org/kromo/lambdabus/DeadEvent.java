@@ -58,7 +58,7 @@ public final class DeadEvent {
     }
 
     @Override
-    public final boolean equals(final Object object) {
+    public boolean equals(final Object object) {
         if (this == object) {
             return true;
         }
@@ -72,7 +72,7 @@ public final class DeadEvent {
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         final int start = 37;
 
         int tempHashCode = start;

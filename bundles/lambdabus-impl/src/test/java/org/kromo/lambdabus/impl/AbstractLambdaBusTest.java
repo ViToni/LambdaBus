@@ -268,14 +268,14 @@ public class AbstractLambdaBusTest {
 
         private final Set<ThreadingMode> supportedThreadingModes;
 
-        protected TestingAbstractLambdaBus(
+        TestingAbstractLambdaBus(
         ) {
             this(
                     DEFAULT_THREADING_MODE,
                     EnumSet.of(DEFAULT_THREADING_MODE));
         }
 
-        protected TestingAbstractLambdaBus(
+        TestingAbstractLambdaBus(
                 final ThreadingMode defaultThreadingMode,
                 final Set<ThreadingMode> supportedThreadingModes
         ) {

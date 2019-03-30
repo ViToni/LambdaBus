@@ -724,7 +724,7 @@ public abstract class AbstractLambdaBus
      * @return {@code true} if {@link Collection} is not {@code null} and not empty,
      *         {@code false} otherwise
      */
-    protected static final boolean containsSubscriber(
+    protected static boolean containsSubscriber(
             final Collection<Consumer<?>> subscriberCollection
     ) {
         return (Objects.nonNull(subscriberCollection) && !subscriberCollection.isEmpty());
@@ -753,17 +753,17 @@ public abstract class AbstractLambdaBus
         }
 
         @Override
-        public final Class<?> forClass() {
+        public Class<?> forClass() {
             return eventClass;
         }
 
         @Override
-        public final boolean isClosed() {
+        public boolean isClosed() {
             return closed.get();
         }
 
         @Override
-        public final void close() {
+        public void close() {
             if (closed.compareAndSet(false, true)) {
                 closeRunnable.run();
                 closeRunnable = null;

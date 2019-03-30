@@ -90,7 +90,7 @@ public class SharableEventQueue
      * is provided the {@code ThreadingMode}s {@link ThreadingMode#ASYNC_PER_EVENT} and
      * {@link ThreadingMode#ASYNC_PER_SUBSCRIBER} are also supported.
      */
-    private Set<ThreadingMode> supportedThreadingModes;
+    private final Set<ThreadingMode> supportedThreadingModes;
 
     /**
      * Prepares a {@code SharableDispatchingEventQueue} instance which dispatches events in the queue
@@ -211,7 +211,7 @@ public class SharableEventQueue
     /**
      * Waits for events to appear in the queue and tries to dispatch them.
      */
-    private final <T> void takeEventsFromQueueAndTryToDispatch() {
+    private void takeEventsFromQueueAndTryToDispatch() {
         while (!isClosed()) {
             try {
                 final QueuedEvent<?> queuedEvent = eventQueue.take();
@@ -244,7 +244,7 @@ public class SharableEventQueue
      *            {@code non-null} containing the actual event, the subscriber
      *            collection. (The {@link ThreadingMode} is not used since we support only {@link ThreadingMode#ASYNC}.)
      */
-    private final <T> void dispatchQueuedEventToSubscriber(
+    private <T> void dispatchQueuedEventToSubscriber(
             final QueuedEvent<T> queuedEvent
     ) {
         // unsupported ThreadingModes have been filtered out before we get here
@@ -280,7 +280,7 @@ public class SharableEventQueue
      *
      * @return setup daemon thread {@link ExecutorService}
      */
-    private final ExecutorService createDedicatedSingleThreadedExecutor() {
+    private ExecutorService createDedicatedSingleThreadedExecutor() {
         final String threadFactoryName= getClass().getSimpleName() + "-" + INSTANCE_COUNT.incrementAndGet();
         final ThreadFactory threadFactory = new DaemonThreadFactory(threadFactoryName);
 

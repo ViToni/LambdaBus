@@ -104,7 +104,7 @@ public class DispatchingUtilTest {
     //##########################################################################
 
     @Nested
-    public static class dispatchEventSafelyTest {
+    public class dispatchEventSafelyTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -228,7 +228,7 @@ public class DispatchingUtilTest {
     //##########################################################################
 
     @Nested
-    public static class dispatchEventToSubscriberTest {
+    public class dispatchEventToSubscriberTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -405,7 +405,7 @@ public class DispatchingUtilTest {
     //##########################################################################
 
     @Nested
-    public static class dispatchEventToSubscriberThreadedPerEventTest {
+    public class dispatchEventToSubscriberThreadedPerEventTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -1107,7 +1107,7 @@ public class DispatchingUtilTest {
             }
         }
 
-        private <T> void assertThreadHandling(
+        private void assertThreadHandling(
                 final int thisThreadHashCode,
                 final Set<Integer> threadHashCodes
         ) {
