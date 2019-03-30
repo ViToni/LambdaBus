@@ -47,6 +47,11 @@
         </license>
     </licenses>
 
+    <organization>
+        <name>kromo.org</name>
+        <url>https://github.com/ViToni</url>
+    </organization>
+
     <developers>
         <developer>
             <id>vitoni</id>
@@ -130,7 +135,7 @@
         <maven.failsafe.plugin.version>3.0.0-M3</maven.failsafe.plugin.version>
 
         <!-- versions for additional plugins -->
-        <felix.maven.plugin.version>4.1.0</felix.maven.plugin.version>
+        <bnd.maven.plugin.version>4.3.0</bnd.maven.plugin.version>
         <spotbugs.maven.plugin.version>3.1.11</spotbugs.maven.plugin.version>
         <versions.maven.plugin.version>2.7</versions.maven.plugin.version>
         <directory.maven.plugin.version>0.3.1</directory.maven.plugin.version>
@@ -310,7 +315,7 @@
                             <addMavenDescriptor>false</addMavenDescriptor>
                             <!-- define common values -->
                             <manifestEntries>
-                                <Built-By>kromo.org</Built-By>
+                                <Built-By>${organization.name}</Built-By>
                                 <Implementation-Date>${maven.build.timestamp}</Implementation-Date>
                                 <!-- Add the Maven coordinates in the manifest -->
                                 <Maven-Group-Id>${project.groupId}</Maven-Group-Id>
@@ -321,45 +326,9 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>${felix.maven.plugin.version}</version>
-                    <!-- required to enable support of "bundle" packaging --> 
-                    <extensions>true</extensions>
-                    <configuration>
-                        <archive>
-                            <addMavenDescriptor>false</addMavenDescriptor>
-                            <!-- 
-                            Some entries of the MANIFEST.MF (e.g. "Built-By") have to be defined here
-                            because defining them in <instructions> does not pick them (maybe to late?).
-                             -->
-                            <manifestEntries>
-                                <Built-By>kromo.org</Built-By>
-                                <Implementation-Date>${maven.build.timestamp}</Implementation-Date>
-                                <!-- Add the Maven coordinates in the manifest -->
-                                <Maven-Group-Id>${project.groupId}</Maven-Group-Id>
-                                <Maven-Artifact-Id>${project.artifactId}</Maven-Artifact-Id>
-                                <Maven-Version>${maven.version}</Maven-Version>
-                            </manifestEntries>
-                        </archive>
-                        <!-- define common values -->
-                        <instructions>
-                            <!-- stops the "uses" clauses being added to "Export-Package" manifest entry -->
-                            <_nouses>true</_nouses>
-                            <Bundle-Vendor>kromo.org</Bundle-Vendor>
-                            <Bundle-RequiredExecutionEnvironment>JavaSE-${jvm.version}</Bundle-RequiredExecutionEnvironment>
-                            <Bundle-ClassPath>.</Bundle-ClassPath>
-                        </instructions>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>bundle-manifest</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>manifest</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
+                    <version>${bnd.maven.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
@@ -553,8 +522,8 @@
             </plugin>
             <!-- required to enable support of "bundle" packaging -->
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>

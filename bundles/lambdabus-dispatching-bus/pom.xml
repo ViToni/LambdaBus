@@ -30,7 +30,7 @@
     <artifactId>lambdabus-dispatching-bus</artifactId>
     <name>LambdaBus EventDispatcher Implementation</name>
     <description>Implementation of a LambdaBus API using composition including EventDispatcher implementations for synchronous and asynchronous event dispatching.</description>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <dependencyManagement>
         <dependencies>
@@ -116,13 +116,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
- 
+
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
                     <configuration>
                         <!-- define custom values -->
                         <instructions>

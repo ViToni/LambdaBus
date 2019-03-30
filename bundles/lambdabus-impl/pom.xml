@@ -30,7 +30,7 @@
     <artifactId>lambdabus-impl</artifactId>
     <name>LambdaBus Implementation</name>
     <description>Implementation of LambdaBus API including implementations for synchronous and asynchronous event dispatching.</description>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <dependencyManagement>
         <dependencies>
@@ -98,13 +98,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
- 
+
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
                     <configuration>
                         <!-- define custom values -->
                         <instructions>

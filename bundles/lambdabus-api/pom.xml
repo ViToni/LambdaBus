@@ -30,7 +30,7 @@
     <artifactId>lambdabus-api</artifactId>
     <name>LambdaBus API</name>
     <description>LambdaBus API and behavioral contract of the API as unit test for implementing classes.</description>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <dependencyManagement>
         <dependencies>
@@ -77,16 +77,19 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
                     <configuration>
                         <!-- define custom values -->
-                        <instructions>
-                            <Bundle-Description>LambdaBus API</Bundle-Description>
-                            <Export-Package>
+                        <bnd><![CDATA[
+                            Bundle-Description: LambdaBus API
+                            Export-Package: org.kromo.lambdabus
+
+                            -exportcontents: \
                                 org.kromo.lambdabus
-                           	</Export-Package>
-                        </instructions>
+
+                            -sources: true
+                        ]]></bnd>
                     </configuration>
                 </plugin>
             </plugins>
@@ -95,6 +98,10 @@
         <!-- configure plugins in addition to the ones in the parent POM -->
         <plugins>
             <!-- groupId: org.apache.maven.plugins is assumed by default. -->
+            <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

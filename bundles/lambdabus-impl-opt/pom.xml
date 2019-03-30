@@ -30,7 +30,7 @@
     <artifactId>lambdabus-impl-opt</artifactId>
     <name>LambdaBus Implementation (optional)</name>
     <description>Additional implementations of the LambdaBus API providing support for synchronous, asynchronous and non-blocking event dispatching.</description>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <dependencyManagement>
         <dependencies>
@@ -121,8 +121,8 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
                     <configuration>
                         <!-- define custom values -->
                         <instructions>
