@@ -7,3 +7,6 @@
 # IntelliJ IDEA files & directories
 **/.idea/
 **/*.iml
+
+# MacOS files
+**/.DS_Store
