@@ -3,3 +3,7 @@
 **/.project
 **/.classpath
 **/.settings/
+
+# IntelliJ IDEA files & directories
+**/.idea/
+**/*.iml
