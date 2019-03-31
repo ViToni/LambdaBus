@@ -47,9 +47,6 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
 public class AbstractEventDispatcherTest extends
     EventDispatcherContract<AbstractEventDispatcher> {
 
-    protected static final int ONE = 1;
-    protected static final int TWO = 2;
-
     @Override
     protected AbstractEventDispatcher createEventDispatcher() {
         return new TestingAbstractEventDispatcher(ThreadingMode.SYNC);

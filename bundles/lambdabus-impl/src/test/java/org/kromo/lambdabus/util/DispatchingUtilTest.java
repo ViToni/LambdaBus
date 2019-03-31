@@ -85,9 +85,6 @@ import org.kromo.lambdabus.test.util.SpyableLogger;
  */
 public class DispatchingUtilTest {
 
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
-
     private static final int DEFAULT_EVENT_COUNT = 617;
     private static final int DEFAULT_SUBSCRIBER_COUNT = 17;
 
@@ -112,7 +109,7 @@ public class DispatchingUtilTest {
         public void dispatchEventSafely() {
             final int eventCount = DEFAULT_EVENT_COUNT;
 
-            final AtomicInteger counter = new AtomicInteger(ZERO);
+            final AtomicInteger counter = new AtomicInteger();
             final AtomicReference<Object> objectRef = new AtomicReference<>();
 
             final Set<Integer> threadHashCodes = ConcurrentHashMap.newKeySet();
@@ -127,14 +124,14 @@ public class DispatchingUtilTest {
                 final Object event = new Object();
                 DispatchingUtil.dispatchEventSafely(event, eventConsumer);
 
-                assertEquals(i + ONE, counter.get(), "Event was NOT dipatched to consumer");
-                assertEquals(event, objectRef.get(), "Wrong event was dipatched to consumer");
+                assertEquals(i + 1, counter.get(), "Event was NOT dispatched to consumer");
+                assertEquals(event, objectRef.get(), "Wrong event was dispatched to consumer");
             }
 
             final Integer thisThreadHashCode = Thread.currentThread().hashCode();
 
             // threads didn't change from event to event
-            assertEquals(ONE, threadHashCodes.size());
+            assertEquals(1, threadHashCodes.size());
             assertEquals(thisThreadHashCode, threadHashCodes.iterator().next());
         }
 
@@ -197,7 +194,7 @@ public class DispatchingUtilTest {
             assertDoesNotThrow(
                     () -> dispatchEventSafely(event, throwable, spyLogger)
             );
-            verify(spyLogger, times(ONE))
+            verify(spyLogger, times(1))
                 .warn(
                         anyString(),
                         any(event.getClass()),
@@ -273,18 +270,18 @@ public class DispatchingUtilTest {
             final int oddEventCount = eventCount / 2 ;
             final int subscriberCount = DEFAULT_SUBSCRIBER_COUNT;
             final int exceptionThrowingSubscriberCount =
-                    testExceptionsToo ? subscriberCount / 2 : ZERO;
+                    testExceptionsToo ? subscriberCount / 2 : 0;
 
             final int totalEventCount     = subscriberCount * eventCount ;
             final int expectedEvenCount   = subscriberCount * evenEventCount;
             final int expectedOddCount    = subscriberCount * oddEventCount;
             final int totalExceptionCount = exceptionThrowingSubscriberCount * eventCount;
 
-            final AtomicInteger evenCounter = new AtomicInteger(ZERO);
-            final AtomicInteger oddCounter = new AtomicInteger(ZERO);
+            final AtomicInteger evenCounter = new AtomicInteger();
+            final AtomicInteger oddCounter = new AtomicInteger();
 
-            final AtomicInteger handledCounter = new AtomicInteger(ZERO);
-            final AtomicInteger exceptionCounter = new AtomicInteger(ZERO);
+            final AtomicInteger handledCounter = new AtomicInteger();
+            final AtomicInteger exceptionCounter = new AtomicInteger();
 
             final Set<Integer> threadHashCodes = ConcurrentHashMap.newKeySet();
 
@@ -362,7 +359,7 @@ public class DispatchingUtilTest {
                     spyLogger);
 
             if (!useDefaultLogger) {
-                if (ZERO == exceptionThrowingSubscriberCount) {
+                if (0 == exceptionThrowingSubscriberCount) {
                     verifyNoMoreInteractions(spyLogger);
                 } else {
                     verify(spyLogger, timeout(MAX_WAIT_TIME.toMillis()).times(exceptionThrowingSubscriberCount))
@@ -391,9 +388,9 @@ public class DispatchingUtilTest {
             }
 
             // dispatching occurred only in one thread
-            assertEquals(ONE, threadHashCodes.size());
+            assertEquals(1, threadHashCodes.size());
 
-            final int handledCount = (loopIndex + ONE) * eventSubscriberCollection.size();
+            final int handledCount = (loopIndex + 1) * eventSubscriberCollection.size();
 
             // the event was dispatched to all subscriber
             assertEquals(handledCount, handledCounter.get());
@@ -431,7 +428,7 @@ public class DispatchingUtilTest {
 
         @Test
         public void dispatchEventToSubscriber_RejectedExecutionException() {
-            final int threadPoolSize = ONE;
+            final int threadPoolSize = 1;
             final Logger spyLogger = spy(new SpyableLogger(logger)) ;
 
             executorService = new ThreadPoolExecutor(threadPoolSize, threadPoolSize,
@@ -439,8 +436,8 @@ public class DispatchingUtilTest {
                     new SynchronousQueue<>(), // required so that tasks don't queue up but are rejected
                     threadFactory);
 
-            final AtomicInteger startedCounter = new AtomicInteger(ZERO);
-            final AtomicInteger handledCounter = new AtomicInteger(ZERO);
+            final AtomicInteger startedCounter = new AtomicInteger();
+            final AtomicInteger handledCounter = new AtomicInteger();
 
             final Phaser phaser = new Phaser(threadPoolSize);
 
@@ -465,7 +462,7 @@ public class DispatchingUtilTest {
 
             final List<Consumer<String>> eventSubscriberCollection = Collections.singletonList(blockingConsumer);
 
-            final String firstEvent = String.format("%03d", ZERO);
+            final String firstEvent = String.format("%03d", 0);
             DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
                     firstEvent,
                     eventSubscriberCollection,
@@ -484,12 +481,12 @@ public class DispatchingUtilTest {
                     arrivedPartiesSupplier);
 
             // check that the first task started but did not complete yet
-            assertEquals(ONE, startedCounter.get());
-            assertEquals(ZERO, handledCounter.get());
+            assertEquals(1, startedCounter.get());
+            assertEquals(0, handledCounter.get());
 
             verifyNoMoreInteractions(spyLogger);
 
-            final String secondEvent = String.format("%03d", ONE);
+            final String secondEvent = String.format("%03d", 1);
             DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
                     secondEvent,
                     eventSubscriberCollection,
@@ -497,12 +494,12 @@ public class DispatchingUtilTest {
                     spyLogger);
 
             // assert that handler for first event is still blocking
-            assertEquals(ONE, startedCounter.get());
-            assertEquals(ZERO, handledCounter.get());
+            assertEquals(1, startedCounter.get());
+            assertEquals(0, handledCounter.get());
 
             final ArgumentCaptor<String> strCaptor = ArgumentCaptor.forClass(String.class);
             final ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
-            verify(spyLogger, times(ONE))
+            verify(spyLogger, times(1))
                 .error(
                         anyString(),
                         strCaptor.capture(),
@@ -515,8 +512,8 @@ public class DispatchingUtilTest {
             assertEquals(RejectedExecutionException.class, exceptionCaptor.getValue().getClass());
 
             // check that the first task did not complete yet
-            assertEquals(ONE, startedCounter.get());
-            assertEquals(ZERO, handledCounter.get());
+            assertEquals(1, startedCounter.get());
+            assertEquals(0, handledCounter.get());
 
             // release the blocking phaser
             assertTimeoutPreemptively(
@@ -531,8 +528,8 @@ public class DispatchingUtilTest {
                     arrivedPartiesSupplier);
 
             // check that the first event was fully dispatched
-            assertEquals(ONE, startedCounter.get());
-            assertEquals(ONE, handledCounter.get());
+            assertEquals(1, startedCounter.get());
+            assertEquals(1, handledCounter.get());
         }
 
         @Test
@@ -584,10 +581,10 @@ public class DispatchingUtilTest {
             final int expectedOddCount    = subscriberCount * oddEventCount;
             final int totalExceptionCount = exceptionThrowingSubscriberCount * eventCount;
 
-            final AtomicInteger evenCounter = new AtomicInteger(ZERO);
-            final AtomicInteger oddCounter = new AtomicInteger(ZERO);
-            final AtomicInteger handledCounter = new AtomicInteger(ZERO);
-            final AtomicInteger exceptionCounter = new AtomicInteger(ZERO);
+            final AtomicInteger evenCounter = new AtomicInteger();
+            final AtomicInteger oddCounter = new AtomicInteger();
+            final AtomicInteger handledCounter = new AtomicInteger();
+            final AtomicInteger exceptionCounter = new AtomicInteger();
 
             final Map<TestEvent, Set<Integer>> threadHashCodesMap = new ConcurrentHashMap<>();
 
@@ -684,7 +681,7 @@ public class DispatchingUtilTest {
                         spyLogger);
             }
 
-            final int handledCount = (loopIndex + ONE) * eventSubscriberCollection.size();
+            final int handledCount = (loopIndex + 1) * eventSubscriberCollection.size();
 
             // wait for dispatching of the event to have completed
             assertTimeoutPreemptively(
@@ -696,7 +693,7 @@ public class DispatchingUtilTest {
             assertEquals(handledCount, handledCounter.get());
 
             if (testExceptionToo) {
-                final int exceptionCount = (loopIndex + ONE) * exceptionThrowingSubscriberCount;
+                final int exceptionCount = (loopIndex + 1) * exceptionThrowingSubscriberCount;
                 // the exceptions were raised as expected
                 assertEquals(exceptionCount, exceptionCounter.get());
             }
@@ -739,7 +736,7 @@ public class DispatchingUtilTest {
             assertNotNull(threadHashCodes);
 
             // dispatching occurred only in one thread per event
-            assertEquals(ONE, threadHashCodes.size());
+            assertEquals(1, threadHashCodes.size());
 
             // dispatching occurred in thread different to this one
             assertFalse(threadHashCodes.contains(thisThreadHashCode));
@@ -796,8 +793,8 @@ public class DispatchingUtilTest {
 
             executorService = threadPoolExecutor;
 
-            final AtomicInteger startedCounter = new AtomicInteger(ZERO);
-            final AtomicInteger handledCounter = new AtomicInteger(ZERO);
+            final AtomicInteger startedCounter = new AtomicInteger();
+            final AtomicInteger handledCounter = new AtomicInteger();
 
             final Phaser phaser = new Phaser(threadPoolSize);
 
@@ -825,7 +822,7 @@ public class DispatchingUtilTest {
                 eventSubscriberCollection.add(blockingConsumer);
             }
 
-            final String event = String.format("%03d", ZERO);
+            final String event = String.format("%03d", 0);
             DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
                     event,
                     eventSubscriberCollection,
@@ -845,7 +842,7 @@ public class DispatchingUtilTest {
 
             // check that the first tasks started but did not complete yet
             assertEquals(threadPoolSize, startedCounter.get());
-            assertEquals(ZERO, handledCounter.get());
+            assertEquals(0, handledCounter.get());
 
             final ArgumentCaptor<String> strCaptor = ArgumentCaptor.forClass(String.class);
             final ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
@@ -937,10 +934,10 @@ public class DispatchingUtilTest {
             final int expectedOddCount    = subscriberCount * oddEventCount;
             final int totalExceptionCount = exceptionThrowingSubscriberCount * eventCount;
 
-            final AtomicInteger evenCounter = new AtomicInteger(ZERO);
-            final AtomicInteger oddCounter = new AtomicInteger(ZERO);
-            final AtomicInteger handledCounter = new AtomicInteger(ZERO);
-            final AtomicInteger exceptionCounter = new AtomicInteger(ZERO);
+            final AtomicInteger evenCounter = new AtomicInteger();
+            final AtomicInteger oddCounter = new AtomicInteger();
+            final AtomicInteger handledCounter = new AtomicInteger();
+            final AtomicInteger exceptionCounter = new AtomicInteger();
 
             final Map<TestEvent, Set<Integer>> threadHashCodesMap = new ConcurrentHashMap<>();
 
@@ -980,7 +977,7 @@ public class DispatchingUtilTest {
                 }
             };
 
-            final AtomicInteger exceptionalConsumerCounter = new AtomicInteger(ZERO);
+            final AtomicInteger exceptionalConsumerCounter = new AtomicInteger();
             final List<Consumer<TestEvent>> eventSubscriberCollection = new ArrayList<>();
             for(int i = 0; i < subscriberCount; i++) {
                 final boolean odd = isOdd(i);
@@ -1060,7 +1057,7 @@ public class DispatchingUtilTest {
                         spyLogger);
             }
 
-            final int handledCount = (loopIndex + ONE) * eventSubscriberCollection.size();
+            final int handledCount = (loopIndex + 1) * eventSubscriberCollection.size();
 
             // wait for dispatching of the event to have completed
             assertTimeoutPreemptively(
@@ -1080,7 +1077,7 @@ public class DispatchingUtilTest {
             }
 
             if (testExceptionToo) {
-                final int exceptionCount = (loopIndex + ONE) * exceptionThrowingSubscriberCount;
+                final int exceptionCount = (loopIndex + 1) * exceptionThrowingSubscriberCount;
                 // the exceptions were raised as expected
                 assertEquals(exceptionCount, exceptionCounter.get());
             }
@@ -1114,7 +1111,7 @@ public class DispatchingUtilTest {
             assertNotNull(threadHashCodes);
 
             // dispatching occurred in more than one thread per event
-            assertTrue(ZERO < threadHashCodes.size());
+            assertTrue(0 < threadHashCodes.size());
 
             // dispatching occurred in thread different to this one
             assertFalse(threadHashCodes.contains(thisThreadHashCode));
@@ -1174,10 +1171,10 @@ public class DispatchingUtilTest {
      * @return value of Fibonacci at {@code index}
      */
     private static int fibonacci(final int index) {
-        if (ZERO < index) {
-            return index + fibonacci(index - ONE);
+        if (0 < index) {
+            return index + fibonacci(index - 1);
         } else {
-            return ZERO;
+            return 0;
         }
     }
 
@@ -1193,7 +1190,7 @@ public class DispatchingUtilTest {
                 final String id,
                 final CountDownLatch dispatchedLatch
         ) {
-            this(id, dispatchedLatch, new CountDownLatch(ZERO));
+            this(id, dispatchedLatch, new CountDownLatch(0));
         }
 
         public TestEvent(

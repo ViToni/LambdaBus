@@ -36,8 +36,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class DeadEventTest {
 
-    protected static final int ONE = 1;
-
     @Test
     public void construtor() {
         new DeadEvent(new Object());
@@ -72,11 +70,11 @@ public class DeadEventTest {
 
             // adding to the Set should not increase the set size beyond 1
             set.add(deadEvent);
-            assertEquals(ONE, set.size(), "Events are not identical");
+            assertEquals(1, set.size(), "Events are not identical");
 
             // compare all DeadEvents created yet
             list.add(deadEvent);
-            assertEquals(i + ONE, list.size(), "No events added");
+            assertEquals(i + 1, list.size(), "No events added");
             for (int j = 0; j < i; j++) {
                 assertEquals(list.get(j), deadEvent, "Events are not identical");
             }

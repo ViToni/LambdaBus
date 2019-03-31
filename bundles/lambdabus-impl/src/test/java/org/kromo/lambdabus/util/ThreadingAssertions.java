@@ -55,9 +55,6 @@ public final class ThreadingAssertions {
         // no instance
     }
 
-    private static final int ZERO = 0;
-    private static final int ONE  = 1;
-
     /**
      * Timeout used to wait for published events to complete
      */
@@ -90,9 +87,9 @@ public final class ThreadingAssertions {
             final CountDownLatch doneLatch = new CountDownLatch(eventCount);
 
             final AtomicBoolean outOfSync = new AtomicBoolean(false);
-            final AtomicInteger counter = new AtomicInteger(ZERO);
+            final AtomicInteger counter = new AtomicInteger();
             final Consumer<Integer> intConsumer = (intEvent) -> {
-                if(! counter.compareAndSet(intEvent, intEvent + ONE)) {
+                if(! counter.compareAndSet(intEvent, intEvent + 1)) {
                     outOfSync.set(true);
                 }
                 doneLatch.countDown();

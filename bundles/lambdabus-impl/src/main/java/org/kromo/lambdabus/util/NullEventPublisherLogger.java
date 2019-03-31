@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
  */
 public class NullEventPublisherLogger {
 
-    private static final int ZERO = 0;
-
     private static final int DEFAULT_RELEVANT_STACKTRACE_ELEMENT_INDEX = 3;
 
     private final Logger log = LoggerFactory.getLogger(NullEventPublisherLogger.class);
@@ -43,7 +41,7 @@ public class NullEventPublisherLogger {
     }
 
     public NullEventPublisherLogger(final int relevantStackTraceElementIndex) {
-        if (relevantStackTraceElementIndex < ZERO) {
+        if (relevantStackTraceElementIndex < 0) {
             throw new IllegalArgumentException("'relevantStackTraceElementIndex' must not be less than ZERO");
         }
 

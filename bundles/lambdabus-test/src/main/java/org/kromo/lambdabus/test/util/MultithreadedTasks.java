@@ -59,8 +59,6 @@ public class MultithreadedTasks {
      */
     private static final AtomicInteger executionCounter = new AtomicInteger();
 
-    private static final int ONE = 1;
-
     /**
      * Maximum number of threads to use for task execution.<br>
      * (If a task is to be repeated {@code N} times and {@code N < maxThreads}
@@ -98,7 +96,7 @@ public class MultithreadedTasks {
             final int maxThreads,
             final String threadNamePrefix
     ) {
-        if (maxThreads < ONE) {
+        if (maxThreads < 1) {
             throw new IllegalArgumentException("'maxThreads' must not be less than ONE");
         }
         this.maxThreads = maxThreads;
@@ -138,7 +136,7 @@ public class MultithreadedTasks {
             final Runnable task,
             final ExecutionPolicy executionPolicy
     ) {
-        if (nTimes < ONE) {
+        if (nTimes < 1) {
             throw new IllegalArgumentException("'nTimes' must not be less than ONE");
         }
         Objects.requireNonNull(task, "'task' must not be null");

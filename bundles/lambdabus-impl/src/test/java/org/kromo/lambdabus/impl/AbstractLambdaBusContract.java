@@ -67,13 +67,13 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
             lb.setRunnableForNullEvent(atomicCounter::incrementAndGet);
 
             for (int i = 0; i < TINY_EVENT_COUNT; i++) {
-                assertEquals(atomicCounter.get(), i);
+                assertEquals(i, atomicCounter.get());
                 createEventPostAndWaitforDispatchingToComplete(
                         lb,
                         postMethod,
-                        ZERO,
+                        0,
                         nullEventProvider);
-                assertEquals(atomicCounter.get(), i + ONE);
+                assertEquals(i + 1, atomicCounter.get());
             }
         }
     }
@@ -91,13 +91,13 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
             lb.setRunnableForNullEvent(atomicCounter::incrementAndGet);
 
             for (int i = 0; i < TINY_EVENT_COUNT; i++) {
-                assertEquals(atomicCounter.get(), ZERO);
+                assertEquals(0, atomicCounter.get());
                 createEventPostAndWaitforDispatchingToComplete(
                         lb,
                         postMethod,
-                        ZERO,
+                        0,
                         A::new);
-                assertEquals(atomicCounter.get(), ZERO);
+                assertEquals(0, atomicCounter.get());
             }
         }
     }
@@ -111,7 +111,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
             lb.unsetRunnableForNullEvent();
             assertFalse(lb.hasRunnableForNullEvent(), "Must not have a Runnable for null events");
 
-            final CountDownLatch calledLatch = new CountDownLatch(ONE);
+            final CountDownLatch calledLatch = new CountDownLatch(1);
             final Runnable exceptionThrowingNullEventRunnable = () -> {
                 try {
                     throw new RuntimeException("Can be ignored. Just testing NullEventRunnable throwing Exceptions");

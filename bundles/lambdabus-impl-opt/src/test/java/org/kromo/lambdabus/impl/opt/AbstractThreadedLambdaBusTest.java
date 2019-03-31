@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -60,9 +60,6 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  *
  */
 public class AbstractThreadedLambdaBusTest {
-
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
 
     protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
 
@@ -220,15 +217,15 @@ public class AbstractThreadedLambdaBusTest {
             try {
                 assertFalse(lb.isClosed(), "LambdaBus must not be closed yet");
                 assertFalse(executorServiceSpy.isShutdown(), "ExecutorService must not be shutdown yet");
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdown();
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdownNow();
+                verify(executorServiceSpy, never()).shutdown();
+                verify(executorServiceSpy, never()).shutdownNow();
             } finally {
                 lb.close();
             }
 
             assertTrue(lb.isClosed(), "LambdaBus must be closed");
             assertTrue(executorServiceSpy.isShutdown(), "ExecutorService must be shutdown");
-            verify(executorServiceSpy, times(ONE)).shutdownNow();
+            verify(executorServiceSpy, times(1)).shutdownNow();
         } finally {
             // close real ExecutorService (fail safe if class does not behave properly)
             executorService.shutdownNow();
@@ -262,8 +259,8 @@ public class AbstractThreadedLambdaBusTest {
                 assertFalse(executorServiceSpy.isShutdown(), "ExecutorService must not be shutdown");
                 assertFalse(nonTerminatingExecutorService.isShutdown(), "Decorated ExecutorService must not be shutdown");
 
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdown();
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdownNow();
+                verify(executorServiceSpy, never()).shutdown();
+                verify(executorServiceSpy, never()).shutdownNow();
             } finally {
                 lb.close();
             }
@@ -273,8 +270,8 @@ public class AbstractThreadedLambdaBusTest {
             assertFalse(executorServiceSpy.isShutdown(), "ExecutorService must not be shutdown");
             assertTrue(nonTerminatingExecutorService.isShutdown(), "Decorated ExecutorService must be shutdown");
 
-            verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdown();
-            verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdownNow();
+            verify(executorServiceSpy, never()).shutdown();
+            verify(executorServiceSpy, never()).shutdownNow();
         } finally {
             // close real ExecutorService
             executorService.shutdownNow();

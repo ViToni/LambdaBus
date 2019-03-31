@@ -54,9 +54,6 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  */
 public class AbstractLambdaBusTest {
 
-    protected static final int ONE = 1;
-    protected static final int TWO = 2;
-
     /**
      * Timeout used to wait for published events to complete
      */
