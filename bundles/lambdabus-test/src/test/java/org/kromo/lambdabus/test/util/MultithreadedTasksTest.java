@@ -149,13 +149,10 @@ public class MultithreadedTasksTest {
 
         final AtomicInteger counter = new AtomicInteger();
 
-        final Runnable task = new Runnable() {
-                @Override
-                public void run() {
-                    if (throwExceptionAfterNtimes < counter.incrementAndGet()) {
-                        throw new RuntimeException(msg);
-                    }
-                }
+        final Runnable task = () -> {
+            if (throwExceptionAfterNtimes < counter.incrementAndGet()) {
+                throw new RuntimeException(msg);
+            }
         };
 
         final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);
@@ -264,14 +261,11 @@ public class MultithreadedTasksTest {
         final AtomicInteger counter = new AtomicInteger();
         final Set<Integer> threadHashCodes = ConcurrentHashMap.newKeySet();
 
-        final Runnable task = new Runnable() {
-                @Override
-                public void run() {
-                    // might have used the name but names might change
-                    final int threadHashCode = Thread.currentThread().hashCode();
-                    counter.incrementAndGet();
-                    threadHashCodes.add(threadHashCode);
-                }
+        final Runnable task = () -> {
+            // might have used the name but names might change
+            final int threadHashCode = Thread.currentThread().hashCode();
+            counter.incrementAndGet();
+            threadHashCodes.add(threadHashCode);
         };
 
         final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);

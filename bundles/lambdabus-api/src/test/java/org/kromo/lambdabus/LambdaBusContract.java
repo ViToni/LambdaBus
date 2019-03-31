@@ -106,8 +106,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Fixed mapping for the {@link LambdaBus#post(Object)} method used for generic tests.
      */
-    private static final BiConsumer<LambdaBus, Object> POST_METHOD =
-            (lb, event) -> lb.post(event);
+    private static final BiConsumer<LambdaBus, Object> POST_METHOD = LambdaBus::post;
 
     /**
      * Fixed mapping for the {@link LambdaBus#post(Object)} and

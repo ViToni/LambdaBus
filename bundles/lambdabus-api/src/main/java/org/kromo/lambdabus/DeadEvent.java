@@ -73,9 +73,8 @@ public final class DeadEvent {
 
     @Override
     public int hashCode() {
-        final int start = 37;
+        int tempHashCode = 37;
 
-        int tempHashCode = start;
         tempHashCode = (tempHashCode + event.hashCode()) * 17;
 
         return tempHashCode;

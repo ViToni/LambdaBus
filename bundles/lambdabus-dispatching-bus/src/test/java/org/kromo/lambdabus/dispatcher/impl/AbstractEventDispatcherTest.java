@@ -171,10 +171,10 @@ public class AbstractEventDispatcherTest extends
         ) {
             assertNotNull(event);
             assertNotNull(eventSubscriberCollection);
-            eventSubscriberCollection.stream().forEach(Assertions::assertNotNull);
+            eventSubscriberCollection.forEach(Assertions::assertNotNull);
             assertNotNull(supportedThreadingMode);
 
-            eventSubscriberCollection.stream().forEach(consumer -> consumer.accept(event));
+            eventSubscriberCollection.forEach(consumer -> consumer.accept(event));
         }
     }
 

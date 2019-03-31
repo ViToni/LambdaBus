@@ -21,6 +21,7 @@ package org.kromo.lambdabus.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.kromo.lambdabus.LambdaBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +54,7 @@ public class SynchronousLambdaBusTest
         ThreadingAssertions.assertThatEventsAreProcessedInOrder(
                 EVENTS_OF_TYPE_A_COUNT,
                 this::createLambdaBus,
-                (lb, event) -> lb.post(event),
+                LambdaBus::post,
                 logger);
     }
 
@@ -69,7 +70,7 @@ public class SynchronousLambdaBusTest
                 EVENTS_OF_TYPE_A_COUNT,
                 THREAD_COUNT,
                 this::createLambdaBus,
-                (lb, event) -> lb.post(event),
+                LambdaBus::post,
                 getClass(),
                 logger);
     }

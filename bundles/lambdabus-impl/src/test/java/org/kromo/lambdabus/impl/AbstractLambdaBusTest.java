@@ -233,9 +233,7 @@ public class AbstractLambdaBusTest {
         for (final ThreadingMode defaultThreadingMode : supportedThreadingModeSet) {
             final AtomicInteger receivedEventCount = new AtomicInteger(0);
             try (final TestingAbstractLambdaBus lb = new TestingAbstractLambdaBus(defaultThreadingMode, supportedThreadingModeSet)) {
-                final Consumer<TestEvent> testSubscriber = (event) -> {
-                    receivedEventCount.incrementAndGet();
-                };
+                final Consumer<TestEvent> testSubscriber = event -> receivedEventCount.incrementAndGet();
 
                 lb.subscribe(TestEvent.class, testSubscriber);
                 for (int i = 0; i < eventCount; i++) {

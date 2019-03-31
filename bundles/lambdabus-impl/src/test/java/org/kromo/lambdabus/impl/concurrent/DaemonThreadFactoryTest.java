@@ -236,12 +236,9 @@ public class DaemonThreadFactoryTest {
 
         final Thread testingThread  = new Thread(threadGroup, testRunnable);
         testingThread.setUncaughtExceptionHandler(
-                new Thread.UncaughtExceptionHandler() {
-                    @Override
-                    public void uncaughtException(final Thread thread, final Throwable throwable) {
-                        // catch the first exception thrown within thread
-                        throwableRef.compareAndSet(null, throwable);
-                    }
+                (thread, throwable) -> {
+                    // catch the first exception thrown within thread
+                    throwableRef.compareAndSet(null, throwable);
                 }
         );
 

@@ -153,21 +153,21 @@ public class ThreadedLambdaBus
                         event,
                         eventSubscriberCollection
                 );
-                return;
+                break;
             case ASYNC_PER_SUBSCRIBER:
                 DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
                         event,
                         eventSubscriberCollection,
                         getExecutor()
                 );
-                return;
+                break;
             default:
                 DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
                         event,
                         eventSubscriberCollection,
                         getExecutor()
                 );
-                return;
+                break;
         }
     }
 

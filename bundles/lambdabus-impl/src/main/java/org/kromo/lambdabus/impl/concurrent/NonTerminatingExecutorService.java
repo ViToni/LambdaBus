@@ -178,9 +178,7 @@ public class NonTerminatingExecutorService
         Objects.requireNonNull(t, name);
         if (isShutdown()) {
             throw new RejectedExecutionException( //
-                    "Rejected " + //
-                    t.toString() + //
-                    " because ExecutorService is shutdown.");
+                    "Rejected " + t + " because ExecutorService is shutdown.");
         }
     }
 }

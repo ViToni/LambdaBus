@@ -436,7 +436,7 @@ public class DispatchingUtilTest {
 
             executorService = new ThreadPoolExecutor(threadPoolSize, threadPoolSize,
                     0L, TimeUnit.MILLISECONDS,
-                    new SynchronousQueue<Runnable>(), // required so that tasks don't queue up but are rejected
+                    new SynchronousQueue<>(), // required so that tasks don't queue up but are rejected
                     threadFactory);
 
             final AtomicInteger startedCounter = new AtomicInteger(ZERO);
@@ -787,7 +787,7 @@ public class DispatchingUtilTest {
             final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
                     threadPoolSize, threadPoolSize,
                     0L, TimeUnit.MILLISECONDS,
-                    new SynchronousQueue<Runnable>(), // required so that tasks don't queue up but are rejected
+                    new SynchronousQueue<>(), // required so that tasks don't queue up but are rejected
                     threadFactory);
             threadPoolExecutor.allowCoreThreadTimeOut(false);
             threadPoolExecutor.prestartAllCoreThreads();
@@ -926,7 +926,7 @@ public class DispatchingUtilTest {
             final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
                     START_THREAD_COUNT, Integer.MAX_VALUE,
                     60L, TimeUnit.SECONDS,
-                    new LinkedBlockingQueue<Runnable>(),
+                    new LinkedBlockingQueue<>(),
                     threadFactory);
             threadPoolExecutor.prestartAllCoreThreads();
 

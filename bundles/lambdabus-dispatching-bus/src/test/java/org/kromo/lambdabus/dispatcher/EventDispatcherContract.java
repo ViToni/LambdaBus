@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
@@ -66,16 +66,14 @@ public abstract class EventDispatcherContract<EventDispatcherType extends Abstra
                     eventDispatcher.isClosed(),
                     eventDispatcherName + " is closed");
 
-            eventDispatcher.dispatchEventToSubscriber("event", Arrays.asList(System.out::println), ThreadingMode.SYNC);
+            eventDispatcher.dispatchEventToSubscriber("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC);
 
             eventDispatcher.close();
             assertTrue(
                     eventDispatcher.isClosed(),
                     eventDispatcherName + " is not closed after close()");
 
-            assertThrows(IllegalStateException.class, () -> {
-                eventDispatcher.dispatchEventToSubscriber("event", Arrays.asList(System.out::println), ThreadingMode.SYNC);
-            });
+            assertThrows(IllegalStateException.class, () -> eventDispatcher.dispatchEventToSubscriber("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC));
         } finally {
             eventDispatcher.close();
         }

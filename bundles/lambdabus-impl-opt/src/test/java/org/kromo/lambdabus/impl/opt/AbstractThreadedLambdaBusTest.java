@@ -289,7 +289,7 @@ public class AbstractThreadedLambdaBusTest {
         final int maximumPoolSize = 1;
         final long keepAliveTime = 0L;
         final TimeUnit timeUnit = TimeUnit.MILLISECONDS;
-        final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
+        final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>();
 
         return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, timeUnit, workQueue);
     }
