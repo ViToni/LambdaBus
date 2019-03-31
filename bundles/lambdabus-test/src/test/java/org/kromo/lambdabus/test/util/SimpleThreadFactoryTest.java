@@ -51,18 +51,18 @@ public class SimpleThreadFactoryTest {
 
     @Test
     public void nullThreadNamePrefix() {
-        final String threadNamePrefix = null;
+        final String nullThreadNamePrefix = null;
         assertThrows(
                 NullPointerException.class,
-                () -> new SimpleThreadFactory(threadNamePrefix));
+                () -> new SimpleThreadFactory(nullThreadNamePrefix));
     }
 
     @Test
     public void nullThreadNameSupplier() {
-        final Supplier<String> threadNameSupplier = null;
+        final Supplier<String> nullThreadNameSupplier = null;
         assertThrows(
                 NullPointerException.class,
-                () -> new SimpleThreadFactory(threadNameSupplier));
+                () -> new SimpleThreadFactory(nullThreadNameSupplier));
     }
 
     @Test
@@ -116,10 +116,10 @@ public class SimpleThreadFactoryTest {
 
         @Test
         public void nullThreadNamePrefix() {
-            final String threadNamePrefix = null;
+            final String nullThreadNamePrefix = null;
             assertThrows(
                     NullPointerException.class,
-                    () -> new SimpleThreadFactory.ThreadNameSupplier(threadNamePrefix));
+                    () -> new SimpleThreadFactory.ThreadNameSupplier(nullThreadNamePrefix));
         }
 
         @Test

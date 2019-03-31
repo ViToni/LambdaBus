@@ -72,33 +72,38 @@ class SubImpl extends BaseImpl
     implements X, Y, Z {}
  * }</pre></blockquote>
  *
- * Subscriber for {@code BaseImpl} will receive only events of type {@code BaseImpl},
- * events of sub-classes such as {@code SubImpl} won't match.<br>
+ * Subscribers for {@code BaseImpl} will receive only events of type {@code BaseImpl},
+ * events of subclasses such as {@code SubImpl} won't match.<br>
  * Subscriptions for {@code A}, {@code B} or {@code C} will only receive events of type
  * {@code BaseImpl} if there is no {@link Consumer} subscribed for {@code BaseImpl}.<br>
- * Lookup of subscriber will occur in order of appearance in the class file, e.g. for an
- * event of type {@code BaseImpl} lookup will search in this order for matching subscriber:<br>
- * <blockquote>
- * BaseImpl =&gt; A=&gt; B =&gt; C
- * </blockquote>
- * First match wins. If there is no subscriber for {@code BaseImpl} but subscriber for {@code B}
- * and {@code C} an event of type {@code BaseImpl} will be dispatched only to subscriber of
- * {@code B} as the {@code B} interface is mentioned before the {@code C} interface.<br>
+ * Lookup of subscribers will occur in order of appearance in the class file, e.g. for an
+ * event of type {@code BaseImpl} lookup will search in this order for matching subscribers:<br>
+ * <blockquote><pre>
+ *
+ * BaseImpl =&gt; A =&gt; B =&gt; C
+ *
+ * </pre></blockquote>
+ *
+ * First match wins. If there is no subscriber for {@code BaseImpl} but
+ * subscribers for {@code B} and {@code C} an event of type {@code BaseImpl}
+ * will be dispatched only to subscribers of {@code B} as the {@code B}
+ * interface is mentioned before the {@code C} interface.<br>
  * <p>
- * A subscription for {@code X}, {@code Y} or {@code Z} will receive events of type
- * {@code SomeImpl} only if there is no {@link Consumer} for {@code SomeImpl}.<br>
- * Events of type {@code SomeImpl} will never be dispatched to subscriber of {@code BaseImpl},
- * {@code A}, {@code B} or {@code C}.
+ * A subscription for {@code X}, {@code Y} or {@code Z} will receive events of
+ * type {@code SubImpl} only if there is no {@link Consumer} for
+ * {@code SubImpl}.<br>
+ * Events of type {@code SubImpl} will never be dispatched to subscribers of
+ * {@code BaseImpl}, {@code A}, {@code B} or {@code C}.
  * </p>
  *
- * <h2>Dead events - events without subscriber</h2>
+ * <h2>Dead events - events without subscribers</h2>
  * Events for which no subscriber could be found (neither class nor directly implemented interfaces)
  * will be posted to the bus wrapped in an instance of {@link DeadEvent}.<br>
  * To avoid creation of unused objects a {@link DeadEvent} should be created only if there is a subscriber
  * for the {@link DeadEvent} class.<br>
  * A use case could be to log such events to detect missing subscriptions.
  *
- * <h2>Publisher &amp; Subscriber</h2>
+ * <h2>Publishers &amp; Subscribers</h2>
  * <p>
  * The {@link LambdaBus#post(Object)} can be passed as a method reference in form of a {@link Consumer}.<br>
  * Publisher using the {@link Consumer} have no dependency to {@link LambdaBus} implementations.</p>
@@ -116,7 +121,7 @@ postRef.accept("Hello Lambda World.");
  * <p>
  * A subscriber is just a {@link Consumer} associated with a class or interface and does not need any changes
  * on the side of the subscriber.<br>
- * Subscriber are totally agnostic about the event bus.</p>
+ * Subscribers are totally agnostic about the event bus.</p>
  * <blockquote><pre>{@code
 final LambdaBus lb = ...
 
@@ -135,8 +140,8 @@ lb.subscribe(String.class, (str) -> System.out.println("Received event: " + str)
  *
  * <h2>Behavior</h2>
  * <p>
- * Publishing and dispatching is supposed to work in multi-threaded application.<br>
- * Wiring of publisher and subscriber is expected to be done a start time but might
+ * Publishing and dispatching is supposed to work in multi-threaded applications.<br>
+ * Wiring of publishers and subscribers is expected to be done a start time but might
  * also work dynamically at runtime.
  * </p>
  * <p>
@@ -153,10 +158,10 @@ public interface LambdaBus
     /**
      * Posts an event to the bus.<br>
      * <p>
-     * The event will be dispatched based on its {@link Class}. If no subscriber was
-     * registered for the {@link Class} of the event, subscriber will be searched by the
-     * directly implemented interfaces of the event. Dispatching will occur for the
-     * first matching interface if any was found.
+     * The event will be dispatched based on its {@link Class}. If no subscriber
+     * was registered for the {@link Class} of the event, subscribers will be
+     * searched by the directly implemented interfaces of the event. Dispatching
+     * will occur for the first matching interface if any was found.
      * </p>
      *
      * @param <T>
@@ -169,12 +174,13 @@ public interface LambdaBus
     <T> void post(final T event);
 
     /**
-     * Posts an event to the bus using the given {@link ThreadingMode} if supported.<br>
+     * Posts an event to the bus using the given {@link ThreadingMode} if
+     * supported.<br>
      * <p>
      * The event will be dispatched based on its class. If no subscriber was
-     * registered for the class of the event, subscriber will be searched by the
-     * directly implemented interfaces of the event. Dispatching will occur for the
-     * first matching interface if any was found.
+     * registered for the class of the event, subscribers will be searched by
+     * the directly implemented interfaces of the event. Dispatching will occur
+     * for the first matching interface if any was found.
      * </p>
      *
      * @param <T>
@@ -183,8 +189,8 @@ public interface LambdaBus
      *            object to be dispatched
      * @param threadingModeHint
      *            {@link Enum} indicating the bus how the event should be
-     *            dispatched, if the value is not supported the default behavior of
-     *            {@link #post(Object)} should be applied.
+     *            dispatched, if the value is not supported the default behavior
+     *            of {@link #post(Object)} should be applied.
      * @throws NullPointerException
      *             if threadingModeHint is {@code null}
      * @throws IllegalStateException
@@ -196,21 +202,27 @@ public interface LambdaBus
      * Subscribe a consumer for events of a given class or interface.
      *
      * <p>
-     * By convention the {@link Class} of an event is evaluated first for subscriber lookup.<br>
-     * If there are is matching subscriber for the {@code Class} of an event the directly
-     * implemented interfaces of the event will be evaluated in order of appearance.<br>
+     * By convention the {@link Class} of an event is evaluated first for
+     * subscriber lookup.<br>
+     * If there are is no matching subscriber for the {@code Class} of an event
+     * the directly implemented interfaces of the event will be evaluated in
+     * order of appearance.<br>
      * Dispatching will occur for the first matching interface if any was found.
      * </p>
      *
      * @param <T>
      *            the type of events subscription is for
      * @param eventClass
-     *            non-{@code null} {@link Class} of events the subscription is for
+     *            non-{@code null} {@link Class} of events the subscription is
+     *            for
      * @param eventSubscriber
-     *            non-{@code null} {@link Consumer} which should get events of the given class
-     * @return non-{@code null} {@link Subscription} which will unsubscribe the consumer from the bus on closure
+     *            non-{@code null} {@link Consumer} which should get events of
+     *            the given class
+     * @return non-{@code null} {@link Subscription} which will unsubscribe
+     *             the consumer from the bus on closure
      * @throws NullPointerException
-     *             if any of eventClass or eventSubscriber is {@code null}
+     *             if any of {@code  eventClass} or {@code eventSubscriber} is
+     *             {@code null}
      * @throws IllegalStateException
      *             if the bus has been closed already
      */
@@ -223,8 +235,9 @@ public interface LambdaBus
      * @param <T>
      *            the type of event
      * @param eventClass
-     *            event {@link Class} to check subscriber for
-     * @return {@code true} if any subscriber was found, {@code false} otherwise
+     *            event {@link Class} to check subscribers for
+     * @return {@code true} if any subscriber was found, {@code false}
+     *             otherwise
      */
     <T> boolean hasSubscriberForClass(final Class<T> eventClass);
 
@@ -232,7 +245,7 @@ public interface LambdaBus
      * Close event bus and unsubscribe consumers.
      * <p>
      * Posting events to the bus or subscribing to the bus after
-     * {@link #close()} is expected to throw {@link IllegalStateException}.
+     * {@code close()} is expected to throw an {@link IllegalStateException}.
      * </p>
      *
      * @throws IllegalStateException

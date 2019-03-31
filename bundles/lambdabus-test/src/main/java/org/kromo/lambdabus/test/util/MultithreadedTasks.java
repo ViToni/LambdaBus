@@ -48,14 +48,13 @@ public class MultithreadedTasks {
     }
 
     /**
-     * By default use as many threads as possible because achieve as much
-     * concurrency as possible.
+     * By default, use as many threads as possible to achieve as much parallelism as possible.
      */
     private static final ExecutionPolicy DEFAULT_POLICY = ExecutionPolicy.PARALLELISM;
 
     /**
      * Counter used as part of the thread name prefix so each call of
-     * {@link #executeTask()} uses an unique prefix.
+     * {@code executeTask(...)} uses a unique prefix.
      */
     private static final AtomicInteger executionCounter = new AtomicInteger();
 
@@ -157,7 +156,7 @@ public class MultithreadedTasks {
         // reference to get exception from inside the threads
         final AtomicReference<Exception> exceptionRef = new AtomicReference<>();
 
-        // register ourself because we have to setup things
+        // register current thread because we have to set up things
         phaser.register();
 
         final Runnable runnable = () -> {
@@ -175,7 +174,7 @@ public class MultithreadedTasks {
                         if (executionPolicy == ExecutionPolicy.PARALLELISM) {
                             /*
                              * Sync at this point to use as many threads as possible.
-                             * Otherwise the "first" few threads might process all the tasks.
+                             * Otherwise, the "first" few threads might process all the tasks.
                              */
                             phaser.arriveAndAwaitAdvance();
                         }
@@ -203,14 +202,14 @@ public class MultithreadedTasks {
             threadFactory.newThread(runnable).start();
         }
 
-        // everything is setup let the waiting worker threads start at once
+        // everything is set up let the waiting worker threads start at once
         phaser.arriveAndDeregister();
 
         try {
             // wait for all threads to end
             endLatch.await();
         } catch (final InterruptedException e) {
-            // just catch this exception it it's the first exception
+            // just catch this exception if it's the first exception
             exceptionRef.compareAndSet(null, e);
 
             // restore interrupted state
@@ -227,7 +226,7 @@ public class MultithreadedTasks {
     }
 
     /**
-     * Compiler infers <E> to a RuntimeException. Now we can throw everything!
+     * Compiler infers {@code <E>} to a RuntimeException. Now we can throw everything!
      *
      * @param <E>
      *            type of exception to throw

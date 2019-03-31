@@ -54,7 +54,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
  * Tests the abstract {@link AbstractThreadedLambdaBus} class by using a simple
- * sub-class to instantiate it.
+ * subclass to instantiate it.
  *
  * @author Victor Toni - initial implementation
  *
@@ -227,7 +227,7 @@ public class AbstractThreadedLambdaBusTest {
             assertTrue(executorServiceSpy.isShutdown(), "ExecutorService must be shutdown");
             verify(executorServiceSpy, times(1)).shutdownNow();
         } finally {
-            // close real ExecutorService (fail safe if class does not behave properly)
+            // close real ExecutorService (fail-safe if class does not behave properly)
             executorService.shutdownNow();
         }
     }
@@ -299,7 +299,7 @@ public class AbstractThreadedLambdaBusTest {
     private final static class TestingThreadedLambdaBus
         extends AbstractThreadedLambdaBus {
 
-        protected TestingThreadedLambdaBus(
+        TestingThreadedLambdaBus(
                 final ThreadingMode defaultThreadingMode,
                 final Set<ThreadingMode> supportedThreadingModes,
                 final ExecutorService executorService

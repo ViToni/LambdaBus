@@ -197,9 +197,7 @@ public final class DispatchingUtil {
             final Executor executor,
             final Logger logger
     ) {
-        /**
-         * Create one task for dispatching the event.
-         */
+        // Create one task for dispatching the event.
         final Runnable dispatchingTask =
                 () -> internalDispatchEventToSubscriber(
                         event,
@@ -207,7 +205,7 @@ public final class DispatchingUtil {
                         logger);
 
         try {
-            /**
+            /*
              * Execute the dispatching task per event in its own thread.
              */
             executor.execute(dispatchingTask);
@@ -271,13 +269,13 @@ public final class DispatchingUtil {
             final Logger logger
     ) {
         for (final Consumer<T> eventSubscriber : eventSubscriberCollection) {
-            /**
-             * Create a task for each subscriber to be informed so that long
-             * running subscriber processes don't block others.
+            /*
+             * Create a task for each subscriber to be informed so that long-running
+             * subscribers processes don't block others.
              */
             final Runnable dispatchingTask = () -> internalDispatchEventSafely(event, eventSubscriber, logger);
             try {
-                /**
+                /*
                  * Execute the dispatching task per subscriber in its own
                  * thread.
                  */

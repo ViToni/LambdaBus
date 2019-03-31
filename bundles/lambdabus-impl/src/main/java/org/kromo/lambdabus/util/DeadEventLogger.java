@@ -39,7 +39,7 @@ public final class DeadEventLogger {
      * was found.
      *
      * @param deadEvent
-     *            container for event for without subscriber
+     *            container for event for without subscribers
      */
     public void logDeadEvent(final DeadEvent deadEvent) {
          logger.debug("No subscribers found for event: {}", deadEvent.event);

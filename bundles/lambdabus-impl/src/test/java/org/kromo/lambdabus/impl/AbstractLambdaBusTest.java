@@ -251,7 +251,7 @@ public class AbstractLambdaBusTest {
     // Our own private event class for tests
     //##########################################################################
 
-    private static class TestEvent { };
+    private static class TestEvent { }
 
     //##########################################################################
     // Helper class to instantiate the abstract class to be tested

@@ -392,7 +392,7 @@ public class DispatchingUtilTest {
 
             final int handledCount = (loopIndex + 1) * eventSubscriberCollection.size();
 
-            // the event was dispatched to all subscriber
+            // the event was dispatched to all subscribers
             assertEquals(handledCount, handledCounter.get());
         }
     }
@@ -441,7 +441,7 @@ public class DispatchingUtilTest {
 
             final Phaser phaser = new Phaser(threadPoolSize);
 
-            // register ourself so that we can control advance
+            // register current thread so that we can control advance
             phaser.register();
 
             /*
@@ -689,7 +689,7 @@ public class DispatchingUtilTest {
                     (Executable) event.dispatchedLatch::await,
                     "event.dispatchedLatch value: " + event.dispatchedLatch.getCount());
 
-            // the event was dispatched to all subscriber
+            // the event was dispatched to all subscribers
             assertEquals(handledCount, handledCounter.get());
 
             if (testExceptionToo) {
@@ -749,7 +749,7 @@ public class DispatchingUtilTest {
     //##########################################################################
 
     @Nested
-    public static class dispatchEventToSubscriberThreadedPerSubscriberTest {
+    public class dispatchEventToSubscriberThreadedPerSubscriberTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -798,7 +798,7 @@ public class DispatchingUtilTest {
 
             final Phaser phaser = new Phaser(threadPoolSize);
 
-            // register ourself so that we can control advance
+            // register current thread so that we can control advance
             phaser.register();
 
             /*
@@ -1065,7 +1065,7 @@ public class DispatchingUtilTest {
                     (Executable) event.dispatchedLatch::await,
                     "event.dispatchedLatch value: " + event.dispatchedLatch.getCount());
 
-            // the event was dispatched to all subscriber
+            // the event was dispatched to all subscribers
             assertEquals(handledCount, handledCounter.get());
 
             if (testExceptionToo) {
@@ -1148,8 +1148,10 @@ public class DispatchingUtilTest {
 
     /**
      * Delay with a bit of randomness.<br>
-     * Internally it uses a recursive Fibonaicci function to to find a new
+     * Internally it uses a recursive Fibonacci function to find a new
      * sequence index for a second call to the Fibonacci sequence.
+     * This unusual approach is used since {@code Thread.sleep()} might take to
+     * long (and needs to handle exceptions).
      *
      * @param minIndex
      *            minimum index of the first Fibonacci sequence value
@@ -1164,7 +1166,7 @@ public class DispatchingUtilTest {
     /**
      * Recursive Fibonacci implementation. Used to introduce some delay into
      * consumers.<br>
-     * {@link Thread#sleep(long)} does not seem to be fine grained enough.
+     * {@link Thread#sleep(long)} does not seem to be fine-grained enough.
      *
      * @param index
      *            of value in Fibonacci sequence
@@ -1179,7 +1181,7 @@ public class DispatchingUtilTest {
     }
 
     /**
-     * Special event used to track when an event has been dispatched to all subscriber.
+     * Special event used to track when an event has been dispatched to all subscribers.
      */
     private static class TestEvent {
         public final String id;

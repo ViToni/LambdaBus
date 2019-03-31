@@ -30,8 +30,8 @@ import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
  * Implementation of {@link LambdaBus} which dispatches events synchronously to
- * subscriber.
- * 
+ * subscribers.
+ *
  * @author Victor Toni - initial implementation
  *
  */

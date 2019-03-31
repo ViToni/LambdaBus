@@ -51,7 +51,7 @@ public class QueuedEventDispatcherTest
     }
 
     @Test
-    @DisplayName("Constructor - default constuctor")
+    @DisplayName("Constructor - default constructor")
     public void defaultConstructor() {
         try (final EventDispatcher ed = new QueuedEventDispatcher()) {
             assertFalse(ed.isClosed(), "Created 'QueuedEventDispatcher' must not be closed.");
@@ -101,11 +101,11 @@ public class QueuedEventDispatcherTest
     @Test
     @DisplayName("Constructor - null ThreadingMode throws NullPointerException")
     public void constructorNullThreadingModeThrowsNPE() {
-        final ThreadingMode defaultThreadingMode = null;
+        final ThreadingMode nullDefaultThreadingMode = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(defaultThreadingMode)) {}
+                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(nullDefaultThreadingMode)) {}
                 }
         );
 
@@ -114,7 +114,7 @@ public class QueuedEventDispatcherTest
             assertThrows(
                     NullPointerException.class,
                     () -> {
-                        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(defaultThreadingMode, eventQueue)) {}
+                        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(nullDefaultThreadingMode, eventQueue)) {}
                     }
             );
         } finally {

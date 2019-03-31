@@ -95,7 +95,7 @@ public abstract class EventDispatcherContract<EventDispatcherType extends Abstra
 
             assertFalse(
                     eventDispatcher.getSupportedThreadingModes().isEmpty(),
-                    "'" + eventDispatcherName + ".getSupportedThreadingModes()' must not return empyt Set");
+                    "'" + eventDispatcherName + ".getSupportedThreadingModes()' must not return empty Set");
 
             for (final ThreadingMode supportedThreadingMode : eventDispatcher.getSupportedThreadingModes()) {
                 assertNotNull(

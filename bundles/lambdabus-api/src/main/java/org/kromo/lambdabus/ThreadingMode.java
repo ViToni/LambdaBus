@@ -19,13 +19,14 @@
  *******************************************************************************/
 package org.kromo.lambdabus;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 /**
- * The {@link ThreadingMode} is used to indicate to the event bus how to dispatch
- * events.
- * <p>As event subscriber might be blocking when an event is dispatched to them
- * specific events might be posted with a non-default {@link ThreadingMode}.</p>
+ * The {@link ThreadingMode} is used to indicate to the event bus how events
+ * should be dispatched.
+ *
+ * <p>As event subscribers might block when an event is dispatched to them,
+ * specific events can be posted with a non-default {@link ThreadingMode}.</p>
  *
  * @author Victor Toni - initial API
  *
@@ -36,45 +37,48 @@ public enum ThreadingMode {
      * Dispatching should be done synchronously in the thread of the caller.
      * <p>
      * Note:<br>
-     * Single-threaded applications with deeply nested calls might want to use another {@link ThreadingMode}.
+     * Single-threaded applications with deeply nested calls might want to use
+     * another {@link ThreadingMode}.
      * </p>
      */
     SYNC,
 
     /**
-     * Posting should be non-blocking and dispatching should be done in a separate thread.
+     * Posting should be non-blocking and dispatching should be done in a
+     * separate thread.
      * <p>
      * Note:<br>
-     * As all dispatching is executed in one thread subscriber (even of different subscriber
-     * classes) might block each other in the dispatching thread.
+     * Since all dispatching is done in one thread, subscribers (even of
+     * different subscriber classes) can block each other in the dispatching
+     * thread.
      * </p>
      */
     ASYNC,
 
     /**
-     * Dispatching should be done in one thread per event, individual subscriber for one event might
-     * block each other.
+     * Dispatching should be done in one thread per event, individual
+     * subscribers to one event type might block each other.
      * <p>
      * Note:<br>
-     * An event will be dispatched in its own thread regardless of the number of registered
-     * subscribers for this event class.<br>
-     * When there are many events for blocking subscriber using a constrained
-     * {@link ExecutorService} might lead to congestion.
+     * An event will be dispatched in a separate thread regardless of the
+     * number of registered subscribers for this event class.<br>
+     * If there are many events for blocking subscribers, using a constrained
+     * {@link Executor} may cause a bottleneck.
      * </p>
      */
     ASYNC_PER_EVENT,
 
     /**
-     * Dispatching should be done in one thread per subscriber, individual subscriber won't block each
-     * other.
+     * Dispatching should be done in one thread per subscriber, individual
+     * subscribers won't block each other.
      * <p>
      * Note:<br>
-     * If an event class has {@code N} subscriber up to {@code N} threads will be used while
+     * If an event class has {@code N} subscribers up to {@code N} threads will be used while
      * dispatching (depending on the executor used).<br>
-     * When there are many events for blocking subscriber using a constrained
-     * {@link ExecutorService} might lead to congestion of the pool.
+     * If there are many events for blocking subscribers, using a constrained
+     * {@link Executor} may cause a bottleneck.
      * </p>
      */
-    ASYNC_PER_SUBSCRIBER;
+    ASYNC_PER_SUBSCRIBER
 
 }

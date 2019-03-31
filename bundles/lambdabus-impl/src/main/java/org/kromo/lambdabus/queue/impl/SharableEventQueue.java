@@ -247,9 +247,9 @@ public class SharableEventQueue
     private <T> void dispatchQueuedEventToSubscriber(
             final QueuedEvent<T> queuedEvent
     ) {
-        // unsupported ThreadingModes have been filtered out before we get here
-        // consumers of this EventQueue are restricted to ThreadingModes of this instance.
-        // if the instance does not have an additional ExecutorServicethe the additional
+        // Unsupported ThreadingModes have been filtered out before we get here
+        // Consumers of this EventQueue are restricted to ThreadingModes of this instance.
+        // If the instance does not have an additional ExecutorService the additional
         // ThreadingModes won't be available and only the default case will be used.
         switch(queuedEvent.threadingMode) {
             case ASYNC_PER_EVENT:
@@ -275,7 +275,7 @@ public class SharableEventQueue
     }
 
     /**
-     * Creates an {@link ExecutorService} which provides a daemon thread with an unique name (to this
+     * Creates an {@link ExecutorService} which provides a daemon thread with a unique name (to this
      * class).
      *
      * @return setup daemon thread {@link ExecutorService}

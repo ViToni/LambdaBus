@@ -44,7 +44,7 @@ public class DaemonThreadFactory
     private final Logger logger = LoggerFactory.getLogger(DaemonThreadFactory.class);
 
     /**
-     * Internal counter for created threads by thid instance.
+     * Internal counter for created threads by this instance.
      */
     private final AtomicInteger threadNumber = new AtomicInteger(0);
 

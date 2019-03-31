@@ -67,10 +67,10 @@ public class DaemonThreadFactoryTest {
     @Test
     @DisplayName("Constructor with null factoryName")
     public void constructor_with_null_factoryName() {
-        final String factoryName = null;
+        final String nullFactoryName = null;
         assertThrows(
                 NullPointerException.class,
-                () -> new DaemonThreadFactory(factoryName)
+                () -> new DaemonThreadFactory(nullFactoryName)
         );
     }
 
@@ -86,10 +86,10 @@ public class DaemonThreadFactoryTest {
     @DisplayName("Constructor with factoryName and null ThreadGroup")
     public void constructor_with_factoryName_and_null_threadGroup() {
         final String factoryName = getClass().getSimpleName();
-        final ThreadGroup threadGroup = null;
+        final ThreadGroup nullThreadGroup = null;
         assertThrows(
                 NullPointerException.class,
-                () -> new DaemonThreadFactory(factoryName, threadGroup)
+                () -> new DaemonThreadFactory(factoryName, nullThreadGroup)
         );
     }
 

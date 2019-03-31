@@ -103,9 +103,7 @@ public final class ThreadingAssertions {
             }
             assertFalse(outOfSync.get());
 
-            /**
-             * Wait for all events to be dispatched.
-             */
+            // wait for all events to be dispatched.
             final Executable result = doneLatch::await;
             assertTimeout(
                     DEFAULT_TIMEOUT,
@@ -116,7 +114,7 @@ public final class ThreadingAssertions {
 
     /**
      * Events posted to the synchronously are directly dispatched to their
-     * subscriber means in the same thread.<br>
+     * subscribers means in the same thread.<br>
      * This is tested by this test.<br>
      *
      * @param eventCount
@@ -133,7 +131,7 @@ public final class ThreadingAssertions {
      *            logger of testing class (helpful to identify log entries for a
      *            given {@link LambdaBus} implementation)
      */
-    public static void assertDisptachingIsDoneInCallerThread(
+    public static void assertDispatchingIsDoneInCallerThread(
             final int eventCount,
             final int threadCount,
             final Supplier<LambdaBus> lambdaBusSupplier,
@@ -184,9 +182,7 @@ public final class ThreadingAssertions {
                 fail(errorMessage);
             }
 
-            /**
-             * Wait for all events to be dispatched.
-             */
+            // wait for all events to be dispatched.
             final Executable result = doneLatch::await;
             assertTimeout(
                     DEFAULT_TIMEOUT,

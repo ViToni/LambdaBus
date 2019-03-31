@@ -35,16 +35,16 @@ public interface EventDispatcher
         extends AutoCloseable {
 
     /**
-     * Dispatches an event to the {@link Collection} of its subscriber.
+     * Dispatches an event to the {@link Collection} of its subscribers.
      *
      * @param <T>
      *            the type of the event
      * @param event
      *            non-{@code null} object which was published to the bus and
-     *            shall be dispatched to the subscriber
+     *            shall be dispatched to subscribers
      * @param eventSubscriberCollection
      *            non-{@code null} {@link Collection} of non-{@code null}
-     *            subscriber for events of type {@link Class}
+     *            subscribers for events of type {@link Class}
      * @param supportedThreadingMode
      *            non-{@code null} {@link ThreadingMode} how the event should be
      *            dispatched

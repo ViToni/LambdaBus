@@ -105,11 +105,11 @@ public class ThreadedLambdaBusTest
     @Test
     @DisplayName("Constructor with null ThreadingMode throws NullPointerException")
     public void constructor_null_ThreadingMode_throws_NPE() {
-        final ThreadingMode defaultThreadingMode = null;
+        final ThreadingMode nullDefaultThreadingMode = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final LambdaBus lb = new ThreadedLambdaBus(defaultThreadingMode)) {}
+                    try (final LambdaBus lb = new ThreadedLambdaBus(nullDefaultThreadingMode)) {}
                 }
         );
 
@@ -117,7 +117,7 @@ public class ThreadedLambdaBusTest
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final LambdaBus lb = new ThreadedLambdaBus(defaultThreadingMode, executorService)) {}
+                    try (final LambdaBus lb = new ThreadedLambdaBus(nullDefaultThreadingMode, executorService)) {}
                 }
         );
     }

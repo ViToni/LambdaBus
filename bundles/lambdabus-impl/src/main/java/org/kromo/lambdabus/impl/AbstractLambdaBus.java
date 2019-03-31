@@ -50,7 +50,7 @@ import org.kromo.lambdabus.util.UnsupportedThreadingModeReporter;
  * <li>{@link #acceptNonNullEvent(Object, ThreadingMode)}</li>
  * <li>{@link #dispatchNonNullEventToSubscriber(Object, Collection, ThreadingMode)}</li>
  * </ul>
- * 
+ *
  * @author Victor Toni - initial API and implementation
  *
  */
@@ -101,8 +101,8 @@ public abstract class AbstractLambdaBus
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
     /**
-     * Prepares a {@code LambdaBus} instance for use by sub-classes.
-     * 
+     * Prepares a {@code LambdaBus} instance for use by subclasses.
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
      *            when posting to the bus (unsupported modes will be mapped to
@@ -137,7 +137,7 @@ public abstract class AbstractLambdaBus
 
         if (!copyOfSupportedThreadingModes.contains(defaultThreadingMode)) {
             throw new IllegalArgumentException("Default ThreadingMode " + defaultThreadingMode
-                    + " not conatined within supported ThreadingModes: " + copyOfSupportedThreadingModes);
+                    + " not contained within supported ThreadingModes: " + copyOfSupportedThreadingModes);
         }
 
         this.defaultThreadingMode = defaultThreadingMode;
@@ -174,7 +174,7 @@ public abstract class AbstractLambdaBus
             // ensure that we pass only supported ThreadingModes
             final ThreadingMode supportedThreadingMode = getSupportedThreadingMode(threadingModeHint);
 
-            // has to be implemented by sub-class
+            // has to be implemented by subclass
             acceptNonNullEvent(event, supportedThreadingMode);
         } else {
             final Runnable nullEventRunnable = runnableForNullEventRef.get();
@@ -196,7 +196,7 @@ public abstract class AbstractLambdaBus
             final Class<T> eventClass,
             final Consumer<T> eventSubscriber
     ) {
-        validateBusIsOpen(", subscriber not accepted anymore!");
+        validateBusIsOpen(", subscribers not accepted anymore!");
 
         Objects.requireNonNull(eventClass, "'eventClass' must not be null");
         Objects.requireNonNull(eventSubscriber, "'eventSubscriber' must not be null");
@@ -241,7 +241,7 @@ public abstract class AbstractLambdaBus
 
     /**
      * Gets the closed state of the bus.
-     * 
+     *
      * @return returns {@code true} if {@link #close()} has been called,
      *         {@code false} otherwise
      */
@@ -270,7 +270,7 @@ public abstract class AbstractLambdaBus
     /**
      * Sets the {@link Runnable} which gets executed whenever a {@code null}
      * event is posted to the bus.
-     * 
+     *
      * @param runnable
      *            non-{@code null} {@link Runnable} which gets executed on
      *            {@code null} event
@@ -290,7 +290,7 @@ public abstract class AbstractLambdaBus
     /**
      * Sets the {@link Runnable} which gets executed whenever a {@code null}
      * event is posted to the bus.
-     * 
+     *
      * @param runnableForNullEvent
      *            non-{@code null} {@link Runnable} which gets executed on any {@code null}
      *            event
@@ -309,7 +309,7 @@ public abstract class AbstractLambdaBus
     /**
      * Removes the {@link Runnable} which gets executed whenever a {@code null}
      * event is posted to the bus.
-     * 
+     *
      * @throws IllegalStateException
      *             if the bus has been closed already
      */
@@ -322,7 +322,7 @@ public abstract class AbstractLambdaBus
     /**
      * Checks if a {@link Runnable} was set to get executed whenever a
      * {@code null} event is posted to the bus.
-     * 
+     *
      * @throws IllegalStateException
      *             if the bus has been closed already
      * @return {@code true} if a {@link Runnable} is set, {@code false}
@@ -338,7 +338,7 @@ public abstract class AbstractLambdaBus
 
     /**
      * Gets the default {@link ThreadingMode} of this instance.
-     * 
+     *
      * @return {@link ThreadingMode} used as default
      */
     protected final ThreadingMode getDefaultThreadingMode() {
@@ -347,7 +347,7 @@ public abstract class AbstractLambdaBus
 
     /**
      * Gets the supported {@link ThreadingMode}s of this instance.
-     * 
+     *
      * @return {@link Set} of supported {@link ThreadingMode}s
      */
     protected final Set<ThreadingMode> getSupportedThreadingModes() {
@@ -364,7 +364,7 @@ public abstract class AbstractLambdaBus
      * All parameters are non-{@code null} because the calling method has
      * checked them already.
      * </p>
-     * 
+     *
      * @param <T>
      *            type of posted event
      * @param event
@@ -380,12 +380,12 @@ public abstract class AbstractLambdaBus
 
     /**
      * Dispatch event to subscribed {@link Consumer}s.
-     * 
+     *
      * <p>
      * All parameters are non-{@code null} because the calling method has
      * checked them already.
      * </p>
-     * 
+     *
      * @param <T>
      *            type of posted event
      * @param event
@@ -411,7 +411,7 @@ public abstract class AbstractLambdaBus
      * Adds an event subscriber ({@link Consumer}) to the internal registry and
      * returns a {@link Subscription} which will unsubscribe the
      * {@link Consumer} on {@code close()}.
-     * 
+     *
      * @param <T>
      *            event type the subscriber registered for
      * @param eventClass
@@ -432,7 +432,7 @@ public abstract class AbstractLambdaBus
     ) {
         subscriberCollection.add(eventSubscriber);
 
-        final Runnable closeRunnable = 
+        final Runnable closeRunnable =
                 () -> subscriberCollection.remove(eventSubscriber);
 
         return new SubscriptionImpl(eventClass, closeRunnable);
@@ -440,8 +440,8 @@ public abstract class AbstractLambdaBus
 
     /**
      * Creates a new {@link Map} to store the lookup table for {@link Class} to {@link Collection}
-     * of event subscriber.
-     * 
+     * of event subscribers.
+     *
      * @param <K>
      *            the type of keys in the map
      * @param <V>
@@ -453,8 +453,8 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Creates a new {@link Collection} to store event subscriber.
-     * 
+     * Creates a new {@link Collection} to store event subscribers.
+     *
      * @param <T>
      *            type of the subscriber
      * @param clazz
@@ -469,7 +469,9 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Returns an empty {@link Collection} of subscriber.
+     * Returns an empty {@link Collection} of subscribers.
+     * Used to provide a non-{@code null} {@code Collection} when no
+     * subscribers are found.
      * <p>
      * Implementation note:<br>
      * The default implementation of {@link #createSubscriberCollection(Class)} returns an
@@ -477,9 +479,9 @@ public abstract class AbstractLambdaBus
      * {@link #createSubscriberCollection(Class)} it might be useful to override this method,
      * too, so that both return a {@link Collection} of the same type.
      * </p>
-     * 
+     *
      * @param <T>
-     *            event type the subscriber registered for
+     *            event type for which registered subscribers were searched
      * @return {@link Collection}, default is {@link Collections#emptyList()}
      */
     protected <T> Collection<Consumer<T>> emptySubscriberCollection() {
@@ -497,7 +499,7 @@ public abstract class AbstractLambdaBus
     //##########################################################################
 
     /**
-     * Closes all subscriber {@link Subscription}s.
+     * Closes all subscribers {@link Subscription}s.
      */
     protected final synchronized void closeSubscriptions() {
         for (final Subscription subscription : subscriptionCollection) {
@@ -510,7 +512,7 @@ public abstract class AbstractLambdaBus
      * Checks whether a {@link ThreadingMode} is supported by the event bus, if it is it will be
      * returned otherwise the default {@link ThreadingMode} ({@link #getDefaultThreadingMode()})
      * will be returned.
-     * 
+     *
      * @param threadingModeHint
      *            {@link ThreadingMode} to check
      * @return provided {@link ThreadingMode} if supported, otherwise the default
@@ -531,7 +533,7 @@ public abstract class AbstractLambdaBus
 
     /**
      * Checks if the given {@link ThreadingMode} is supported.
-     * 
+     *
      * @param threadingMode
      *            to check if it is supported
      * @return {@code true} if {@link ThreadingMode} is supported, {@code false} otherwise
@@ -542,7 +544,7 @@ public abstract class AbstractLambdaBus
 
     /**
      * Checks whether the bus is still open.
-     * 
+     *
      * @throws IllegalStateException
      *             if the bus has been closed already
      */
@@ -552,7 +554,7 @@ public abstract class AbstractLambdaBus
 
     /**
      * Checks whether the bus is still open.
-     * 
+     *
      * @param errorMessage
      *            message to attach to the {@link IllegalStateException}
      * @throws IllegalStateException
@@ -565,10 +567,10 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Tries to dispatch a non-{@code null} event to matching subscriber.<br>
+     * Tries to dispatch a non-{@code null} event to matching subscribers.<br>
      * If no matching subscriber were found the {@link DeadEvent}
      * {@link Consumer} will be called (if registered).
-     * 
+     *
      * @param <T>
      *            type of event
      * @param event
@@ -605,13 +607,13 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Returns {@link Collection} of subscriber for a given {@link Class}.
-     * 
+     * Returns {@link Collection} of subscribers for a given {@link Class}.
+     *
      * @param <T>
      *            type of event
      * @param eventClass
-     *            class to get subscriber {@link Collection} for
-     * @return found {@link Collection}, empty {@link Collection} otherwise
+     *            class to get {@code Collection} of subscribers for
+     * @return found {@code Collection}, empty {@code Collection} otherwise
      */
     protected final <T> Collection<Consumer<T>> getNonNullEventSubscriberCollection(
             final Class<T> eventClass
@@ -632,20 +634,21 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Casts a {@link Collection} of subscriber for a given {@link Class}.
-     * 
+     * Casts a {@link Collection} of subscribers for a given {@link Class}.
+     *
      * @param <T>
      *            type of event
      * @param subscriberCollection
-     *            collection of subscriber {@link Collection} to cast
-     * @return cast {@link Collection}
+     *            {@code Collection} of subscriber to cast
+     * @return cast {@code Collection}
      */
     protected final <T> Collection<Consumer<T>> castSubscriberCollection(
             final Collection<Consumer<?>> subscriberCollection
     ) {
-        /**
-         * This is a dirty hack because otherwise we cannot cast directly to Collection<Consumer<T>>
-         * even if we know for sure that the subscriber are for type T.
+        /*
+         * This is a dirty hack because otherwise we cannot cast directly to
+         * Collection<Consumer<T>> even if we know for sure that the subscribers
+         * are of type Consumer<T>.
          */
         @SuppressWarnings("unchecked")
         final Collection<Consumer<T>> typedSubscriberCollection = (Collection<Consumer<T>>) (Object) subscriberCollection;
@@ -654,11 +657,11 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Returns {@link Collection} of subscriber for a given {@link Class}
-     * 
+     * Returns {@link Collection} of subscribers for a given {@link Class}
+     *
      * @param eventClass
-     *            to get subscriber {@link Collection} for
-     * @return found {@link Collection}, empty {@link Collection} otherwise
+     *            to get {@code Collection} of subscribers for
+     * @return found {@code Collection}, empty {@code Collection} otherwise
      */
     protected final Collection<Consumer<?>> getSubscriberCollectionForDirectInterface(
             final Class<?> eventClass
@@ -675,15 +678,15 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Returns {@link Collection} of subscriber for a given {@link Class}.<br>
-     * If no {@link Collection} exist a new instance will be created using
+     * Returns {@link Collection} of subscribers for a given {@link Class}.<br>
+     * If no {@code Collection} exist a new instance will be created using
      * {@link #createSubscriberCollection(Class)}.
-     * 
+     *
      * @param <T>
      *            type of event
      * @param eventClass
-     *            class of event to get subscriber {@link Collection} for
-     * @return found {@link Collection}, or a new {@link Collection} (created by
+     *            class of event to get {@code Collection} of subscribers for
+     * @return found {@code Collection}, or a new {@code Collection} (created by
      *         {@link #createSubscriberCollection(Class)}) otherwise
      */
     protected final <T> Collection<Consumer<T>> getSubscriberCollectionOrCreateIfAbsent(
@@ -699,16 +702,16 @@ public abstract class AbstractLambdaBus
 
     /**
      * Logs an unsupported {@link ThreadingMode}.
-     * 
+     *
      * <p>
      * Implementation note:<br>
      * Internally the logging is done via the class
      * {@link UnsupportedThreadingModeReporter} so that excessive occurrence of
-     * log entries about unsupported {@link ThreadingMode}s can be filtered out easily.
+     * log entries about unsupported {@code ThreadingMode}s can be filtered out easily.
      * </p>
-     * 
+     *
      * @param unsupportedThreadingMode
-     *            unsupported {@link ThreadingMode} to be logged
+     *            unsupported {@code ThreadingMode} to be logged
      */
     protected final void logUnsupportedThreadingMode(
             final ThreadingMode unsupportedThreadingMode
@@ -717,11 +720,12 @@ public abstract class AbstractLambdaBus
     }
 
     /**
-     * Checks whether the {@link Collection} of subscriber contains any subscriber.
-     * 
+     * Checks whether the {@link Collection} of subscribers is non-{@code null}
+     * and contains any subscriber.
+     *
      * @param subscriberCollection
-     *            {@link Collection} of subscriber to check
-     * @return {@code true} if {@link Collection} is not {@code null} and not empty,
+     *            {@code Collection} of subscribers to check
+     * @return {@code true} if {@code Collection} is not {@code null} and not empty,
      *         {@code false} otherwise
      */
     protected static boolean containsSubscriber(
@@ -733,7 +737,7 @@ public abstract class AbstractLambdaBus
     /**
      * Implementation of the {@link Subscription} interface ensuring the
      * unsubscription happens only once.
-     * 
+     *
      * @author Victor Toni - initial implementation
      *
      */

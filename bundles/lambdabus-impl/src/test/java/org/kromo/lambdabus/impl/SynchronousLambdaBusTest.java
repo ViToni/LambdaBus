@@ -60,13 +60,13 @@ public class SynchronousLambdaBusTest
 
     /**
      * Events posted to the {@link SynchronousLambdaBus} are directly dispatched
-     * to their subscriber means in the same thread.<br>
+     * to their subscribers means in the same thread.<br>
      * This is tested by this test.<br>
      */
     @Test
     @DisplayName("Dispatching is done in caller thread")
-    public void disptaching_is_done_in_caller_thread() {
-        ThreadingAssertions.assertDisptachingIsDoneInCallerThread(
+    public void dispatching_is_done_in_caller_thread() {
+        ThreadingAssertions.assertDispatchingIsDoneInCallerThread(
                 EVENTS_OF_TYPE_A_COUNT,
                 THREAD_COUNT,
                 this::createLambdaBus,

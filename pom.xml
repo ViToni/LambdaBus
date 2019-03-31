@@ -87,7 +87,7 @@
         <lambdabus.dispatching.bus.version>${lambdabus.version}</lambdabus.dispatching.bus.version>
         <lambdabus.dispatcher.opt.version>${lambdabus.version}</lambdabus.dispatcher.opt.version>
 
-        <!-- overwriting user name for manifest file -->
+        <!-- overwriting username for manifest file -->
         <user.name>kromo.org</user.name>
 
         <!-- JARs should be copied to this directory -->

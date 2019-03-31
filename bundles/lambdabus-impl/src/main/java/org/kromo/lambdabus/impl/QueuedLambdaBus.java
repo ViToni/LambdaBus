@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
+import org.kromo.lambdabus.LambdaBus;
 import org.kromo.lambdabus.ThreadingMode;
 import org.kromo.lambdabus.impl.concurrent.DaemonThreadPoolExecutor;
 import org.kromo.lambdabus.queue.EventQueue;
@@ -36,12 +37,12 @@ import org.kromo.lambdabus.queue.impl.SharableEventQueue;
 import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
- * This class provides non-blocking posting and multi-threaded dispatching.<br>
- * Events are put into a queue and dispatched in a different tread.<br>
+ * This class provides non-blocking posting and multithreaded dispatching.<br>
+ * Events are put into a queue and dispatched in a different thread.<br>
  * All {@link ThreadingMode}s are supported. Events posted as
  * {@link ThreadingMode#SYNC} are dispatched directly, other events are queued
  * and dispatched based on requested (or default) {@link ThreadingMode}.
- * 
+ *
  * @author Victor Toni - initial implementation
  *
  */
@@ -49,8 +50,9 @@ public class QueuedLambdaBus
     extends AbstractLambdaBus {
 
     private static final ThreadingMode DEFAULT_THREADING_MODE = ThreadingMode.ASYNC;
+
     /**
-     * The {@link Set} of supported {@link ThreadingMode}s of this {@link EventDispatcher}.
+     * The {@link Set} of supported {@link ThreadingMode}s of this {@link LambdaBus}.
      * As an event can be dispatched directly ({@link ThreadingMode#SYNC}) or in the {@link Thread} of
      * the {@link EventQueue} ({@link ThreadingMode#ASYNC}) this is the smallest possible {@link Set}.
      */
@@ -73,7 +75,7 @@ public class QueuedLambdaBus
 
     /**
      * Prepares a queuing threaded {@code EventDispatcher} instance.
-     * 
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
      *            when posting to the bus (unsupported modes used in
@@ -99,7 +101,7 @@ public class QueuedLambdaBus
 
     /**
      * Prepares a queuing threaded {@code LambdaBus} instance.
-     * 
+     *
      * @param eventQueue
      *            non-{@code null} {@link EventQueue} used to queue and dispatch events
      * @throws NullPointerException
@@ -113,7 +115,7 @@ public class QueuedLambdaBus
 
     /**
      * Prepares a queuing threaded {@code LambdaBus} instance.
-     * 
+     *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
      *            when posting to the bus (unsupported modes used in
@@ -165,12 +167,12 @@ public class QueuedLambdaBus
      * {@link ThreadingMode#SYNC}) or adds the event, its subscribed
      * {@link Consumer}s and the {@link ThreadingMode} to the internal {@link EventQueue} for
      * further processing.
-     * 
+     *
      * <p>
      * All parameters are non-{@code null} because the calling method has
      * checked them already.
      * </p>
-     * 
+     *
      * @param <T>
      *            type of posted event
      * @param event
@@ -196,7 +198,7 @@ public class QueuedLambdaBus
                     eventSubscriberCollection);
         } else {
             // for all other modes events are enqueued
-            enqueuNonNullEventForDispatching(
+            enqueueNonNullEventForDispatching(
                     event,
                     eventSubscriberCollection,
                     supportedThreadingMode);
@@ -206,12 +208,12 @@ public class QueuedLambdaBus
     /**
      * Adds event, its subscribed {@link Consumer}s and the
      * {@link ThreadingMode} to internal queue for further processing.
-     * 
+     *
      * <p>
      * All parameters are {@code null} because the calling method has checked
      * them already.
      * </p>
-     * 
+     *
      * @param <T>
      *            type of posted event
      * @param event
@@ -223,7 +225,7 @@ public class QueuedLambdaBus
      * @param supportedThreadingMode
      *            how should the event be dispatched
      */
-    private <T> void enqueuNonNullEventForDispatching(
+    private <T> void enqueueNonNullEventForDispatching(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection,
             final ThreadingMode supportedThreadingMode
@@ -253,9 +255,9 @@ public class QueuedLambdaBus
      * <li>{@link ThreadingMode#ASYNC_PER_SUBSCRIBER}</li>
      * </ul>
      * might be supported.
-     * 
+     *
      * @param eventQueue
-     *            {@link EventQueue} used to calculated the unified {@link Set} of
+     *            {@link EventQueue} used to calculate the unified {@link Set} of
      *            {@link ThreadingMode}s
      * @return {@link Set} of {@link ThreadingMode}
      */

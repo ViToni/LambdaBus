@@ -41,7 +41,7 @@ import org.kromo.lambdabus.LambdaBusContract;
 /**
  * Extends the behavioral contract of the {@link LambdaBus} by extending
  * {@link AbstractLambdaBus} with custom tests. This class should be extended
- * for tests of sub-classes of {@link AbstractLambdaBus}
+ * for tests of subclasses of {@link AbstractLambdaBus}
  *
  * @param <LambdaBusType>
  *            type to test which extends the {@link AbstractLambdaBus} class
@@ -68,7 +68,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
 
             for (int i = 0; i < TINY_EVENT_COUNT; i++) {
                 assertEquals(i, atomicCounter.get());
-                createEventPostAndWaitforDispatchingToComplete(
+                createEventPostAndWaitForDispatchingToComplete(
                         lb,
                         postMethod,
                         0,
@@ -92,7 +92,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
 
             for (int i = 0; i < TINY_EVENT_COUNT; i++) {
                 assertEquals(0, atomicCounter.get());
-                createEventPostAndWaitforDispatchingToComplete(
+                createEventPostAndWaitForDispatchingToComplete(
                         lb,
                         postMethod,
                         0,
@@ -123,7 +123,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
             lb.setRunnableForNullEvent(exceptionThrowingNullEventRunnable);
             assertTrue(lb.hasRunnableForNullEvent(), "Must have a Runnable for null events");
 
-            // expected that the exception of the NullEventRunnable is not propagated
+            // expected that the exception thrown by the NullEventRunnable is not propagated
             lb.post(null);
 
             assertTimeoutPreemptively(

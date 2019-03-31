@@ -25,7 +25,7 @@ import java.util.Objects;
  * A generic wrapper for events for which no subscriber could be found.
  *
  * <p>
- * Events without subscriber can be detected by subscribing to
+ * Events without any subscriber can be detected by subscribing to
  * {@link DeadEvent}s. Such a subscriber could be used to log otherwise lost
  * events.
  * </p>
@@ -36,7 +36,7 @@ import java.util.Objects;
 public final class DeadEvent {
 
     /**
-     * The object for which no subscriber could be found.
+     * The object for which no subscribers could be found.
      * <p>
      * Since the member is final it is made public instead of using a getter.
      * </p>

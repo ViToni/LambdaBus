@@ -49,7 +49,7 @@ public final class QueuedEvent<T> {
      * @param event
      *            which has been posted to the bus
      * @param eventSubscriberCollection
-     *            {@link Collection} of subscriber the event will be dispatched to
+     *            {@link Collection} of subscribers the event will be dispatched to
      * @param threadingMode
      *            how should the event be dispatched
      */

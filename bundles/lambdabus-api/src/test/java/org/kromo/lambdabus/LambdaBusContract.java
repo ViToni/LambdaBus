@@ -67,7 +67,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
 
     /**
-     * Number of threads to use for multi-threaded dispatching
+     * Number of threads to use for multithreaded dispatching
      */
     protected static final int THREAD_COUNT = 61;
 
@@ -208,12 +208,12 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * Checks that the {@link LambdaBus} implementation has a custom toString() method.
      */
     @Test
-    @DisplayName("LambdaBus.toString() is overriden")
+    @DisplayName("LambdaBus.toString() is overridden")
     public void toStringIsOverridden() {
         try (final LambdaBus lb = createLambdaBus()) {
             final String customToString = lb.toString();
 
-            assertFalse(customToString.startsWith("java.lang.Object@"), "No costum toString() method");
+            assertFalse(customToString.startsWith("java.lang.Object@"), "No custom toString() method");
         }
     }
 
@@ -251,7 +251,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Test that subscriber can be added to the bus without exceptions.
+     * Test that subscribers can be added to the bus without exceptions.
      */
     @Test
     @DisplayName("Regular LambdaBus.subscribe() does not throw exceptions")
@@ -513,7 +513,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Test that unsubscribing multiple times via {@link Subscription#close()} is side-effect free.
+     * Test that unsubscribing multiple times via {@link Subscription#close()} is side effect free.
      */
     @Test
     @DisplayName("Unsubscribing via Subscription.close() is side-effect free and can be done multiple times")
@@ -572,7 +572,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Test closing the event bus removes subscriber.
+     * Test closing the event bus removes subscribers.
      */
     @Test
     @DisplayName("LambdaBus.close() unsubscribes all subscribed handlers")
@@ -616,7 +616,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             lb.close();
         }
 
-        // now all subscriber should be gone
+        // now all subscribers should be gone
         assertNoSubscriber(lb);
 
         for (final Subscription subscription : subscriptions) {
@@ -654,7 +654,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     //##########################################################################
     // Tests for LambdaBus.post(event) and LambdaBus.post(event, ThreadingMode).
     // These tests are parameterized with an abstraction of the posting methods
-    // so that LamdaBus.post(event) and LamdaBus.post(event, ThreadingMode) can
+    // so that LambdaBus.post(event) and LambdaBus.post(event, ThreadingMode) can
     // be tested with one test case.
     //##########################################################################
 
@@ -671,9 +671,9 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
-    @ParameterizedTest(name = "{1} without subscriber does not throw exceptions")
+    @ParameterizedTest(name = "{1} without subscribers does not throw exceptions")
     @MethodSource("getPostMethodsWithNames")
-    @DisplayName("LambdaBus.post(...) without subscriber does not throw exceptions")
+    @DisplayName("LambdaBus.post(...) without subscribers does not throw exceptions")
     public void postWithoutSubscribersDoesNotThrowExceptions(
             final BiConsumer<LambdaBus, Object> postMethod,
             final String nameOnlyUsedForUnitTestName
@@ -681,11 +681,11 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
         final int subscriberCount = 0;
         try (final LambdaBus lb = createLambdaBus()) {
 
-            /**
-             * Create events and wait for all events to be dispatched (or rather handled since there
-             * is no subscriber)
+            /*
+              Create events and wait for all events to be dispatched (or rather handled since there
+              is no subscriber)
              */
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_A_COUNT,
@@ -707,9 +707,9 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
-    @ParameterizedTest(name = "{1} with subscriber does not throw exceptions")
+    @ParameterizedTest(name = "{1} with subscribers does not throw exceptions")
     @MethodSource("getPostMethodsWithNames")
-    @DisplayName("LambdaBus.post(...) with subscriber does not throw excecption")
+    @DisplayName("LambdaBus.post(...) with subscribers does not throw exception")
     public void postWithSubscriberDoesNotThrowExceptions(
             final BiConsumer<LambdaBus, Object> postMethod,
             final String nameOnlyUsedForUnitTestName
@@ -725,7 +725,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
                 }
             );
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_A_COUNT,
@@ -737,7 +737,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Tests that if subscriber throw exceptions during event dispatching the other subscriber will
+     * Tests that if subscribers throw exceptions during event dispatching the other subscribers will
      * still see the event.
      *
      * @param postMethod
@@ -749,9 +749,9 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
-    @ParameterizedTest(name = "{1}: Subscribed handler gets called even if other subscriber for same event throw exceptions")
+    @ParameterizedTest(name = "{1}: Subscribed handler gets called even if other subscribers for same event throw exceptions")
     @MethodSource("getPostMethodsWithNames")
-    @DisplayName("Subscribed handler gets called even if other subscriber for same event throw exceptions")
+    @DisplayName("Subscribed handler gets called even if other subscribers for same event throw exceptions")
     public void subscribedHandlerGetsCalledEvenIfOtherHandlerForSameEventThrowExceptions(
             final BiConsumer<LambdaBus, Object> postMethod,
             final String nameOnlyUsedForUnitTestName
@@ -796,13 +796,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
                     EXCEPTION_THROWING_SUBSCRIBER_COUNT + 1;
 
             // post A events and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberCount,
                     A::new);
 
-            // only one event was published but we registered the same handler
+            // only one event was published, but we registered the same handler
             // EXCEPTION_THROWING_SUBSCRIBER_COUNT times
             assertEquals(EXCEPTION_THROWING_SUBSCRIBER_COUNT, aExceptionCounter.get());
             assertEquals(EXCEPTION_THROWING_SUBSCRIBER_COUNT, a1InterfaceExceptionCounter.get());
@@ -815,7 +815,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Tests that subscriber which were subscribed by class can receive events.
+     * Tests that subscribers which were subscribed by class can receive events.
      *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
@@ -861,7 +861,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             lb.subscribe(C.class, this::handleC1Interface);
             final int subscriberCountForTypeC = 2;
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_A_COUNT,
@@ -880,7 +880,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleC_counter.get());
             assertEquals(0, handleC1Interface_counter.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_B_COUNT,
@@ -899,7 +899,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleC_counter.get());
             assertEquals(0, handleC1Interface_counter.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_C_COUNT,
@@ -921,7 +921,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Tests that subscriber which were subscribed by interface can receive events.
+     * Tests that subscribers which were subscribed by interface can receive events.
      *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
@@ -962,7 +962,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             lb.subscribe(C1Interface.class, this::handleC1Interface);
             final int subscriberCountOfTypeC1Interface = 1;
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_A_COUNT,
@@ -979,7 +979,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleC_counter.get());
             assertEquals(0, handleC1Interface_counter.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_B_COUNT,
@@ -997,7 +997,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleC_counter.get());
             assertEquals(0, handleC1Interface_counter.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_C_COUNT,
@@ -1019,7 +1019,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Tests that subscriber which were subscribed by class can receive events.
+     * Tests that subscribers which were subscribed by class can receive events.
      *
      * @param postMethod
      *            abstraction of {@link LambdaBus#post(Object)} and
@@ -1030,9 +1030,9 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * @param nameOnlyUsedForUnitTestName
      *            used to have descriptive test names
      */
-    @ParameterizedTest(name = "{1} dispatches to DeadEvent handler when no subscriber found")
+    @ParameterizedTest(name = "{1} dispatches to DeadEvent handler when no subscribers found")
     @MethodSource("getPostMethodsWithNames")
-    @DisplayName("LambdaBus.post(...) dispatches to DeadEvent handler when no subscriber found")
+    @DisplayName("LambdaBus.post(...) dispatches to DeadEvent handler when no subscribers found")
     public void postDispatchesToDeadEventHandlerWhenNoSubscriberFound(
             final BiConsumer<LambdaBus, Object> postMethod,
             final String nameOnlyUsedForUnitTestName
@@ -1070,7 +1070,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
                 }
             );
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_A_COUNT,
@@ -1080,7 +1080,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             // all A events dispatched
             assertEquals(EVENTS_OF_TYPE_A_COUNT, deadEventCount.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_B_COUNT,
@@ -1092,7 +1092,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
                 EVENTS_OF_TYPE_A_COUNT +
                 EVENTS_OF_TYPE_B_COUNT, deadEventCount.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_C_COUNT,
@@ -1131,7 +1131,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleC_counter.get());
             assertEquals(0, handleC1Interface_counter.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_A_COUNT,
@@ -1159,7 +1159,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleC_counter.get());
             assertEquals(0, handleC1Interface_counter.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_B_COUNT,
@@ -1187,7 +1187,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleC_counter.get());
             assertEquals(0, handleC1Interface_counter.get());
 
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_C_COUNT,
@@ -1232,13 +1232,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     @ParameterizedTest(name = "{1} after LambdaBus.close() throws IllegalStateException")
     @MethodSource("getPostMethodsWithNames")
     @DisplayName("LambdaBus.post(...) after LambdaBus.close() throws IllegalStateException")
-    public void postinhAafterCloseThrowsIllegalStateException(
+    public void postingAfterCloseThrowsIllegalStateException(
             final BiConsumer<LambdaBus, Object> postMethod,
             final String nameOnlyUsedForUnitTestName
     ) {
         final LambdaBus lb = createLambdaBus();
         try {
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     0,
@@ -1283,13 +1283,13 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final int initialSubscriberCountForTypeA = 0;
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     initialSubscriberCountForTypeA,
                     A::new);
 
-            // nothing has changed because there are no subscriber
+            // nothing has changed because there are no subscribers
             assertEquals(0, handleA_counter.get());
             assertEquals(0, handleA1Interface_counter.get());
 
@@ -1301,7 +1301,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final int subscriberCountForTypeA = 1;
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberCountForTypeA,
@@ -1318,7 +1318,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final int subscriberCountAfterCloseForTypeA = 0;
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberCountAfterCloseForTypeA,
@@ -1334,7 +1334,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertNoSubscriber(lb, B.class, C.class);
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberCountForTypeA,
@@ -1351,7 +1351,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertNoSubscriber(lb, A.class, B.class, C.class);
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberCountAfterCloseForTypeA,
@@ -1401,7 +1401,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final int subscriberForTypeA = 1;
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberForTypeA,
@@ -1412,12 +1412,12 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(0, handleA1Interface_counter.get());
 
             // subscribe handleA1Interface for A events
-            final Subscription handleA1nterfaceSubscription = lb.subscribe(A.class, this::handleA1Interface);
+            final Subscription handleA1InterfaceSubscription = lb.subscribe(A.class, this::handleA1Interface);
             assertHasSubscriber(lb, A.class);
             assertNoSubscriber(lb, B.class, C.class);
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberForTypeA + subscriberForTypeA,
@@ -1434,7 +1434,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertNoSubscriber(lb, B.class, C.class);
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     subscriberForTypeA,
@@ -1446,11 +1446,11 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertEquals(2, handleA1Interface_counter.get());
 
             // remove handleA1Interface subscriber
-            handleA1nterfaceSubscription.close();
+            handleA1InterfaceSubscription.close();
             assertNoSubscriber(lb, A.class, B.class, C.class);
 
             // post event and wait until dispatched/handled
-            createEventPostAndWaitforDispatchingToComplete(
+            createEventPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     0,
@@ -1498,7 +1498,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final int subscriberForTypeA1Interface = 1;
 
             // post A events and wait until dispatched/handled
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                 lb,
                 postMethod,
                 EVENTS_OF_TYPE_A_COUNT,
@@ -1519,7 +1519,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final int subscriberForTypeA = 1;
 
             // post A events and wait until dispatched/handled
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     EVENTS_OF_TYPE_A_COUNT,
@@ -1537,14 +1537,14 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertNoSubscriber(lb, A.class, B.class, C.class);
 
             // post A events and wait until dispatched/handled
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     EVENTS_OF_TYPE_A_COUNT,
                     subscriberForTypeA1Interface,
                     A::new);
 
-            // event count for handleA unchanged, because handerlA was unsubscribed before posting
+            // event count for handleA unchanged, because handleA was unsubscribed before posting
             assertEquals(EVENTS_OF_TYPE_A_COUNT, handleA_counter.get());
             // events were dispatched to "handlerAiInterface" handler since the class handler "handleA"
             // was unsubscribed and does not override the interface handler anymore
@@ -1557,7 +1557,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertNoSubscriber(lb, B.class, C.class);
 
             // post A events and wait until dispatched/handled
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     EVENTS_OF_TYPE_A_COUNT,
@@ -1587,7 +1587,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     @ParameterizedTest(name = "{1}: Handler subscribed by interface overrides handler subscribed by interface in order of appearance")
     @MethodSource("getPostMethodsWithNames")
     @DisplayName("Handler subscribed by interface overrides handler subscribed by interface in order of appearance")
-    public void handlerSubscribedByInterfaceOverridesHandlerSubscribedByInterfaceInOrderOfAppearence(
+    public void handlerSubscribedByInterfaceOverridesHandlerSubscribedByInterfaceInOrderOfAppearance(
             final BiConsumer<LambdaBus, Object> postMethod,
             final String nameOnlyUsedForUnitTestName
     ) {
@@ -1616,7 +1616,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final int subscriberForTypeA2Interface = 1;
 
             // post A events and wait until dispatched/handled
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     EVENTS_OF_TYPE_A_COUNT,
@@ -1635,7 +1635,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertNoSubscriber(lb, A.class);
 
             // post A events and wait until dispatched/handled
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     EVENTS_OF_TYPE_A_COUNT,
@@ -1654,7 +1654,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             assertHasSubscriber(lb, A2Interface.class);
 
             // post A events and wait until dispatched/handled
-            createEventsPostAndWaitforDispatchingToComplete(
+            createEventsPostAndWaitForDispatchingToComplete(
                     lb,
                     postMethod,
                     EVENTS_OF_TYPE_A_COUNT,
@@ -1713,11 +1713,11 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * @param eventCount
      *            number of events to create / post
      * @param subscriberCount
-     *            number of subscriber for events of type {@code T} (supplied by the {@code eventProvider})
+     *            number of subscribers for events of type {@code T} (supplied by the {@code eventProvider})
      * @param eventProvider
      *            supplier of events of type {@code T}
      */
-    protected <T> void createEventsPostAndWaitforDispatchingToComplete(
+    protected <T> void createEventsPostAndWaitForDispatchingToComplete(
             final LambdaBus lb,
             final BiConsumer<LambdaBus, Object> postMethod,
             final int eventCount,
@@ -1752,11 +1752,11 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
      * @param postMethod
      *            {@link BiConsumer} doing the posting
      * @param subscriberCount
-     *            number of subscriber for events of type {@code T} (supplied by the {@code eventProvider})
+     *            number of subscribers for events of type {@code T} (supplied by the {@code eventProvider})
      * @param eventProvider
      *            supplier of events of type {@code T}
      */
-    protected static <T> void createEventPostAndWaitforDispatchingToComplete(
+    protected static <T> void createEventPostAndWaitForDispatchingToComplete(
             final LambdaBus lb,
             final BiConsumer<LambdaBus, Object> postMethod,
             final int subscriberCount,
@@ -1786,7 +1786,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
             final Class<?>... clazzes
     ) {
         for (final Class<?> clazz : clazzes) {
-            assertTrue(lb.hasSubscriberForClass(clazz), "Has subscriber for class: " + clazz);
+            assertTrue(lb.hasSubscriberForClass(clazz), "Has subscriber(s) for class: " + clazz);
         }
     }
 
@@ -1809,7 +1809,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Asserts that the supplied {@link LambdaBus} has no subscriber, for the
+     * Asserts that the supplied {@link LambdaBus} has no subscribers, for the
      * common classes /interfaces used for testing.
      *
      * @param lb
@@ -1859,7 +1859,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
         implements A1Interface, A2Interface {
         private final CountDownLatch doneLatch;
 
-        // constructor must be public to be visible for sub-classes (maybe in different packages)
+        // constructor must be public to be visible for subclasses (maybe in different packages)
         public A(final CountDownLatch doneLatch) {
             this.doneLatch = Objects.requireNonNull(doneLatch, "'doneLatch' must not be null");
         }
@@ -1924,7 +1924,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     //##########################################################################
-    // Handler methods to be used as subscriber for events.
+    // Handler methods to be used as subscribers for events.
     //##########################################################################
 
     /**
@@ -1942,7 +1942,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     }
 
     /**
-     * Handler for events of type {@link A}. Used to test if other subscriber
+     * Handler for events of type {@link A}. Used to test if other subscribers
      * for the same event are called if one throws an exception.<br>
      * Increments the {@link #aExceptionCounter}.
      *
@@ -1978,7 +1978,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
 
     /**
      * Handler for events of type {@link A1Interface}. Used to test if other
-     * subscriber for the same event are called if one throws an exception.<br>
+     * subscribers for the same event are called if one throws an exception.<br>
      * Increments the {@link #a1InterfaceExceptionCounter}.
      *
      * @param a1Interface

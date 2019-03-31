@@ -38,8 +38,8 @@ import org.kromo.lambdabus.queue.impl.SharableEventQueue;
 import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
- * This class provides non-blocking posting and multi-threaded dispatching.<br>
- * Events are put into a queue and dispatched in a different tread.<br>
+ * This class provides non-blocking posting and multithreaded dispatching.<br>
+ * Events are put into a queue and dispatched in a different thread.<br>
  * All {@link ThreadingMode}s are supported. Events posted as
  * {@link ThreadingMode#SYNC} are dispatched directly, other events are queued
  * and dispatched based on requested (or default) {@link ThreadingMode}.
@@ -192,7 +192,7 @@ public class QueuedEventDispatcher
                     eventSubscriberCollection);
         } else {
             // for all other modes events are enqueued
-            enqueuEventForDispatching(
+            enqueueEventForDispatching(
                     event,
                     eventSubscriberCollection,
                     supportedThreadingMode);
@@ -216,7 +216,7 @@ public class QueuedEventDispatcher
      * @param supportedThreadingMode
      *            how the event should be dispatched
      */
-    protected <T> void enqueuEventForDispatching(
+    protected <T> void enqueueEventForDispatching(
             final T event,
             final Collection<Consumer<T>> eventSubscriberCollection,
             final ThreadingMode supportedThreadingMode
@@ -244,7 +244,7 @@ public class QueuedEventDispatcher
      * might be supported.
      *
      * @param eventQueue
-     *            {@link EventQueue} used to calculated the unified {@link Set} of
+     *            {@link EventQueue} used to calculate the unified {@link Set} of
      *            {@link ThreadingMode}s
      * @return {@link Set} of {@link ThreadingMode}
      */

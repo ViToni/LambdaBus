@@ -108,6 +108,7 @@ public class QueuedLambdaBusTest
         }
     }
 
+    @Test
     @DisplayName("Constructor with null EventQueue throws NullPointerException")
     public void constructorNullEventQueueThrowsNPE() {
         final EventQueue nullEventQueue = null;

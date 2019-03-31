@@ -28,7 +28,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
  * Implementation of {@link EventDispatcher} interface which dispatches events
- * synchronously to subscriber (in the same {@link Thread} as the publisher of
+ * synchronously to subscribers (in the same {@link Thread} as the publisher of
  * the event).
  *
  * @author Victor Toni - initial implementation

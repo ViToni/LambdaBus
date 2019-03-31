@@ -23,7 +23,7 @@ package org.kromo.lambdabus;
  * The {@link Subscription} interface is used to remove the {@link Exception}
  * from the {@link AutoCloseable#close()} method.<br>
  * The {@link #close()} method does not do any IO operations and is used as a
- * simple was to unsubscribe from the {@link LambdaBus}.
+ * simple way to unsubscribe from the {@link LambdaBus}.
  *
  * @author Victor Toni - initial API
  *

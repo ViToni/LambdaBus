@@ -28,7 +28,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import org.kromo.lambdabus.ThreadingMode;;
+import org.kromo.lambdabus.ThreadingMode;
 
 /**
  * Test for the {@link DispatchingLambdaBus}
@@ -41,12 +41,12 @@ public class DispatchingLambdaBusTest {
     @Test
     @DisplayName("Constructor with null EventDispatcher throws NullPointerException")
     public void constructor_with_null_EventDispatcher_throws_NPE() {
-        final EventDispatcher eventDispatcher = null;
+        final EventDispatcher nullEventDispatcher = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
                     try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
-                            eventDispatcher)) {}
+                            nullEventDispatcher)) {}
                 }
         );
     }

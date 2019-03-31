@@ -80,7 +80,7 @@ public class ThreadedLambdaBus
             final ThreadingMode defaultThreadingMode
     ) {
         this( //
-                // check the THreadingMode before creating an ExecutorService
+                // check the ThreadingMode before creating an ExecutorService
                 Objects.requireNonNull(defaultThreadingMode, "'defaultThreadingMode' must not be null"), //
                 new DaemonThreadPoolExecutor( //
                         new LinkedBlockingQueue<>() //

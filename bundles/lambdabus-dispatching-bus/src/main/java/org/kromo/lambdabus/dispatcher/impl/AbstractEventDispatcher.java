@@ -113,7 +113,7 @@ public abstract class AbstractEventDispatcher
 
         if (!copyOfSupportedThreadingModes.contains(defaultThreadingMode)) {
             throw new IllegalArgumentException("Default ThreadingMode " + defaultThreadingMode
-                    + " not conatined within supported ThreadingModes: " + copyOfSupportedThreadingModes);
+                    + " not contained within supported ThreadingModes: " + copyOfSupportedThreadingModes);
         }
 
         this.supportedThreadingModes = EnumSet.copyOf(copyOfSupportedThreadingModes);

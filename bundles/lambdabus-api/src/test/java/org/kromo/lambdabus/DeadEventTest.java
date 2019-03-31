@@ -37,12 +37,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DeadEventTest {
 
     @Test
-    public void construtor() {
+    public void constructor() {
         new DeadEvent(new Object());
     }
 
     @Test
-    public void construtorThrowsNPEOnNull() {
+    public void constructorThrowsNPEOnNull() {
         assertThrows(
                 NullPointerException.class,
                 () -> new DeadEvent(null));

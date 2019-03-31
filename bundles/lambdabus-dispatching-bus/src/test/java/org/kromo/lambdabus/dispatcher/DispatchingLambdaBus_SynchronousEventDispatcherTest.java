@@ -20,7 +20,7 @@
 package org.kromo.lambdabus.dispatcher;
 
 import org.kromo.lambdabus.dispatcher.impl.SynchronousEventDispatcher;
-import org.kromo.lambdabus.impl.AbstractLambdaBusContract;;
+import org.kromo.lambdabus.impl.AbstractLambdaBusContract;
 
 /*
  * Test for the {@link DispatchingLambdaBus} using the

@@ -30,7 +30,7 @@ import org.kromo.lambdabus.dispatcher.EventDispatcher;
 import org.kromo.lambdabus.dispatcher.impl.AbstractEventDispatcher;
 
 /**
- * Base class providing functionality for implementing multi-threaded versions
+ * Base class providing functionality for implementing multithreaded versions
  * of the {@link EventDispatcher}.
  *
  * @author Victor Toni - initial implementation
@@ -46,8 +46,7 @@ public abstract class AbstractThreadedEventDispatcher
     private final String toString;
 
     /**
-     * Prepares a threaded {@code EventDispatcher} instance for use by
-     * sub-classes.
+     * Prepares a threaded {@code EventDispatcher} instance for use by subclasses.
      *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
@@ -95,10 +94,10 @@ public abstract class AbstractThreadedEventDispatcher
 
     /**
      * This method will be executed before the {@link ExecutorService} shutdown is initiated.
-     * Might be overriden to customize behavior.
+     * Might be overridden to customize behavior.
      */
     protected void preExecutorShutdownHook() {
-        // nothing to do here, might be overriden by sub-classes
+        // nothing to do here, might be overridden by subclasses
     }
 
     /**
