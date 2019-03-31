@@ -53,6 +53,8 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 public class DaemonThreadFactoryTest {
 
+    protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
+
     @Test
     @DisplayName("Constructor with factoryName")
     public void constructor_factoryName() {
@@ -244,7 +246,7 @@ public class DaemonThreadFactoryTest {
 
         testingThread.start();
 
-        assertTimeout(Duration.ofMillis(500), (Executable) doneLatch::await);
+        assertTimeout(DEFAULT_TIMEOUT, (Executable) doneLatch::await);
 
         if (null != throwableRef.get()) {
             throw throwableRef.get();

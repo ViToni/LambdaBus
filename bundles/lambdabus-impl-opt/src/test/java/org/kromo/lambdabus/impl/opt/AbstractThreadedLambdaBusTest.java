@@ -29,6 +29,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -63,7 +64,7 @@ public class AbstractThreadedLambdaBusTest {
     private static final int ZERO = 0;
     private static final int ONE = 1;
 
-    protected static final int DEFAULT_TIMEOUT_MILLIS = 500;
+    protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
 
     @ParameterizedTest(name = "Constructor - default ThreadingMode.{0} and EnumSet.of(ThreadingMode.{0})")
     @EnumSource(ThreadingMode.class)
@@ -219,8 +220,8 @@ public class AbstractThreadedLambdaBusTest {
             try {
                 assertFalse(lb.isClosed(), "LambdaBus must not be closed yet");
                 assertFalse(executorServiceSpy.isShutdown(), "ExecutorService must not be shutdown yet");
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT_MILLIS).times(ZERO)).shutdown();
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT_MILLIS).times(ZERO)).shutdownNow();
+                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdown();
+                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdownNow();
             } finally {
                 lb.close();
             }
@@ -261,8 +262,8 @@ public class AbstractThreadedLambdaBusTest {
                 assertFalse(executorServiceSpy.isShutdown(), "ExecutorService must not be shutdown");
                 assertFalse(nonTerminatingExecutorService.isShutdown(), "Decorated ExecutorService must not be shutdown");
 
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT_MILLIS).times(ZERO)).shutdown();
-                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT_MILLIS).times(ZERO)).shutdownNow();
+                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdown();
+                verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdownNow();
             } finally {
                 lb.close();
             }
@@ -272,8 +273,8 @@ public class AbstractThreadedLambdaBusTest {
             assertFalse(executorServiceSpy.isShutdown(), "ExecutorService must not be shutdown");
             assertTrue(nonTerminatingExecutorService.isShutdown(), "Decorated ExecutorService must be shutdown");
 
-            verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT_MILLIS).times(ZERO)).shutdown();
-            verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT_MILLIS).times(ZERO)).shutdownNow();
+            verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdown();
+            verify(executorServiceSpy, timeout(DEFAULT_TIMEOUT.toMillis()).times(ZERO)).shutdownNow();
         } finally {
             // close real ExecutorService
             executorService.shutdownNow();

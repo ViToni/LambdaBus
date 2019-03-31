@@ -19,11 +19,11 @@
  *******************************************************************************/
 package org.kromo.lambdabus.util;
 
-import static java.time.Duration.ofMillis;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -61,7 +61,7 @@ public final class ThreadingAssertions {
     /**
      * Timeout used to wait for published events to complete
      */
-    private static final int DEFAULT_TIMEOUT_MILLIS = 500;
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
 
     private static final AtomicInteger INSTANCE_COUNT = new AtomicInteger();
 
@@ -111,7 +111,7 @@ public final class ThreadingAssertions {
              */
             final Executable result = doneLatch::await;
             assertTimeout(
-                    ofMillis(DEFAULT_TIMEOUT_MILLIS),
+                    DEFAULT_TIMEOUT,
                     result
             );
         }
@@ -192,7 +192,7 @@ public final class ThreadingAssertions {
              */
             final Executable result = doneLatch::await;
             assertTimeout(
-                    ofMillis(DEFAULT_TIMEOUT_MILLIS),
+                    DEFAULT_TIMEOUT,
                     result
             );
 

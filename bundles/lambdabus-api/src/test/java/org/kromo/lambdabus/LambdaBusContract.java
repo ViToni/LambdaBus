@@ -19,7 +19,6 @@
  *******************************************************************************/
 package org.kromo.lambdabus;
 
-import static java.time.Duration.ofMillis;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +68,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Timeout used to wait for published events to complete
      */
-    protected static final int DEFAULT_TIMEOUT_MILLIS = 500;
+    protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
 
     /**
      * Number of threads to use for multi-threaded dispatching
@@ -1746,7 +1746,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
         final Executable executable = doneLatch::await;
 
         // wait until dispatched/handled
-        assertTimeoutPreemptively(ofMillis(DEFAULT_TIMEOUT_MILLIS), executable);
+        assertTimeoutPreemptively(DEFAULT_TIMEOUT, executable);
     }
 
     /**
@@ -1776,7 +1776,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
         final Executable executable = doneLatch::await;
 
         // post event and wait until dispatched/handled
-        assertTimeoutPreemptively(ofMillis(DEFAULT_TIMEOUT_MILLIS), executable);
+        assertTimeoutPreemptively(DEFAULT_TIMEOUT, executable);
     }
 
     /**

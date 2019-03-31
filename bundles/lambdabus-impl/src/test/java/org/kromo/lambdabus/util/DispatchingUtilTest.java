@@ -19,7 +19,6 @@
  *******************************************************************************/
 package org.kromo.lambdabus.util;
 
-import static java.time.Duration.ofMillis;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,6 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -91,9 +91,9 @@ public class DispatchingUtilTest {
     private static final int DEFAULT_EVENT_COUNT = 617;
     private static final int DEFAULT_SUBSCRIBER_COUNT = 17;
 
-    private static final int BLOCKING_WAIT_TIME_IN_MS = 250;
+    private static final Duration BLOCKING_WAIT_TIME = Duration.ofMillis(250);
 
-    private static final int MAX_WAIT_TIME_IN_MS = 4 * BLOCKING_WAIT_TIME_IN_MS;
+    private static final Duration MAX_WAIT_TIME = BLOCKING_WAIT_TIME.multipliedBy(4);
 
     private static final int START_THREAD_COUNT = 3 * DEFAULT_SUBSCRIBER_COUNT;
 
@@ -365,7 +365,7 @@ public class DispatchingUtilTest {
                 if (ZERO == exceptionThrowingSubscriberCount) {
                     verifyNoMoreInteractions(spyLogger);
                 } else {
-                    verify(spyLogger, timeout(MAX_WAIT_TIME_IN_MS).times(exceptionThrowingSubscriberCount))
+                    verify(spyLogger, timeout(MAX_WAIT_TIME.toMillis()).times(exceptionThrowingSubscriberCount))
                         .warn(
                                 anyString(),
                                 eq(event),
@@ -479,7 +479,7 @@ public class DispatchingUtilTest {
 
             // wait for dispatching of the first event to have started
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     arriveAndAwaitAdvance,
                     arrivedPartiesSupplier);
 
@@ -520,13 +520,13 @@ public class DispatchingUtilTest {
 
             // release the blocking phaser
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     arriveAndAwaitAdvance,
                     arrivedPartiesSupplier);
 
             // wait for the first event to have completed
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     arriveAndAwaitAdvance,
                     arrivedPartiesSupplier);
 
@@ -688,7 +688,7 @@ public class DispatchingUtilTest {
 
             // wait for dispatching of the event to have completed
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     (Executable) event.dispatchedLatch::await,
                     "event.dispatchedLatch value: " + event.dispatchedLatch.getCount());
 
@@ -839,7 +839,7 @@ public class DispatchingUtilTest {
 
             // wait for dispatching of the first event to have started
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     arriveAndAwaitAdvance,
                     arrivedPartiesSupplier);
 
@@ -866,13 +866,13 @@ public class DispatchingUtilTest {
 
             // release the blocking phase
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     arriveAndAwaitAdvance,
                     arrivedPartiesSupplier);
 
             // wait for the first event to have completed
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     arriveAndAwaitAdvance,
                     arrivedPartiesSupplier);
 
@@ -1064,7 +1064,7 @@ public class DispatchingUtilTest {
 
             // wait for dispatching of the event to have completed
             assertTimeoutPreemptively(
-                    ofMillis(MAX_WAIT_TIME_IN_MS),
+                    MAX_WAIT_TIME,
                     (Executable) event.dispatchedLatch::await,
                     "event.dispatchedLatch value: " + event.dispatchedLatch.getCount());
 
@@ -1074,7 +1074,7 @@ public class DispatchingUtilTest {
             if (testExceptionToo) {
                 // wait for dispatching of the event to have completed
                 assertTimeoutPreemptively(
-                        ofMillis(MAX_WAIT_TIME_IN_MS),
+                        MAX_WAIT_TIME,
                         (Executable) event.exceptionLatch::await,
                         "event.exceptionLatch value: " + event.exceptionLatch.getCount());
             }
@@ -1087,7 +1087,7 @@ public class DispatchingUtilTest {
 
             if(!useDefaultLogger) {
                 if (testExceptionToo) {
-                    verify(spyLogger, timeout(MAX_WAIT_TIME_IN_MS).times(exceptionThrowingSubscriberCount))
+                    verify(spyLogger, timeout(MAX_WAIT_TIME.toMillis()).times(exceptionThrowingSubscriberCount))
                         .warn(
                                 anyString(),
                                 eq(event),

@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
@@ -128,7 +127,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
             lb.post(null);
 
             assertTimeoutPreemptively(
-                    Duration.ofMillis(DEFAULT_TIMEOUT_MILLIS),
+                    DEFAULT_TIMEOUT,
                     (Executable) calledLatch::await);
 
             lb.unsetRunnableForNullEvent();

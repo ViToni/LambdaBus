@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -59,7 +60,7 @@ public class AbstractLambdaBusTest {
     /**
      * Timeout used to wait for published events to complete
      */
-    protected static final int DEFAULT_TIMEOUT_MILLIS = 500;
+    protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
 
     @Test
     @DisplayName("Default Constructor")

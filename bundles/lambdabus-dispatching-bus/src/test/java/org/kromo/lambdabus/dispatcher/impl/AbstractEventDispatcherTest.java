@@ -50,11 +50,6 @@ public class AbstractEventDispatcherTest extends
     protected static final int ONE = 1;
     protected static final int TWO = 2;
 
-    /**
-     * Timeout used to wait for published events to complete
-     */
-    protected static final int DEFAULT_TIMEOUT_MILLIS = 500;
-
     @Override
     protected AbstractEventDispatcher createEventDispatcher() {
         return new TestingAbstractEventDispatcher(ThreadingMode.SYNC);
