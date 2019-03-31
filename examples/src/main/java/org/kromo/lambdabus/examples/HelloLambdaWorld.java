@@ -24,9 +24,9 @@ public class HelloLambdaWorld {
         lb.post("Hello Old World.");
 
         /*
-         * Publish a "String" event via the method reference
-         * of the event bus. Using method references avoids
-         * needing to "know" about the event bus.
+         * Publishes a "String" event via the method reference
+         * of the event bus. The use of method references
+         * avoids the need to "know" the event bus.
          */
         postRef.accept("Hello Lambda World.");
 

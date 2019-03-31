@@ -6,21 +6,23 @@ Tiny event bus for Java using lambda expressions and method references.
 
 The LambdaBus defines the API of an event bus using class types as implicit topics for which `Consumer` can be subscribed.
 
-Java 8 provides lambda expressions and method references which can be used to create an abstraction for (nearly any) event bus and allows publishers and subscribers to be totally agnostic about the bus itself. Subscribers do not need to know about the bus at all, publishers can use a generic `Consumer` reference. This makes the code easy to write (and easy to change event bus implementations if the need should arise).
+Java 8 introduced lambda expressions and method references that can be used to create an abstraction for (almost any) event bus, allowing publishers and subscribers to be completely independent of the event bus itself.
+Subscribers do not need to have any knowledge of the event bus, the publisher can use a generic `Consumer` reference.
+This makes the code easy to write (and easy to change event bus implementations should the need arise).
 
-There is no need for annotations, classes using the event bus don't even have to know that an event bus exists only the wiring parts needs to know about it.
+There is no need for annotations, classes that use the event bus do not even need to know that an event bus exists, only the wiring parts need to know about it.
 
 ## "Hello World"
 
 ```java
 public class HelloWorld {
     public static void main(String[] args) {
-        final LambdaBus lb = ...;
+        final LambdaBus lb = ...
 
         /*
          * For every "String" event published to the bus
          * call System.out.println() with the String as
-         * parameter.
+         * argument.
          */
         lb.subscribe(String.class, System.out::println);
 
@@ -42,7 +44,7 @@ public class HelloLambdaWorld {
         /*
          * For every "String" event published to the bus
          * call System.out.println() with the String as
-         * parameter.
+         * argument.
          */
         lb.subscribe(String.class, System.out::println);
 
@@ -52,9 +54,9 @@ public class HelloLambdaWorld {
         lb.post("Hello Old World.");
 
         /*
-         * Publish a "String" event via the method reference
-         * of the event bus. Using method references
-         * avoids needing to "know" about the event bus.
+         * Publishes a "String" event via the method reference
+         * of the event bus. The use of method references
+         * avoids the need to "know" the event bus.
          */
         postRef.accept("Hello Lambda World.");
 
@@ -78,26 +80,33 @@ public class HelloLambdaWorld {
 ~$ mvn clean install
 ```
 
-The build will create the library jars and make result available in the folder `target/lib` and JavaDoc JARs in the folder `target/javadoc`.
+The build creates the library jars and makes result available in the `target/lib` folder and JavaDoc JARs in the `target/javadoc` folder.
 
 ```sh
 ~$ mvn site site:stage
 ```
 
-This build will create the documentation and test coverage and the result will be available in the folder `target/site`
+This build creates the documentation and test coverage and the result is provided in the `target/site` folder.
 
 ## Gotcha!
 
-Lambdas and method references are not objects! This has some serious implications as they don't have and don't support (as of Java 9) comparison or `equals()` / `hashCode()` as one expects from regular Objects.
+Lambdas and method references are not objects!
+The resulting far-reaching implications are that they do not support comparison using `equals()` / `hashCode()` as expected from regular objects.
 
-Means if an event handler should ever be unsubscribed from the event bus the reference returned by `subscribe()` has to be kept since this is the only reference that exists!
-Using Lambdas allows the `subscribe()` method to wrap the unsubscribe logic and return just a `Closable`, by closing it the registered handler is unsubscribed.
+This means that if an event handler is ever to be unsubscribed from the event bus, the reference returned by the `subscribe()` method must be kept, since it is the only reference that exists and there is no other way to identify this subscription!
+
+The use of lambdas allows the `subscribe()` method to wrap the unsubscribe logic and return only a `Closable`, the closing of which unsubscribes the registered handler.
 
 ## tl;dr
 
-While working on an embedded project it became apparent that using an event bus would make the code simpler and easier to test. Tests would be easier to write because one has only to take care of the input / output of a specific handler and the behavior of a specific handler could be tested stand alone.
+While working on an embedded project, it became evident that using an event bus would make the code simpler and easier to test.
+Tests would be easier to write because one would only have to worry about the input/output of a particular handler and the behavior of a particular handler could be tested independently.
 
-Existing event bus implementations are mostly parts of bigger projects. As size matters (especially for embedded) this seemed too much as a library dependency (also in the context of library updates which might be not related to event bus itself).
-Furthermore the use of annotations to mark handler methods and/or provide threading hints seemed to invasive because code has to be adapted to a specific event bus. As the consuming library should be mostly agnostic of the event bus used I looked for something different.
+Existing event bus implementations are usually part of larger projects.
+Since size matters (especially for embedded), this seemed to be too much of a library dependency (also related to library updates that might not be related to the event bus itself).
 
-Using Java 8 lambda expressions and method enables creating an event bus which subscribers and publishers can be totally agnostic of. There is no need for annotations, the classes using the event bus don't even have to know that an event bus exists only the wiring parts needs to know about it.
+In addition, using annotations to mark handler methods and/or provide threading hints seemed too invasive, since the code must be adapted to a specific event bus.
+Since the consuming library should be largely agnostic to the event bus used, I looked for something different.
+
+The use of lambda expressions and method references, available since Java 8, allows the creation of an event bus of which subscribers and publishers can be completely agnostic.
+There is no need for annotations, the classes using the event bus do not even need to know that an event bus exists, only the wiring parts need to know about it.
