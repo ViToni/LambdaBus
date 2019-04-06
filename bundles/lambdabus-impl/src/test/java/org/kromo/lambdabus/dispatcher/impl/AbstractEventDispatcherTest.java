@@ -156,17 +156,17 @@ public class AbstractEventDispatcherTest extends
         }
 
         @Override
-        protected <T> void internalDispatchEventToSubscriber(
+        protected <T> void internalDispatchEventToHandler(
                 final T event,
-                final Collection<Consumer<T>> eventSubscriberCollection,
+                final Collection<Consumer<T>> eventHandlerCollection,
                 final ThreadingMode supportedThreadingMode
         ) {
             assertNotNull(event);
-            assertNotNull(eventSubscriberCollection);
-            eventSubscriberCollection.forEach(Assertions::assertNotNull);
+            assertNotNull(eventHandlerCollection);
+            eventHandlerCollection.forEach(Assertions::assertNotNull);
             assertNotNull(supportedThreadingMode);
 
-            eventSubscriberCollection.forEach(consumer -> consumer.accept(event));
+            eventHandlerCollection.forEach(consumer -> consumer.accept(event));
         }
     }
 

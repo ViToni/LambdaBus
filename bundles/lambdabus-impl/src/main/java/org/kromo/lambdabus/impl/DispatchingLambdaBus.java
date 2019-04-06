@@ -55,7 +55,7 @@ public class DispatchingLambdaBus implements LambdaBus {
     /**
      * {@link Map} of event classes to {@link Collection} of subscribed {@link Consumer}s.
      */
-    private final Map<Class<?>, Collection<Consumer<?>>> subscriberCollectionMap;
+    private final Map<Class<?>, Collection<Consumer<?>>> eventHandlerCollectionMap;
 
     /**
      * {@link Collection} of all {@link Subscription}s so that they can be
@@ -99,7 +99,7 @@ public class DispatchingLambdaBus implements LambdaBus {
     public DispatchingLambdaBus(final EventDispatcher eventDispatcher) {
         this.eventDispatcher = Objects.requireNonNull(eventDispatcher, "'eventDispatcher' must not be null");
 
-        subscriberCollectionMap = createSubscriberCollectionMap();
+        eventHandlerCollectionMap = createEventHandlerCollectionMap();
 
         setDefaultRunnableForNullEventWithoutCheckingBusState();
     }
@@ -150,19 +150,19 @@ public class DispatchingLambdaBus implements LambdaBus {
     @Override
     public <T> Subscription subscribe(
             final Class<T> eventClass,
-            final Consumer<T> eventSubscriber
+            final Consumer<T> eventHandler
     ) {
         validateBusIsOpen(", subscriber not accepted anymore!");
 
         Objects.requireNonNull(eventClass, "'eventClass' must not be null");
-        Objects.requireNonNull(eventSubscriber, "'eventSubscriber' must not be null");
+        Objects.requireNonNull(eventHandler, "'eventHandler' must not be null");
 
-        final Collection<Consumer<T>> subscriberCollection = getSubscriberCollectionOrCreateIfAbsent(eventClass);
+        final Collection<Consumer<T>> eventHandlerCollection = getEventHandlerCollectionOrCreateIfAbsent(eventClass);
 
-        final Subscription subscription = addEventSubscriberAndReturnSubscription(
+        final Subscription subscription = addEventHandlerAndReturnSubscription(
                 eventClass,
-                eventSubscriber,
-                subscriberCollection);
+                eventHandler,
+                eventHandlerCollection);
 
         subscriptionCollection.add(subscription);
 
@@ -179,9 +179,9 @@ public class DispatchingLambdaBus implements LambdaBus {
         /*
          * We don't use getSubscriber() because we don't need any casting related to T.
          */
-        final Collection<Consumer<?>> subscriberCollection = subscriberCollectionMap.get(eventClass);
+        final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap.get(eventClass);
 
-        return containsSubscriber(subscriberCollection);
+        return containsHandler(eventHandlerCollection);
     }
 
     /**
@@ -324,18 +324,18 @@ public class DispatchingLambdaBus implements LambdaBus {
         tryToDispatchNonNullEvent(event, supportedThreadingMode);
     }
 
-    private <T> void dispatchNonNullEventToSubscriber(
+    private <T> void dispatchNonNullEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     ) {
         /*
         * Delegate to the dispatcher so that it can decide on its own which
         * dispatching strategy to use.
         */
-        eventDispatcher.dispatchEventToSubscriber(
+        eventDispatcher.dispatchEventToHandler(
                 event,
-                eventSubscriberCollection,
+                eventHandlerCollection,
                 supportedThreadingMode);
     }
 
@@ -344,32 +344,32 @@ public class DispatchingLambdaBus implements LambdaBus {
     //##########################################################################
 
     /**
-     * Adds an event subscriber ({@link Consumer}) to the internal registry and
-     * returns a {@link Subscription} which will unsubscribe the
-     * {@link Consumer} on {@code close()}.
+     * Adds an event handler ({@link Consumer}) as subscriber to the internal
+     * registry and returns a {@link Subscription} which will unsubscribe the
+     * {@link Consumer} on {@link Subscription#close()}.
      *
      * @param <T>
      *            event type the subscriber registered for
      * @param eventClass
      *            non-{@code null} {@link Class} of events the subscription is
      *            for
-     * @param eventSubscriber
+     * @param eventHandler
      *            non-{@code null} {@link Consumer} to subscribe
-     * @param subscriberCollection
+     * @param eventHandlerCollection
      *            non-{@code null} {@link Collection} of {@link Consumer} to
      *            which the subscriber should be added to
      * @return non-{@code null} {@link Subscription} which will unsubscribe the
      *         {@link Consumer} (remove it from the {@link Collection}
      */
-    protected <T> Subscription addEventSubscriberAndReturnSubscription(
+    protected <T> Subscription addEventHandlerAndReturnSubscription(
             final Class<T> eventClass,
-            final Consumer<T> eventSubscriber,
-            final Collection<Consumer<T>> subscriberCollection
+            final Consumer<T> eventHandler,
+            final Collection<Consumer<T>> eventHandlerCollection
     ) {
-        subscriberCollection.add(eventSubscriber);
+        eventHandlerCollection.add(eventHandler);
 
         final Runnable closeRunnable =
-                () -> subscriberCollection.remove(eventSubscriber);
+                () -> eventHandlerCollection.remove(eventHandler);
 
         return new SubscriptionImpl(eventClass, closeRunnable);
     }
@@ -384,7 +384,7 @@ public class DispatchingLambdaBus implements LambdaBus {
      *            the type of values in the map
      * @return {@link Map}, default class used is {@link ConcurrentHashMap}
      */
-    protected <K,V> Map<K,V> createSubscriberCollectionMap() {
+    protected <K,V> Map<K,V> createEventHandlerCollectionMap() {
         return new ConcurrentHashMap<>();
     }
 
@@ -400,7 +400,7 @@ public class DispatchingLambdaBus implements LambdaBus {
      * @return {@link Collection}, default class used is
      *         {@link CopyOnWriteArrayList}
      */
-    protected <T> Collection<T> createSubscriberCollection(final Class<?> clazz) {
+    protected <T> Collection<T> createEventHandlerCollection(final Class<?> clazz) {
         return new CopyOnWriteArrayList<>();
     }
 
@@ -408,9 +408,9 @@ public class DispatchingLambdaBus implements LambdaBus {
      * Returns an empty {@link Collection} of subscriber.
      * <p>
      * Implementation note:<br>
-     * The default implementation of {@link #createSubscriberCollection(Class)} returns an
+     * The default implementation of {@link #createEventHandlerCollection(Class)} returns an
      * instance of type {@link java.util.List}. When overriding
-     * {@link #createSubscriberCollection(Class)} it might be useful to override this method,
+     * {@link #createEventHandlerCollection(Class)} it might be useful to override this method,
      * too, so that both return a {@link Collection} of the same type.
      * </p>
      *
@@ -418,7 +418,7 @@ public class DispatchingLambdaBus implements LambdaBus {
      *            event type the subscriber registered for
      * @return {@link Collection}, default is {@link Collections#emptyList()}
      */
-    protected <T> Collection<Consumer<T>> emptySubscriberCollection() {
+    protected <T> Collection<Consumer<T>> emptyEventHandlerCollection() {
         return Collections.emptyList();
     }
 
@@ -427,7 +427,7 @@ public class DispatchingLambdaBus implements LambdaBus {
     //##########################################################################
 
     /**
-     * Closes all subscriber {@link Subscription}s.
+     * Closes all open {@link Subscription}s.
      */
     protected final synchronized void closeSubscriptions() {
         for (final Subscription subscription : subscriptionCollection) {
@@ -516,19 +516,19 @@ public class DispatchingLambdaBus implements LambdaBus {
         @SuppressWarnings("unchecked")
         final Class<T> eventClass = (Class<T>) event.getClass();
 
-        final Collection<Consumer<T>> eventSubscriberCollection = getNonNullEventSubscriberCollection(eventClass);
-        if (!eventSubscriberCollection.isEmpty()) {
-            dispatchNonNullEventToSubscriber(
+        final Collection<Consumer<T>> eventHandlerCollection = getNonNullEventHandlerCollection(eventClass);
+        if (!eventHandlerCollection.isEmpty()) {
+            dispatchNonNullEventToHandler(
                     event,
-                    eventSubscriberCollection,
+                    eventHandlerCollection,
                     supportedThreadingMode);
         } else {
-            final Collection<Consumer<DeadEvent>> deadEventSubscriberCollection = getNonNullEventSubscriberCollection(DeadEvent.class);
-            if (!deadEventSubscriberCollection.isEmpty()) {
+            final Collection<Consumer<DeadEvent>> deadEventHandlerCollection = getNonNullEventHandlerCollection(DeadEvent.class);
+            if (!deadEventHandlerCollection.isEmpty()) {
                 final DeadEvent deadEvent = new DeadEvent(event);
-                dispatchNonNullEventToSubscriber(
+                dispatchNonNullEventToHandler(
                         deadEvent,
-                        deadEventSubscriberCollection,
+                        deadEventHandlerCollection,
                         supportedThreadingMode);
             }
         }
@@ -543,22 +543,22 @@ public class DispatchingLambdaBus implements LambdaBus {
      *            class to get subscriber {@link Collection} for
      * @return found {@link Collection}, empty {@link Collection} otherwise
      */
-    protected final <T> Collection<Consumer<T>> getNonNullEventSubscriberCollection(
+    protected final <T> Collection<Consumer<T>> getNonNullEventHandlerCollection(
             final Class<T> eventClass
     ) {
-        final Collection<Consumer<?>> subscriberCollectionForClass = subscriberCollectionMap.get(eventClass);
-        if (containsSubscriber(subscriberCollectionForClass)) {
-            return castSubscriberCollection(subscriberCollectionForClass);
+        final Collection<Consumer<?>> eventHandlerCollectionForClass = eventHandlerCollectionMap.get(eventClass);
+        if (containsHandler(eventHandlerCollectionForClass)) {
+            return castEventHandlerCollection(eventHandlerCollectionForClass);
         }
 
-        // no subscriber found for class, searching directly implemented interfaces
-        final Collection<Consumer<?>> subscriberCollectionForDirectInterfaceOfClass = getSubscriberCollectionForDirectInterface(eventClass);
-        if (containsSubscriber(subscriberCollectionForDirectInterfaceOfClass)) {
-            return castSubscriberCollection(subscriberCollectionForDirectInterfaceOfClass);
+        // no event handler found for class, searching directly implemented interfaces
+        final Collection<Consumer<?>> eventHandlerCollectionForDirectInterfaceOfClass = getEventHandlerCollectionForDirectInterface(eventClass);
+        if (containsHandler(eventHandlerCollectionForDirectInterfaceOfClass)) {
+            return castEventHandlerCollection(eventHandlerCollectionForDirectInterfaceOfClass);
         }
 
-        // no subscriber found for class or directly implemented interfaces
-        return emptySubscriberCollection();
+        // no event handler found for class or directly implemented interfaces
+        return emptyEventHandlerCollection();
     }
 
     /**
@@ -566,21 +566,21 @@ public class DispatchingLambdaBus implements LambdaBus {
      *
      * @param <T>
      *            type of event
-     * @param subscriberCollection
-     *            collection of subscriber {@link Collection} to cast
+     * @param eventHandlerCollection
+     *            {@link Collection} of subscribed {@link Consumer}s to cast
      * @return cast {@link Collection}
      */
-    protected final <T> Collection<Consumer<T>> castSubscriberCollection(
-            final Collection<Consumer<?>> subscriberCollection
+    protected final <T> Collection<Consumer<T>> castEventHandlerCollection(
+            final Collection<Consumer<?>> eventHandlerCollection
     ) {
         /*
          * This is a dirty hack because otherwise we cannot cast directly to Collection<Consumer<T>>
          * even if we know for sure that the subscriber are for type T.
          */
         @SuppressWarnings("unchecked")
-        final Collection<Consumer<T>> typedSubscriberCollection = (Collection<Consumer<T>>) (Object) subscriberCollection;
+        final Collection<Consumer<T>> typedEventHandlerCollection = (Collection<Consumer<T>>) (Object) eventHandlerCollection;
 
-        return typedSubscriberCollection;
+        return typedEventHandlerCollection;
     }
 
     /**
@@ -590,14 +590,14 @@ public class DispatchingLambdaBus implements LambdaBus {
      *            to get subscriber {@link Collection} for
      * @return found {@link Collection}, empty {@link Collection} otherwise
      */
-    protected final Collection<Consumer<?>> getSubscriberCollectionForDirectInterface(
+    protected final Collection<Consumer<?>> getEventHandlerCollectionForDirectInterface(
             final Class<?> eventClass
     ) {
         for (final Class<?> eventInterface : eventClass.getInterfaces()) {
-            final Collection<Consumer<?>> subscriberCollection = subscriberCollectionMap.get(eventInterface);
+            final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap.get(eventInterface);
             // First match wins. Interfaces retain declaration order.
-            if (containsSubscriber(subscriberCollection)) {
-                return subscriberCollection;
+            if (containsHandler(eventHandlerCollection)) {
+                return eventHandlerCollection;
             }
         }
 
@@ -607,24 +607,24 @@ public class DispatchingLambdaBus implements LambdaBus {
     /**
      * Returns {@link Collection} of subscriber for a given {@link Class}.<br>
      * If no {@link Collection} exist a new instance will be created using
-     * {@link #createSubscriberCollection(Class)}.
+     * {@link #createEventHandlerCollection(Class)}.
      *
      * @param <T>
      *            type of event
      * @param eventClass
      *            class of event to get subscriber {@link Collection} for
      * @return found {@link Collection}, or a new {@link Collection} (created by
-     *         {@link #createSubscriberCollection(Class)}) otherwise
+     *         {@link #createEventHandlerCollection(Class)}) otherwise
      */
-    protected final <T> Collection<Consumer<T>> getSubscriberCollectionOrCreateIfAbsent(
+    protected final <T> Collection<Consumer<T>> getEventHandlerCollectionOrCreateIfAbsent(
             final Class<T> eventClass
     ) {
-        final Collection<Consumer<?>> subscriberCollection = subscriberCollectionMap.computeIfAbsent(
+        final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap.computeIfAbsent(
                 eventClass,
-                this::createSubscriberCollection
+                this::createEventHandlerCollection
         );
 
-        return castSubscriberCollection(subscriberCollection);
+        return castEventHandlerCollection(eventHandlerCollection);
     }
 
     /**
@@ -649,15 +649,15 @@ public class DispatchingLambdaBus implements LambdaBus {
     /**
      * Checks whether the {@link Collection} of subscriber contains any subscriber.
      *
-     * @param subscriberCollection
+     * @param eventHandlerCollection
      *            {@link Collection} of subscriber to check
      * @return {@code true} if {@link Collection} is not {@code null} and not empty,
      *         {@code false} otherwise
      */
-    protected static boolean containsSubscriber(
-            final Collection<Consumer<?>> subscriberCollection
+    protected static boolean containsHandler(
+            final Collection<Consumer<?>> eventHandlerCollection
     ) {
-        return (Objects.nonNull(subscriberCollection) && !subscriberCollection.isEmpty());
+        return (Objects.nonNull(eventHandlerCollection) && !eventHandlerCollection.isEmpty());
     }
 
     /**

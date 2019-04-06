@@ -253,24 +253,24 @@ public class SharableEventQueue
         // ThreadingModes won't be available and only the default case will be used.
         switch(queuedEvent.threadingMode) {
             case ASYNC_PER_EVENT:
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
                         queuedEvent.event,
-                        queuedEvent.eventSubscriberCollection,
+                        queuedEvent.eventHandlerCollection,
                         optionalDispatchingExecutorService.get());
                 return;
 
             case ASYNC_PER_SUBSCRIBER:
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
                         queuedEvent.event,
-                        queuedEvent.eventSubscriberCollection,
+                        queuedEvent.eventHandlerCollection,
                         optionalDispatchingExecutorService.get());
                 return;
 
             default:
                 // none of the additional ThreadingModes was used / is available
-                DispatchingUtil.dispatchEventToSubscriber(
+                DispatchingUtil.dispatchEventToHandler(
                         queuedEvent.event,
-                        queuedEvent.eventSubscriberCollection);
+                        queuedEvent.eventHandlerCollection);
         }
     }
 

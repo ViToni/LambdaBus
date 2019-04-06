@@ -42,18 +42,18 @@ public interface EventDispatcher
      * @param event
      *            non-{@code null} object which was published to the bus and
      *            shall be dispatched to subscribers
-     * @param eventSubscriberCollection
+     * @param eventHandlerCollection
      *            non-{@code null} {@link Collection} of non-{@code null}
-     *            subscribers for events of type {@link Class}
+     *            {@link Consumer} for events of type {@link Class}
      * @param supportedThreadingMode
-     *            non-{@code null} {@link ThreadingMode} how the event should be
-     *            dispatched
+     *            non-{@code null} {@link ThreadingMode} how the event should
+     *            be dispatched
      * @throws IllegalStateException
      *             if {@link EventDispatcher} is already closed
      */
-    <T> void dispatchEventToSubscriber(
+    <T> void dispatchEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode);
 
     /**

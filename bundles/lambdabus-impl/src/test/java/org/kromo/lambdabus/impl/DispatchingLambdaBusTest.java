@@ -163,7 +163,7 @@ public class DispatchingLambdaBusTest {
                         // since the posted one is not supported
                         Mockito //
                             .verify(eventDispatcher, times(1)) //
-                                .dispatchEventToSubscriber( //
+                                .dispatchEventToHandler( //
                                         Mockito.same(event), //
                                         Mockito.anyCollection(), //
                                         Mockito.same(defaultThreadingMode) //
@@ -172,7 +172,7 @@ public class DispatchingLambdaBusTest {
                     }
                     Mockito //
                         .verify(eventDispatcher, times(eventCount)) //
-                            .dispatchEventToSubscriber( //
+                            .dispatchEventToHandler( //
                                     Mockito.any(TestEvent.class), //
                                     Mockito.anyCollection(), //
                                     Mockito.same(defaultThreadingMode) //

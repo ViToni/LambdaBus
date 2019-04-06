@@ -39,7 +39,7 @@ import org.kromo.lambdabus.ThreadingMode;
 public final class QueuedEvent<T> {
 
     public final T event;
-    public final Collection<Consumer<T>> eventSubscriberCollection;
+    public final Collection<Consumer<T>> eventHandlerCollection;
     public final ThreadingMode threadingMode;
 
     /**
@@ -48,18 +48,19 @@ public final class QueuedEvent<T> {
      *
      * @param event
      *            which has been posted to the bus
-     * @param eventSubscriberCollection
-     *            {@link Collection} of subscribers the event will be dispatched to
+     * @param eventHandlerCollection
+     *            {@link Collection} of subscribed {@link Consumer} the event
+     *            will be dispatched to
      * @param threadingMode
      *            how should the event be dispatched
      */
     public QueuedEvent(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode threadingMode
     ) {
         this.event = event;
-        this.eventSubscriberCollection = eventSubscriberCollection;
+        this.eventHandlerCollection = eventHandlerCollection;
         this.threadingMode = threadingMode;
     }
 

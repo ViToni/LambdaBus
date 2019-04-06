@@ -66,14 +66,14 @@ public abstract class EventDispatcherContract<EventDispatcherType extends Abstra
                     eventDispatcher.isClosed(),
                     eventDispatcherName + " is closed");
 
-            eventDispatcher.dispatchEventToSubscriber("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC);
+            eventDispatcher.dispatchEventToHandler("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC);
 
             eventDispatcher.close();
             assertTrue(
                     eventDispatcher.isClosed(),
                     eventDispatcherName + " is not closed after close()");
 
-            assertThrows(IllegalStateException.class, () -> eventDispatcher.dispatchEventToSubscriber("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC));
+            assertThrows(IllegalStateException.class, () -> eventDispatcher.dispatchEventToHandler("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC));
         } finally {
             eventDispatcher.close();
         }

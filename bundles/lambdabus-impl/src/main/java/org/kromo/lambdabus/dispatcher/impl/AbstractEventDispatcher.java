@@ -36,7 +36,7 @@ import org.kromo.lambdabus.dispatcher.EventDispatcher;
  * <p>
  * Implementations have to implement only the method:
  * <ul>
- * <li>{@link #dispatchEventToSubscriber(Object, Collection, ThreadingMode)}</li>
+ * <li>{@link #dispatchEventToHandler(Object, Collection, ThreadingMode)}</li>
  * </ul>
  *
  * @author Victor Toni - initial implementation
@@ -154,7 +154,7 @@ public abstract class AbstractEventDispatcher
      *            type of posted event
      * @param event
      *            non-{@code null} object to be dispatched
-     * @param eventSubscriberCollection
+     * @param eventHandlerCollection
      *            non-{@code null} {@link Collection} of non-{@code null}
      *            {@link Consumer}s registered for the {@link Class} of the
      *            event
@@ -163,18 +163,18 @@ public abstract class AbstractEventDispatcher
      *            dispatched
      */
     @Override
-    public final <T> void dispatchEventToSubscriber(
+    public final <T> void dispatchEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     ) {
         if (isClosed()) {
             throw new IllegalStateException(getClass().getSimpleName() + " is closed. Event not dispatched: " + event);
         }
 
-        internalDispatchEventToSubscriber( //
+        internalDispatchEventToHandler( //
                 event, //
-                eventSubscriberCollection, //
+                eventHandlerCollection, //
                 supportedThreadingMode);
     }
 
@@ -202,9 +202,9 @@ public abstract class AbstractEventDispatcher
     // Methods required to be implemented by sub-classes
     //##########################################################################
 
-    protected abstract <T> void internalDispatchEventToSubscriber(
+    protected abstract <T> void internalDispatchEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     );
 

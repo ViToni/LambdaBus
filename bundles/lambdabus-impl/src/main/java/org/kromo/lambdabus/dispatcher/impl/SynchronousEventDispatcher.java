@@ -49,14 +49,14 @@ public class SynchronousEventDispatcher
     }
 
    @Override
-   protected final <T> void internalDispatchEventToSubscriber(
+   protected final <T> void internalDispatchEventToHandler(
            final T event,
-           final Collection<Consumer<T>> eventSubscriberCollection,
+           final Collection<Consumer<T>> eventHandlerCollection,
            final ThreadingMode supportedThreadingMode
    ) {
-       DispatchingUtil.dispatchEventToSubscriber(
+       DispatchingUtil.dispatchEventToHandler(
                event,
-               eventSubscriberCollection);
+               eventHandlerCollection);
    }
 
 }

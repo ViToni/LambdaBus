@@ -199,7 +199,7 @@ public interface LambdaBus
     <T> void post(final T event, final ThreadingMode threadingModeHint);
 
     /**
-     * Subscribe a consumer for events of a given class or interface.
+     * Subscribe an event handler for events of a given class or interface.
      *
      * <p>
      * By convention the {@link Class} of an event is evaluated first for
@@ -215,18 +215,18 @@ public interface LambdaBus
      * @param eventClass
      *            non-{@code null} {@link Class} of events the subscription is
      *            for
-     * @param eventSubscriber
+     * @param eventHandler
      *            non-{@code null} {@link Consumer} which should get events of
      *            the given class
      * @return non-{@code null} {@link Subscription} which will unsubscribe
-     *             the consumer from the bus on closure
+     *             the {@code eventHandler} from the bus on closure
      * @throws NullPointerException
-     *             if any of {@code  eventClass} or {@code eventSubscriber} is
+     *             if any of {@code eventClass} or {@code eventHandler} is
      *             {@code null}
      * @throws IllegalStateException
      *             if the bus has been closed already
      */
-    <T> Subscription subscribe(final Class<T> eventClass, final Consumer<T> eventSubscriber);
+    <T> Subscription subscribe(final Class<T> eventClass, final Consumer<T> eventHandler);
 
     /**
      * Checks if there is any {@link Consumer} subscribed for the given

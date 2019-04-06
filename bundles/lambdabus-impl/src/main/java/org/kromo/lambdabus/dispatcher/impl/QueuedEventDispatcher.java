@@ -171,7 +171,7 @@ public class QueuedEventDispatcher
      *            type of posted event
      * @param event
      *            non-{@code null} object to be dispatched
-     * @param eventSubscriberCollection
+     * @param eventHandlerCollection
      *            non-{@code null} {@link Collection} of non-{@code null}
      *            {@link Consumer}s registered for the {@link Class} of the
      *            event
@@ -180,21 +180,21 @@ public class QueuedEventDispatcher
      *            dispatched
      */
     @Override
-    protected final <T> void internalDispatchEventToSubscriber(
+    protected final <T> void internalDispatchEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     ) {
         // SYNC events dispatched directly
         if (ThreadingMode.SYNC == supportedThreadingMode) {
-            DispatchingUtil.dispatchEventToSubscriber(
+            DispatchingUtil.dispatchEventToHandler(
                     event,
-                    eventSubscriberCollection);
+                    eventHandlerCollection);
         } else {
             // for all other modes events are enqueued
             enqueueEventForDispatching(
                     event,
-                    eventSubscriberCollection,
+                    eventHandlerCollection,
                     supportedThreadingMode);
         }
     }
@@ -210,7 +210,7 @@ public class QueuedEventDispatcher
      *            type of event
      * @param event
      *            non-{@code null} object
-     * @param eventSubscriberCollection
+     * @param eventHandlerCollection
      *            non-{@code null} {@link Collection} of non-{@code null} {@link Consumer}s registered
      *            for the {@link Class} of the event
      * @param supportedThreadingMode
@@ -218,12 +218,12 @@ public class QueuedEventDispatcher
      */
     protected <T> void enqueueEventForDispatching(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     ) {
         final QueuedEvent<T> queuedEvent = new QueuedEvent<>(
                 event,
-                eventSubscriberCollection,
+                eventHandlerCollection,
                 supportedThreadingMode
         );
         eventQueue.add(queuedEvent);

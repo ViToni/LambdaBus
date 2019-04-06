@@ -308,13 +308,13 @@ public class DispatchingUtilTest {
                 throw new RuntimeException("Oops, this consumer throws an exception");
             };
 
-            final List<Consumer<String>> eventSubscriberCollection = new ArrayList<>();
+            final List<Consumer<String>> eventHandlerCollection = new ArrayList<>();
             for(int i = 0; i < subscriberCount; i++) {
                 final boolean odd = isOdd(i);
                 if (testExceptionsToo && odd) {
-                    eventSubscriberCollection.add(exceptionalConsumer);
+                    eventHandlerCollection.add(exceptionalConsumer);
                 } else {
-                    eventSubscriberCollection.add(eventConsumer);
+                    eventHandlerCollection.add(eventConsumer);
                 }
             }
 
@@ -323,7 +323,7 @@ public class DispatchingUtilTest {
                 final String event = String.format("%03d", loopIndex);
                 dispatchEventAndAssert(
                         event,
-                        eventSubscriberCollection,
+                        eventHandlerCollection,
                         loopIndex,
                         handledCounter,
                         threadHashCodes,
@@ -339,7 +339,7 @@ public class DispatchingUtilTest {
 
         private <T> void dispatchEventAndAssert(
                 final T event,
-                final Collection<Consumer<T>> eventSubscriberCollection,
+                final Collection<Consumer<T>> eventHandlerCollection,
                 final int loopIndex,
                 final AtomicInteger handledCount,
                 final Set<Integer> threadHashCodes,
@@ -351,7 +351,7 @@ public class DispatchingUtilTest {
 
             dispatchEventAndAssert(
                     event,
-                    eventSubscriberCollection,
+                    eventHandlerCollection,
                     loopIndex,
                     handledCount,
                     threadHashCodes,
@@ -374,7 +374,7 @@ public class DispatchingUtilTest {
 
         private <T> void dispatchEventAndAssert(
                 final T event,
-                final Collection<Consumer<T>> eventSubscriberCollection,
+                final Collection<Consumer<T>> eventHandlerCollection,
                 final int loopIndex,
                 final AtomicInteger handledCounter,
                 final Set<Integer> threadHashCodes,
@@ -382,15 +382,15 @@ public class DispatchingUtilTest {
                 final Logger logger
         ) {
             if (useDefaultLogger) {
-                DispatchingUtil.dispatchEventToSubscriber(event, eventSubscriberCollection);
+                DispatchingUtil.dispatchEventToHandler(event, eventHandlerCollection);
             } else {
-                DispatchingUtil.dispatchEventToSubscriber(event, eventSubscriberCollection, logger);
+                DispatchingUtil.dispatchEventToHandler(event, eventHandlerCollection, logger);
             }
 
             // dispatching occurred only in one thread
             assertEquals(1, threadHashCodes.size());
 
-            final int handledCount = (loopIndex + 1) * eventSubscriberCollection.size();
+            final int handledCount = (loopIndex + 1) * eventHandlerCollection.size();
 
             // the event was dispatched to all subscribers
             assertEquals(handledCount, handledCounter.get());
@@ -460,12 +460,12 @@ public class DispatchingUtilTest {
                 phaser.arriveAndAwaitAdvance();     // used to check if completed
             };
 
-            final List<Consumer<String>> eventSubscriberCollection = Collections.singletonList(blockingConsumer);
+            final List<Consumer<String>> eventHandlerCollection = Collections.singletonList(blockingConsumer);
 
             final String firstEvent = String.format("%03d", 0);
-            DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
+            DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
                     firstEvent,
-                    eventSubscriberCollection,
+                    eventHandlerCollection,
                     executorService,
                     spyLogger);
 
@@ -487,9 +487,9 @@ public class DispatchingUtilTest {
             verifyNoMoreInteractions(spyLogger);
 
             final String secondEvent = String.format("%03d", 1);
-            DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
+            DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
                     secondEvent,
-                    eventSubscriberCollection,
+                    eventHandlerCollection,
                     executorService,
                     spyLogger);
 
@@ -619,13 +619,13 @@ public class DispatchingUtilTest {
                 }
             };
 
-            final List<Consumer<TestEvent>> eventSubscriberCollection = new ArrayList<>();
+            final List<Consumer<TestEvent>> eventHandlerCollection = new ArrayList<>();
             for(int i = 0; i < subscriberCount; i++) {
                 final boolean odd = isOdd(i);
                 if (testExceptionToo && odd) {
-                    eventSubscriberCollection.add(exceptionalConsumer);
+                    eventHandlerCollection.add(exceptionalConsumer);
                 } else {
-                    eventSubscriberCollection.add(eventConsumer);
+                    eventHandlerCollection.add(eventConsumer);
                 }
             }
 
@@ -635,7 +635,7 @@ public class DispatchingUtilTest {
                 final CountDownLatch dispatchedLatch = new CountDownLatch(subscriberCount);
                 final TestEvent event = new TestEvent(id, dispatchedLatch);
                 dispatchEventAndAssert(
-                        event, eventSubscriberCollection,
+                        event, eventHandlerCollection,
                         loopIndex,
                         handledCounter, exceptionCounter,
                         threadHashCodesMap,
@@ -656,7 +656,7 @@ public class DispatchingUtilTest {
 
         private <T extends TestEvent> void dispatchEventAndAssert(
                 final T event,
-                final Collection<Consumer<T>> eventSubscriberCollection,
+                final Collection<Consumer<T>> eventHandlerCollection,
                 final int loopIndex,
                 final AtomicInteger handledCounter,
                 final AtomicInteger exceptionCounter,
@@ -669,19 +669,19 @@ public class DispatchingUtilTest {
         ) {
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             if (useDefaultLogger) {
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
                         event,
-                        eventSubscriberCollection,
+                        eventHandlerCollection,
                         executor);
             } else {
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
                         event,
-                        eventSubscriberCollection,
+                        eventHandlerCollection,
                         executor,
                         spyLogger);
             }
 
-            final int handledCount = (loopIndex + 1) * eventSubscriberCollection.size();
+            final int handledCount = (loopIndex + 1) * eventHandlerCollection.size();
 
             // wait for dispatching of the event to have completed
             assertTimeoutPreemptively(
@@ -817,15 +817,15 @@ public class DispatchingUtilTest {
                 phaser.arriveAndAwaitAdvance();     // used to check if completed
             };
 
-            final List<Consumer<String>> eventSubscriberCollection = new ArrayList<>();
+            final List<Consumer<String>> eventHandlerCollection = new ArrayList<>();
             for (int i = 0; i < subscriberCount; i++) {
-                eventSubscriberCollection.add(blockingConsumer);
+                eventHandlerCollection.add(blockingConsumer);
             }
 
             final String event = String.format("%03d", 0);
-            DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
+            DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
                     event,
-                    eventSubscriberCollection,
+                    eventHandlerCollection,
                     executorService,
                     spyLogger);
 
@@ -978,14 +978,14 @@ public class DispatchingUtilTest {
             };
 
             final AtomicInteger exceptionalConsumerCounter = new AtomicInteger();
-            final List<Consumer<TestEvent>> eventSubscriberCollection = new ArrayList<>();
+            final List<Consumer<TestEvent>> eventHandlerCollection = new ArrayList<>();
             for(int i = 0; i < subscriberCount; i++) {
                 final boolean odd = isOdd(i);
                 if (testExceptionToo && odd) {
-                    eventSubscriberCollection.add(exceptionalConsumer);
+                    eventHandlerCollection.add(exceptionalConsumer);
                     exceptionalConsumerCounter.incrementAndGet();
                 } else {
-                    eventSubscriberCollection.add(eventConsumer);
+                    eventHandlerCollection.add(eventConsumer);
                 }
             }
 
@@ -996,7 +996,7 @@ public class DispatchingUtilTest {
                         subscriberCount,
                         exceptionalConsumerCounter.get());
                 dispatchEventAndAssert(
-                        event, eventSubscriberCollection,
+                        event, eventHandlerCollection,
                         loopIndex,
                         handledCounter, exceptionCounter,
                         threadHashCodesMap,
@@ -1032,7 +1032,7 @@ public class DispatchingUtilTest {
 
         private <T extends TestEvent> void dispatchEventAndAssert(
                 final T event,
-                final Collection<Consumer<T>> eventSubscriberCollection,
+                final Collection<Consumer<T>> eventHandlerCollection,
                 final int loopIndex,
                 final AtomicInteger handledCounter,
                 final AtomicInteger exceptionCounter,
@@ -1045,19 +1045,19 @@ public class DispatchingUtilTest {
         ) {
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             if (useDefaultLogger) {
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
                         event,
-                        eventSubscriberCollection,
+                        eventHandlerCollection,
                         executor);
             } else {
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
                         event,
-                        eventSubscriberCollection,
+                        eventHandlerCollection,
                         executor,
                         spyLogger);
             }
 
-            final int handledCount = (loopIndex + 1) * eventSubscriberCollection.size();
+            final int handledCount = (loopIndex + 1) * eventHandlerCollection.size();
 
             // wait for dispatching of the event to have completed
             assertTimeoutPreemptively(

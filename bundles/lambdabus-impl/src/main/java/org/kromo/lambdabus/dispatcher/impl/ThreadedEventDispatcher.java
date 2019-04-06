@@ -85,27 +85,27 @@ public class ThreadedEventDispatcher
     }
 
     @Override
-    protected final <T> void internalDispatchEventToSubscriber(
+    protected final <T> void internalDispatchEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventSubscriberCollection,
+            final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     ) {
         switch (supportedThreadingMode) {
             case SYNC:
-                DispatchingUtil.dispatchEventToSubscriber(
+                DispatchingUtil.dispatchEventToHandler(
                         event,
-                        eventSubscriberCollection);
+                        eventHandlerCollection);
                 break;
             case ASYNC_PER_SUBSCRIBER:
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerSubscriber(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
                         event,
-                        eventSubscriberCollection,
+                        eventHandlerCollection,
                         getExecutor());
                 break;
             default:
-                DispatchingUtil.dispatchEventToSubscriberThreadedPerEvent(
+                DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
                         event,
-                        eventSubscriberCollection,
+                        eventHandlerCollection,
                         getExecutor());
                 break;
         }
