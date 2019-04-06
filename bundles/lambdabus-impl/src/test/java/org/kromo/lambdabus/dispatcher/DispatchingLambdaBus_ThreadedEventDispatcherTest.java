@@ -19,8 +19,9 @@
  *******************************************************************************/
 package org.kromo.lambdabus.dispatcher;
 
-import org.kromo.lambdabus.dispatcher.impl.opt.ThreadedEventDispatcher;
+import org.kromo.lambdabus.dispatcher.impl.ThreadedEventDispatcher;
 import org.kromo.lambdabus.impl.AbstractLambdaBusContract;
+import org.kromo.lambdabus.impl.DispatchingLambdaBus;
 
 public class DispatchingLambdaBus_ThreadedEventDispatcherTest
     extends AbstractLambdaBusContract<DispatchingLambdaBus> {

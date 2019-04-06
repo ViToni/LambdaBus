@@ -17,14 +17,14 @@
  * Contributors:
  *     Victor Toni - initial API and implementation
  *******************************************************************************/
-package org.kromo.lambdabus.dispatcher;
+package org.kromo.lambdabus.impl;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.impl.AbstractLambdaBus;
+import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**
  * The {@link DispatchingLambdaBus} uses a strategy pattern to change

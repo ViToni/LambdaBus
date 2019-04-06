@@ -29,8 +29,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.dispatcher.DispatchingLambdaBus;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
+import org.kromo.lambdabus.impl.DispatchingLambdaBus;
 import org.kromo.lambdabus.impl.concurrent.DaemonThreadPoolExecutor;
 import org.kromo.lambdabus.queue.EventQueue;
 import org.kromo.lambdabus.queue.QueuedEvent;

@@ -21,6 +21,7 @@ package org.kromo.lambdabus.dispatcher;
 
 import org.kromo.lambdabus.LambdaBusContract;
 import org.kromo.lambdabus.dispatcher.impl.QueuedEventDispatcher;
+import org.kromo.lambdabus.impl.DispatchingLambdaBus;
 
 /**
  * Test for the {@link DispatchingLambdaBus} using the

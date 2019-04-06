@@ -17,7 +17,7 @@
  * Contributors:
  *     Victor Toni - initial implementation
  *******************************************************************************/
-package org.kromo.lambdabus.impl.opt;
+package org.kromo.lambdabus.dispatcher.impl;
 
 import java.util.Objects;
 import java.util.Set;
@@ -25,19 +25,17 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.kromo.lambdabus.LambdaBus;
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.impl.AbstractLambdaBus;
+import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**
- * Base class providing functionality for implementing multithreaded versions of the
- * {@link LambdaBus}.
+ * Base class providing functionality for implementing multithreaded versions
+ * of the {@link EventDispatcher}.
  *
  * @author Victor Toni - initial implementation
- *
  */
-public abstract class AbstractThreadedLambdaBus
-    extends AbstractLambdaBus {
+public abstract class AbstractThreadedEventDispatcher
+    extends AbstractEventDispatcher {
 
     /**
      * Non-{@code null} {@link ExecutorService} used to dispatching asynchronous events.
@@ -47,7 +45,7 @@ public abstract class AbstractThreadedLambdaBus
     private final String toString;
 
     /**
-     * Prepares a threaded {@code LambdaBus} instance for use by subclasses.
+     * Prepares a threaded {@code EventDispatcher} instance for use by subclasses.
      *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
@@ -59,26 +57,29 @@ public abstract class AbstractThreadedLambdaBus
      *            non-{@code null} {@link ExecutorService} used to execute the
      *            dispatching jobs
      * @throws NullPointerException
-     *             if {@code defaultThreadingMode}, {@code supportedThreadingModes} or
-     *             {@code executorService} is {@code null}
+     *             if {@code defaultThreadingMode}, {@code supportedThreadingModes}
+     *             or {@code executorService} is {@code null}
      * @throws IllegalArgumentException
      *             if {@code supportedThreadingModes} is empty or the
      *             {@code defaultThreadingMode} is not contained within
      *             {@code supportedThreadingModes}
      */
-    protected AbstractThreadedLambdaBus(
+    protected AbstractThreadedEventDispatcher(
             final ThreadingMode defaultThreadingMode,
             final Set<ThreadingMode> supportedThreadingModes,
             final ExecutorService executorService
     ) {
         super(defaultThreadingMode, supportedThreadingModes);
-
-        Objects.requireNonNull(executorService, "'executorService' must not be null");
-        this.executorService = Executors.unconfigurableExecutorService(executorService);
+        Objects.requireNonNull(executorService,"'executorService' must not be null");
 
         this.toString = getClass().getSimpleName() + '(' + executorService + ')';
+
+        this.executorService = Executors.unconfigurableExecutorService(executorService);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return toString;

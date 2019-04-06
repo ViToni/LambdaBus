@@ -1,13 +1,16 @@
 package org.kromo.lambdabus.examples;
 
 import org.kromo.lambdabus.LambdaBus;
-import org.kromo.lambdabus.impl.SynchronousLambdaBus;
+import org.kromo.lambdabus.dispatcher.EventDispatcher;
+import org.kromo.lambdabus.dispatcher.impl.SynchronousEventDispatcher;
+import org.kromo.lambdabus.impl.DispatchingLambdaBus;
 
 public class HelloWorld {
 
     public static void main(String[] args) {
-        // SyncLambdaBus is the simplest LambdaBus
-        final LambdaBus lb = new SynchronousLambdaBus();
+        // SynchronousEventDispatcher is the simplest EventDispatcher
+        final EventDispatcher eventDispatcher = new SynchronousEventDispatcher();
+        final LambdaBus lb = new DispatchingLambdaBus(eventDispatcher);
 
         /*
          * For every "String" event published to the bus

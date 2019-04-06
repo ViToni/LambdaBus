@@ -17,7 +17,7 @@
  * Contributors:
  *     Victor Toni - initial implementation
  *******************************************************************************/
-package org.kromo.lambdabus.dispatcher;
+package org.kromo.lambdabus.impl;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import org.kromo.lambdabus.ThreadingMode;
+import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**
  * Test for the {@link DispatchingLambdaBus}

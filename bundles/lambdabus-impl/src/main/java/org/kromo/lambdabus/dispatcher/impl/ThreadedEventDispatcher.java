@@ -17,7 +17,7 @@
  * Contributors:
  *     Victor Toni - initial implementation
  *******************************************************************************/
-package org.kromo.lambdabus.dispatcher.impl.opt;
+package org.kromo.lambdabus.dispatcher.impl;
 
 import java.util.Collection;
 import java.util.EnumSet;

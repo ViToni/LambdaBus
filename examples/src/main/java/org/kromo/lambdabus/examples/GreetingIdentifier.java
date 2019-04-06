@@ -3,12 +3,20 @@ package org.kromo.lambdabus.examples;
 import java.util.function.Supplier;
 
 import org.kromo.lambdabus.LambdaBus;
-import org.kromo.lambdabus.impl.SynchronousLambdaBus;
+import org.kromo.lambdabus.dispatcher.EventDispatcher;
+import org.kromo.lambdabus.dispatcher.impl.SynchronousEventDispatcher;
+import org.kromo.lambdabus.impl.DispatchingLambdaBus;
 
 public class GreetingIdentifier {
 
     public static void main(String[] args) {
-         testLambdaBus(SynchronousLambdaBus::new);
+
+        final Supplier<LambdaBus> lbSupplier = () -> {
+            final EventDispatcher eventDispatcher = new SynchronousEventDispatcher();
+            return new DispatchingLambdaBus(eventDispatcher);
+        };
+
+        testLambdaBus(lbSupplier);
     }
 
     public static void testLambdaBus(
