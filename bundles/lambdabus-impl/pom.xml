@@ -29,7 +29,10 @@
 
     <artifactId>lambdabus-impl</artifactId>
     <name>LambdaBus Implementation</name>
-    <description>Implementation of LambdaBus API including implementations for synchronous and asynchronous event dispatching.</description>
+    <description>Implementation of LambdaBus API including implementations for synchronous and asynchronous event dispatching.
+    Additional implementations of the LambdaBus API providing support for synchronous, asynchronous and non-blocking event dispatching.
+    Implementation of a LambdaBus API using composition including EventDispatcher implementations for synchronous and asynchronous event dispatching.
+    Implementation of EventsDispatcher API supporting asynchronous and non-blocking event dispatching.</description>
     <packaging>jar</packaging>
 
     <dependencyManagement>
@@ -109,7 +112,12 @@
                         <!-- define custom values -->
                         <instructions>
                             <Export-Package>
+                                org.kromo.lambdabus.dispatcher,
+                                org.kromo.lambdabus.dispatcher.impl
+                                org.kromo.lambdabus.dispatcher.impl.opt
                                 org.kromo.lambdabus.impl,
+                                org.kromo.lambdabus.impl.concurrent,
+                                org.kromo.lambdabus.impl.opt,
                                 org.kromo.lambdabus.queue,
                                 org.kromo.lambdabus.queue.impl,
                                 org.kromo.lambdabus.util
