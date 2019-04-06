@@ -37,21 +37,19 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import org.kromo.lambdabus.LambdaBus;
 import org.kromo.lambdabus.LambdaBusContract;
+import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**
  * Extends the behavioral contract of the {@link LambdaBus} by extending
- * {@link AbstractLambdaBus} with custom tests. This class should be extended
- * for tests of subclasses of {@link AbstractLambdaBus}
- *
- * @param <LambdaBusType>
- *            type to test which extends the {@link AbstractLambdaBus} class
- *            (and implements the {@link LambdaBus} interface)
+ * {@link DispatchingLambdaBus} with custom tests. This class should be
+ * extended for tests of subclasses of {@link EventDispatcher} used within
+ * {@link DispatchingLambdaBus}.
  *
  * @author Victor Toni - initial implementation
  *
  */
-public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLambdaBus>
-    extends LambdaBusContract<LambdaBusType> {
+public abstract class AbstractDispatchingLambdaBusContract
+    extends LambdaBusContract<DispatchingLambdaBus> {
 
     @ParameterizedTest(name = "{1}: NullEventRunnable gets called on null event")
     @MethodSource("getPostMethodsWithNames")
@@ -62,7 +60,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
     ) {
         final Function<CountDownLatch, Object> nullEventProvider = (doneLatch) -> null;
         final AtomicInteger atomicCounter = new AtomicInteger();
-        try (final AbstractLambdaBus lb = createLambdaBus()) {
+        try (final DispatchingLambdaBus lb = createLambdaBus()) {
 
             lb.setRunnableForNullEvent(atomicCounter::incrementAndGet);
 
@@ -86,7 +84,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
         final String nameOnlyUsedForUnitTestName
     ) {
         final AtomicInteger atomicCounter = new AtomicInteger();
-        try (final AbstractLambdaBus lb = createLambdaBus()) {
+        try (final DispatchingLambdaBus lb = createLambdaBus()) {
 
             lb.setRunnableForNullEvent(atomicCounter::incrementAndGet);
 
@@ -105,7 +103,7 @@ public abstract class AbstractLambdaBusContract<LambdaBusType extends AbstractLa
     @Test
     @DisplayName("Exceptions from RunnableForNullEvent are not propagated")
     public void exceptionsFromRunnableForNullEventAreNotPropagated() {
-        try (final AbstractLambdaBus lb = createLambdaBus()) {
+        try (final DispatchingLambdaBus lb = createLambdaBus()) {
             assertTrue(lb.hasRunnableForNullEvent(), "Should have a Runnable for null events");
 
             lb.unsetRunnableForNullEvent();

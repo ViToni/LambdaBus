@@ -19,8 +19,8 @@
  *******************************************************************************/
 package org.kromo.lambdabus.dispatcher;
 
-import org.kromo.lambdabus.LambdaBusContract;
 import org.kromo.lambdabus.dispatcher.impl.QueuedEventDispatcher;
+import org.kromo.lambdabus.impl.AbstractDispatchingLambdaBusContract;
 import org.kromo.lambdabus.impl.DispatchingLambdaBus;
 
 /**
@@ -31,7 +31,7 @@ import org.kromo.lambdabus.impl.DispatchingLambdaBus;
  *
  */
 public class DispatchingLambdaBus_QueuedEventDispatcherTest
-    extends LambdaBusContract<DispatchingLambdaBus> {
+    extends AbstractDispatchingLambdaBusContract {
 
     @Override
     protected DispatchingLambdaBus createLambdaBus() {

@@ -20,7 +20,7 @@
 package org.kromo.lambdabus.dispatcher;
 
 import org.kromo.lambdabus.dispatcher.impl.SynchronousEventDispatcher;
-import org.kromo.lambdabus.impl.AbstractLambdaBusContract;
+import org.kromo.lambdabus.impl.AbstractDispatchingLambdaBusContract;
 import org.kromo.lambdabus.impl.DispatchingLambdaBus;
 
 /*
@@ -31,7 +31,7 @@ import org.kromo.lambdabus.impl.DispatchingLambdaBus;
  *
  */
 public class DispatchingLambdaBus_SynchronousEventDispatcherTest
-    extends AbstractLambdaBusContract<DispatchingLambdaBus> {
+    extends AbstractDispatchingLambdaBusContract {
 
     @Override
     protected DispatchingLambdaBus createLambdaBus() {
