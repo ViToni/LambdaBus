@@ -22,7 +22,9 @@ package org.kromo.lambdabus.dispatcher.impl;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
@@ -32,7 +34,9 @@ import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
  * The {@link ThreadedEventDispatcher} supports synchronous and asynchronous
- * dispatching of events.<br>
+ * dispatching of events. Since this class does not hold any state of for any
+ * event bus it could be safely shared between multiple instances.<br>
+ *
  * Supported {@link ThreadingMode}s are
  * <ul>
  * <li>{@link ThreadingMode#SYNC}</li>
@@ -46,7 +50,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  *
  */
 public class ThreadedEventDispatcher
-    extends AbstractThreadedEventDispatcher {
+    extends AbstractEventDispatcher {
 
     private static final ThreadingMode DEFAULT_THREADING_MODE = ThreadingMode.ASYNC_PER_EVENT;
     private static final EnumSet<ThreadingMode> SUPPORTED_THREADING_MODES;
@@ -54,6 +58,12 @@ public class ThreadedEventDispatcher
         final EnumSet<ThreadingMode> unsupportedThreadingModes = EnumSet.of(ThreadingMode.ASYNC);
         SUPPORTED_THREADING_MODES = EnumSet.complementOf(unsupportedThreadingModes);
     }
+
+    /**
+     * Non-{@code null} {@link ExecutorService} used to dispatching asynchronous events.
+     */
+    private final ExecutorService executorService;
+    private final String toString;
 
     /**
      * Prepares a threaded {@code EventDispatcher} instance.
@@ -71,19 +81,93 @@ public class ThreadedEventDispatcher
      *
      * @param executorService
      *            non-{@code null} {@link ExecutorService} used to execute the
-     *            dispatching jobs
+     *            dispatching of events
+     *
      * @throws NullPointerException
      *             if {@code executorService} is {@code null}
      */
     public ThreadedEventDispatcher(
             final ExecutorService executorService
     ) {
-        super(
+        this(
+                executorService,
                 DEFAULT_THREADING_MODE,
-                SUPPORTED_THREADING_MODES,
-                Objects.requireNonNull(executorService, "'executorService' must not be null"));
+                SUPPORTED_THREADING_MODES);
     }
 
+    /**
+     * Prepares a threaded {@code EventDispatcher} instance.
+     *
+     * @param executorService
+     *            non-{@code null} {@link ExecutorService} used to execute the
+     *            dispatching of events
+     * @param defaultThreadingMode
+     *            non-{@code null} {@link ThreadingMode} to be used as default
+     *            when posting to the bus (unsupported modes will be mapped to
+     *            this one)
+     *
+     * @throws NullPointerException
+     *             if any of {@code executorService} or
+     *             {@code defaultThreadingMode} is {@code null}
+     * @throws IllegalArgumentException
+     *             if {@code defaultThreadingMode} is not supported
+     */
+    public ThreadedEventDispatcher(
+            final ExecutorService executorService,
+            final ThreadingMode defaultThreadingMode
+    ) {
+        this(
+                executorService,
+                defaultThreadingMode,
+                SUPPORTED_THREADING_MODES);
+    }
+
+    /**
+     * Prepares a threaded {@code EventDispatcher} instance for use by subclasses.
+     *
+     * @param executorService
+     *            non-{@code null} {@link ExecutorService} used to execute the
+     *            dispatching of events
+     * @param defaultThreadingMode
+     *            non-{@code null} {@link ThreadingMode} to be used as default
+     *            when posting to the bus (unsupported modes will be mapped to
+     *            this one)
+     * @param supportedThreadingModes
+     *            non-empty {@link Set} of supported {@link ThreadingMode}s
+     *
+     * @throws NullPointerException
+     *             if any of {@code executorService}, {@code defaultThreadingMode}
+     *             or {@code supportedThreadingModes} is {@code null}
+     * @throws IllegalArgumentException
+     *             if {@code supportedThreadingModes} is empty or the
+     *             {@code defaultThreadingMode} is not contained within
+     *             {@code supportedThreadingModes}
+     */
+    private ThreadedEventDispatcher(
+            final ExecutorService executorService,
+            final ThreadingMode defaultThreadingMode,
+            final Set<ThreadingMode> supportedThreadingModes
+    ) {
+        super(defaultThreadingMode, supportedThreadingModes);
+
+        Objects.requireNonNull(executorService,"'executorService' must not be null");
+
+        this.toString = getClass().getSimpleName() + '(' + executorService + ')';
+
+        this.executorService = Executors.unconfigurableExecutorService(executorService);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toString;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final <T> void internalDispatchEventToHandler(
             final T event,
@@ -100,15 +184,23 @@ public class ThreadedEventDispatcher
                 DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
                         event,
                         eventHandlerCollection,
-                        getExecutor());
+                        executorService);
                 break;
             default:
                 DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
                         event,
                         eventHandlerCollection,
-                        getExecutor());
+                        executorService);
                 break;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void cleanupBeforeClose() {
+        executorService.shutdownNow();
     }
 
 }
