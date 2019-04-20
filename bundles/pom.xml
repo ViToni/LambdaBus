@@ -41,10 +41,10 @@
     <build>
         <!-- configured plugins -->
         <pluginManagement>
-            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
             <plugins>
                 <plugin>
                     <!-- copy artifacts to the main directory -->
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <executions>
                         <!-- copy all JARs to the main directory -->
@@ -97,6 +97,7 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-report-plugin</artifactId>
                     <executions>
                         <execution>
@@ -135,16 +136,17 @@
 
         <!-- common plugins to run -->
         <plugins>
-            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
-
             <!-- enforce required version of JDK and Maven -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
             <!-- required to enable support of "bundle" packaging -->
@@ -160,6 +162,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
             </plugin>
             <plugin>
@@ -192,14 +195,16 @@
 
     <reporting>
         <plugins>
-            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <configuration>
                     <!-- we want to have all reports of the modules -->
