@@ -48,27 +48,63 @@ import org.kromo.lambdabus.ThreadingMode;
 public class DispatchingLambdaBusTest {
 
     @Test
-    @DisplayName("Constructor with null EventDispatcher throws NullPointerException")
-    public void constructor_with_null_EventDispatcher_throws_NPE() {
-        final EventDispatcher nullEventDispatcher = null;
-        assertThrows(
-                NullPointerException.class,
+    @DisplayName("Default Constructor")
+    public void defaultConstructor() {
+        assertDoesNotThrow(
                 () -> {
-                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
-                            nullEventDispatcher)) {}
+                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus()) {}
                 }
         );
     }
 
     @Test
     @DisplayName("Default Constructor")
-    public void defaultConstructor() {
+    public void constructorUsingEventDispatcher() {
         final EventDispatcher eventDispatcher = createMockEventDispatcher();
 
         assertDoesNotThrow(
                 () -> {
+                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(eventDispatcher)) {}
+                }
+        );
+    }
+
+    @Test
+    @DisplayName("Default Constructor")
+    public void constructorUsingEventDispatcherAndSubscriptionManager() {
+        final EventDispatcher eventDispatcher = createMockEventDispatcher();
+        final SubscriptionManager subscriptionManager = Mockito.mock(SubscriptionManager.class);
+
+        assertDoesNotThrow(
+                () -> {
                     try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
-                            eventDispatcher)) {}
+                            eventDispatcher, subscriptionManager)) {}
+                }
+        );
+    }
+
+    @Test
+    @DisplayName("Constructor with null EventDispatcher throws NullPointerException")
+    public void constructor_with_null_EventDispatcher_throws_NPE() {
+        final EventDispatcher nullEventDispatcher = null;
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(nullEventDispatcher)) {}
+                }
+        );
+    }
+
+    @Test
+    @DisplayName("Constructor with null SubscriptionManager throws NullPointerException")
+    public void constructor_with_null_SubscriptionManager_throws_NPE() {
+        final EventDispatcher eventDispatcher = createMockEventDispatcher();
+        final SubscriptionManager nullSubscriptionManager = null;
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
+                            eventDispatcher, nullSubscriptionManager)) {}
                 }
         );
     }
