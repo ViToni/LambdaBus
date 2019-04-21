@@ -156,7 +156,7 @@ public class AbstractEventDispatcherTest extends
         }
 
         @Override
-        protected <T> void internalDispatchEventToHandler(
+        protected final <T> void dispatchEventToHandlerNonSync(
                 final T event,
                 final Collection<Consumer<T>> eventHandlerCollection,
                 final ThreadingMode supportedThreadingMode

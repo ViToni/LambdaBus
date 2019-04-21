@@ -24,12 +24,11 @@ import java.util.function.Consumer;
 
 import org.kromo.lambdabus.ThreadingMode;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
-import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
- * Implementation of {@link EventDispatcher} interface which dispatches events
- * synchronously to subscribers (in the same {@link Thread} as the publisher of
- * the event).
+ * Implementation of the {@link EventDispatcher} interface that synchronously
+ * dispatches events to subscribers (in the same {@link Thread} as the
+ * publisher of the event).
  *
  * @author Victor Toni - initial implementation
  *
@@ -49,14 +48,14 @@ public class SynchronousEventDispatcher
     }
 
    @Override
-   protected final <T> void internalDispatchEventToHandler(
+   protected final <T> void dispatchEventToHandlerNonSync(
            final T event,
            final Collection<Consumer<T>> eventHandlerCollection,
-           final ThreadingMode supportedThreadingMode
+           final ThreadingMode unsupportedThreadingMode
    ) {
-       DispatchingUtil.dispatchEventToHandler(
-               event,
-               eventHandlerCollection);
+       // will never reach this point
+       // nothing to do here since non-SYNC dispatching is not supported
+       throw new UnsupportedOperationException("ThreadingMode '" + unsupportedThreadingMode + "' not supported");
    }
 
 }

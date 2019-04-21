@@ -169,17 +169,12 @@ public class ThreadedEventDispatcher
      * {@inheritDoc}
      */
     @Override
-    protected final <T> void internalDispatchEventToHandler(
+    protected final <T> void dispatchEventToHandlerNonSync(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     ) {
         switch (supportedThreadingMode) {
-            case SYNC:
-                DispatchingUtil.dispatchEventToHandler(
-                        event,
-                        eventHandlerCollection);
-                break;
             case ASYNC_PER_SUBSCRIBER:
                 DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
                         event,

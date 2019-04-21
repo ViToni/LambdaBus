@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 
 import org.kromo.lambdabus.ThreadingMode;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
+import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
  * Base class providing the core {@link EventDispatcher} functionality,
@@ -38,6 +39,14 @@ import org.kromo.lambdabus.dispatcher.EventDispatcher;
  * <ul>
  * <li>{@link #dispatchEventToHandler(Object, Collection, ThreadingMode)}</li>
  * </ul>
+ *
+ * When an event is not dispatched directly usually a {@link Runnable} would be
+ * created which contains the event itself and its consumers (at the time the
+ * event has been published).
+ * As such an {@link EventDispatcher} doesn't share state with an individual
+ * event bus and an {@code EventDispatcher} instance could be shared among
+ * low-throughput event-bus instances, blocking consumer might block all
+ * event-busses though.
  *
  * @author Victor Toni - initial implementation
  *
@@ -172,10 +181,18 @@ public abstract class AbstractEventDispatcher
             throw new IllegalStateException(getClass().getSimpleName() + " is closed. Event not dispatched: " + event);
         }
 
-        internalDispatchEventToHandler( //
-                event, //
-                eventHandlerCollection, //
-                supportedThreadingMode);
+        // SYNC events are dispatched directly
+        if (ThreadingMode.SYNC == supportedThreadingMode) {
+            DispatchingUtil.dispatchEventToHandler(
+                    event,
+                    eventHandlerCollection);
+        } else {
+            // all other modes events are delegated
+            dispatchEventToHandlerNonSync( //
+                    event, //
+                    eventHandlerCollection, //
+                    supportedThreadingMode);
+        }
     }
 
     /**
@@ -202,7 +219,7 @@ public abstract class AbstractEventDispatcher
     // Methods required to be implemented by sub-classes
     //##########################################################################
 
-    protected abstract <T> void internalDispatchEventToHandler(
+    protected abstract <T> void dispatchEventToHandlerNonSync(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
