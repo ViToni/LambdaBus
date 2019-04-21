@@ -311,7 +311,7 @@
                             <addMavenDescriptor>false</addMavenDescriptor>
                             <!-- define common values -->
                             <manifestEntries>
-                                <Built-By>${organization.name}</Built-By>
+                                <Built-By>${project.organization.name}</Built-By>
                                 <Implementation-Date>${maven.build.timestamp}</Implementation-Date>
                                 <!-- Add the Maven coordinates in the manifest -->
                                 <Maven-Group-Id>${project.groupId}</Maven-Group-Id>
