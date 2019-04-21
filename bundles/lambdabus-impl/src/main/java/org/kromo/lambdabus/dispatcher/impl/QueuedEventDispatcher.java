@@ -24,23 +24,24 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.kromo.lambdabus.ThreadingMode;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
 import org.kromo.lambdabus.impl.DispatchingLambdaBus;
-import org.kromo.lambdabus.impl.concurrent.DaemonThreadPoolExecutor;
-import org.kromo.lambdabus.queue.EventQueue;
-import org.kromo.lambdabus.queue.QueuedEvent;
-import org.kromo.lambdabus.queue.impl.SharableEventQueue;
-import org.kromo.lambdabus.util.DispatchingUtil;
 
 /**
- * This class provides non-blocking posting and multithreaded dispatching.<br>
+ * This class provides non-blocking posting and asynchronous dispatching.<br>
  * Events are put into a queue and dispatched in a different thread.<br>
- * All {@link ThreadingMode}s are supported. Events posted as
+ * Supported {@link ThreadingMode}s depend on the {@code EventDipatcher} the
+ * actual. dispatching is delegated to. Events posted as
  * {@link ThreadingMode#SYNC} are dispatched directly, other events are queued
  * and dispatched based on requested (or default) {@link ThreadingMode}.
  *
@@ -53,19 +54,37 @@ public class QueuedEventDispatcher
     private static final ThreadingMode DEFAULT_THREADING_MODE = ThreadingMode.ASYNC;
 
     /**
-     * The {@link Set} of supported {@link ThreadingMode}s of this {@link EventDispatcher}.
-     * As an event can be dispatched directly ({@link ThreadingMode#SYNC}) or in the {@link Thread} of
-     * the {@link EventQueue} ({@link ThreadingMode#ASYNC}) this is the smallest possible {@link Set}.
+     * The {@link Set} of supported {@link ThreadingMode}s of this
+     * {@link EventDispatcher}. As an event can be dispatched directly
+     * ({@link ThreadingMode#SYNC}) or in the queue processing {@link Thread}
+     * ({@link ThreadingMode#ASYNC}), this is the smallest possible {@link Set}.
      */
     private static final Set<ThreadingMode> DEFAULT_SUPPORTED_THREADING_MODES = EnumSet.of( //
             DEFAULT_THREADING_MODE, //
-            ThreadingMode.ASYNC //
+            ThreadingMode.SYNC //
             );
 
     /**
-     * Queue holding events (and associated information) to be dispatched.
+     * Instance counter used to create unique names for the thread processing the queue.
      */
-    private final EventQueue eventQueue;
+    private static final AtomicInteger INSTANCE_COUNT = new AtomicInteger();
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Queue holding events (including associated information) to be dispatched.
+     */
+    private final BlockingQueue<Runnable> eventQueue = new LinkedBlockingQueue<>();
+
+    /**
+     * EventDispatcher used by queued events for actual dispatching.
+     */
+    private final EventDispatcher eventDispatcher;
+
+    /**
+     * Non-{@code null} {@link ExecutorService} used to process the queued events.
+     */
+    private final Thread queueLoopThread;
 
     /**
      * Prepares a queuing threaded {@code EventDispatcher} instance.
@@ -91,65 +110,67 @@ public class QueuedEventDispatcher
     public QueuedEventDispatcher(final ThreadingMode defaultThreadingMode) {
         this( //
                 Objects.requireNonNull(defaultThreadingMode, "'defaultThreadingMode' must not be null"), //
-                new SharableEventQueue( //
-                        new DaemonThreadPoolExecutor( //
-                                new LinkedBlockingQueue<>() //
-                        ) //
-                ) //
+                new SynchronousEventDispatcher() //
         );
     }
 
     /**
-     * Prepares a queuing threaded {@code EventDispatcher} instance using an external
-     * {@link EventQueue}.
+     * Prepares a queuing {@code EventDispatcher} instance using an external
+     * {@link eventDispatcher} for dispatching of asynchronous tasks.
      *
-     * @param eventQueue
-     *            non-{@code null} {@link EventQueue} used to queue and dispatch events
+     * @param eventDispatcher
+     *            non-{@code null} {@link EventDispatcher} used to dispatch
+     *            events asynchronously
      * @throws NullPointerException
      *             if {@code eventQueue} is {@code null}
      */
-    public QueuedEventDispatcher(final EventQueue eventQueue) {
+    public QueuedEventDispatcher(final EventDispatcher eventDispatcher) {
         this(
                 DEFAULT_THREADING_MODE,
-                eventQueue);
+                eventDispatcher);
     }
 
     /**
      * Prepares a queuing threaded {@code EventDispatcher} instance using an external
-     * {@link EventQueue}.
+     * {@link EventDispatcher}.
      *
      * @param defaultThreadingMode
      *            non-{@code null} {@link ThreadingMode} to be used as default
      *            when posting to the bus (unsupported modes used in
      *            {@link DispatchingLambdaBus#post(Object, ThreadingMode)} will be mapped to this
      *            one)
-     * @param eventQueue
-     *            non-{@code null} {@link EventQueue} used to queue and dispatch events
+     * @param eventDispatcher
+     *            non-{@code null} {@link EventDispatcher} used to dispatch queued events
      * @throws NullPointerException
-     *             if any of {@code defaultThreadingMode} or {@code eventQueue}
+     *             if any of {@code defaultThreadingMode} or {@code eventDispatcher}
      *             is {@code null}
      * @throws IllegalArgumentException
      *             if {@code defaultThreadingMode} is not supported (not contained
      *             within the calculated supported {@link ThreadingMode}s
-     * @see QueuedEventDispatcher#calculateSupportedThreadingModes(EventQueue)
+     * @see QueuedEventDispatcher#calculateSupportedThreadingModes(EventDispatcher)
      */
     public QueuedEventDispatcher(
             final ThreadingMode defaultThreadingMode,
-            final EventQueue eventQueue
+            final EventDispatcher eventDispatcher
     ) {
         super( //
                 Objects.requireNonNull(defaultThreadingMode, "'defaultThreadingMode' must not be null"), //
                 calculateSupportedThreadingModes( //
-                        Objects.requireNonNull(eventQueue, "'eventQueue' must not be null")
+                        Objects.requireNonNull(eventDispatcher, "'eventDispatcher' must not be null")
                 ) //
         );
 
-        this.eventQueue = eventQueue;
+        this.eventDispatcher = eventDispatcher;
+
+        queueLoopThread = createQueueProcessingThread(this::takeEventsFromQueueAndTryToDispatch);
+        queueLoopThread.start();
     }
 
     @Override
     protected void cleanupBeforeClose() {
-        eventQueue.close();
+        eventQueue.clear();
+        eventDispatcher.close();
+        queueLoopThread.interrupt();
     }
 
     //##########################################################################
@@ -157,10 +178,10 @@ public class QueuedEventDispatcher
     //##########################################################################
 
     /**
-     * Either dispatches the given event directly (in case of
-     * {@link ThreadingMode#SYNC}) or adds the event, its subscribed
-     * {@link Consumer}s and the {@link ThreadingMode} to the internal {@link EventQueue} for
-     * further processing.
+     * Dispatching request using {@link ThreadingMode#SYNC}) are already handled
+     * by the base class. This method adds a {@link Runnable}-like lambda to
+     * the internal queue for further processing, with the runnable holding the
+     * event, its {@link Consumer}s and the {@link ThreadingMode} to be used.
      *
      * <p>
      * All parameters are non-{@code null} because the calling method has
@@ -185,75 +206,130 @@ public class QueuedEventDispatcher
             final Collection<Consumer<T>> eventHandlerCollection,
             final ThreadingMode supportedThreadingMode
     ) {
-        // SYNC events dispatched directly
-        if (ThreadingMode.SYNC == supportedThreadingMode) {
-            DispatchingUtil.dispatchEventToHandler(
-                    event,
-                    eventHandlerCollection);
+        // SYNC events have been already been handled by base class
+
+        // for all other modes events are enqueued
+        final ThreadingMode mappedThreadingMode;
+        if (ThreadingMode.ASYNC == supportedThreadingMode) {
+            // mapping ASYNC to SYNC since the "sync" dispatching will be handled
+            // from within the queue processing thread
+            mappedThreadingMode = ThreadingMode.SYNC;
         } else {
-            // for all other modes events are enqueued
-            enqueueEventForDispatching(
-                    event,
-                    eventHandlerCollection,
-                    supportedThreadingMode);
+            mappedThreadingMode = supportedThreadingMode;
         }
-    }
 
-    //##########################################################################
-    // Methods which can be overridden to customize behavior
-    //##########################################################################
-
-    /**
-     * Creates a queued event and adds it to the configured {@link EventQueue}.
-     *
-     * @param <T>
-     *            type of event
-     * @param event
-     *            non-{@code null} object
-     * @param eventHandlerCollection
-     *            non-{@code null} {@link Collection} of non-{@code null} {@link Consumer}s registered
-     *            for the {@link Class} of the event
-     * @param supportedThreadingMode
-     *            how the event should be dispatched
-     */
-    protected <T> void enqueueEventForDispatching(
-            final T event,
-            final Collection<Consumer<T>> eventHandlerCollection,
-            final ThreadingMode supportedThreadingMode
-    ) {
-        final QueuedEvent<T> queuedEvent = new QueuedEvent<>(
+        final Runnable eventDispatchingRunnable = () -> eventDispatcher.dispatchEventToHandler(
                 event,
                 eventHandlerCollection,
-                supportedThreadingMode
-        );
-        eventQueue.add(queuedEvent);
+                mappedThreadingMode);
+
+        enqueueEventForDispatching(eventDispatchingRunnable);
     }
+
+    //##########################################################################
+    // Private helper methods
+    //##########################################################################
 
     /**
      * Creates a {@link Set} of {@link ThreadingMode} by combining our
-     * {@link #DEFAULT_SUPPORTED_THREADING_MODES}s with the {@link ThreadingMode}s supported by the
-     * {@link EventQueue}.<br>
-     * As an event can be dispatched directly ({@link ThreadingMode#SYNC}) or in the {@link Thread} of
-     * the {@link EventQueue} ({@link ThreadingMode#ASYNC}) this is the smallest possible
-     * {@link Set}.<br>
-     * If the {@link EventQueue} is using an {@link ExecutorService} additionally
+     * {@link #DEFAULT_SUPPORTED_THREADING_MODES}s with the
+     * {@link ThreadingMode}s supported by the {@link EventDispatcher}.<br>
+     * As an event can be dispatched directly ({@link ThreadingMode#SYNC}) or in
+     * the queue processing {@link Thread} ({@link ThreadingMode#ASYNC}), this
+     * is the smallest possible {@link Set}.<br>
+     * If the {@link EventDispatcher} is using an {@link ExecutorService}
+     * additionally
      * <ul>
      * <li>{@link ThreadingMode#ASYNC_PER_EVENT}</li>
      * <li>{@link ThreadingMode#ASYNC_PER_SUBSCRIBER}</li>
      * </ul>
      * might be supported.
      *
-     * @param eventQueue
-     *            {@link EventQueue} used to calculate the unified {@link Set} of
-     *            {@link ThreadingMode}s
+     * @param eventDispatcher
+     *            {@link EventDispatcher} used to calculate the unified
+     *            {@link Set} of {@link ThreadingMode}s
      * @return {@link Set} of {@link ThreadingMode}
      */
-    protected static Set<ThreadingMode> calculateSupportedThreadingModes(final EventQueue eventQueue) {
+    private static Set<ThreadingMode> calculateSupportedThreadingModes(final EventDispatcher eventDispatcher) {
         final Set<ThreadingMode> threadingModes = EnumSet.copyOf(DEFAULT_SUPPORTED_THREADING_MODES);
 
-        threadingModes.addAll(eventQueue.getSupportedThreadingModes());
+        eventDispatcher.getSupportedThreadingModes().forEach( //
+                threadingMode -> {
+                    if (ThreadingMode.SYNC == threadingMode) {
+                        // mapping the SYNC mode of the EventDispatcher to ASYNC
+                        // since the SYNC operation will be performed in queue
+                        // processing thread
+                        threadingModes.add(ThreadingMode.ASYNC);
+                    } else {
+                        threadingModes.add(threadingMode);
+                    }
+                }
+        );
 
         return Collections.unmodifiableSet(threadingModes);
+    }
+
+    /**
+     * Creates a daemon {@link Thread} with a unique name (to this class).
+     *
+     * @param queueProcessingRunnable
+     *            {@link Runnable} which will process the internal queue
+     * @return setup daemon thread
+     */
+    private Thread createQueueProcessingThread(final Runnable queueProcessingRunnable) {
+        final String threadName= getClass().getSimpleName() + "-" + INSTANCE_COUNT.incrementAndGet();
+        final Thread thread = new Thread(queueProcessingRunnable, threadName);
+        thread.setDaemon(true);
+
+        return thread;
+    }
+
+    /**
+     * Adds a {@link Runnable} which encloses the dispatching of an event to the
+     * internal queue.
+     * 
+     * @param eventDispatchingRunnable
+     *            a {@link Runnable} which will perform the dispatching
+     */
+    private void enqueueEventForDispatching(
+            final Runnable eventDispatchingRunnable
+    ) {
+        try {
+            eventQueue.put(eventDispatchingRunnable);
+        }
+        catch (final InterruptedException e) {
+            if (!isClosed()) {
+                logger.warn("Interrupted while trying to insert event into queue.", e);
+            }
+            // restore interrupted state
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Waits for events to appear in the queue and tries to dispatch them.
+     * <p>
+     * Implementation note:<br>
+     * As this method is doing the dispatching within the queue processing thread
+     * it might delay dispatching base on the behavior of the consumers.
+     * </p>
+     */
+    private void takeEventsFromQueueAndTryToDispatch() {
+        while (!isClosed()) {
+            try {
+                final Runnable eventDispatchingRunnable = eventQueue.take();
+                eventDispatchingRunnable.run();
+            } catch (final InterruptedException e) {
+                if (!isClosed()) {
+                    logger.warn("Interrupted while waiting for queued event.");
+                }
+                // restore interrupted state
+                Thread.currentThread().interrupt();
+            }
+        }
+        if (!eventQueue.isEmpty()) {
+            logger.warn("{} stopped. Events still queued: {}", getClass().getSimpleName(), eventQueue);
+        }
     }
 
 }

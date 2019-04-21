@@ -114,8 +114,6 @@
                                 org.kromo.lambdabus.dispatcher.impl,
                                 org.kromo.lambdabus.impl,
                                 org.kromo.lambdabus.impl.concurrent,
-                                org.kromo.lambdabus.queue,
-                                org.kromo.lambdabus.queue.impl,
                                 org.kromo.lambdabus.util
                             </Export-Package>
                         </instructions>

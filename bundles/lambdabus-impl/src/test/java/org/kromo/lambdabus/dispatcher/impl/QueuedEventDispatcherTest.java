@@ -31,8 +31,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.kromo.lambdabus.ThreadingMode;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
 import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
-import org.kromo.lambdabus.queue.EventQueue;
-import org.kromo.lambdabus.queue.impl.SharableEventQueue;
 
 /**
  * Testing {@link QueuedEventDispatcher} reusing tests from
@@ -60,40 +58,40 @@ public class QueuedEventDispatcherTest
 
     @Test
     @DisplayName("Constructor - (EventQueue)")
-    public void constructorWithExecutorService() {
-        final EventQueue eventQueue = new SharableEventQueue();
-        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(eventQueue)) {
-            assertFalse(eventDispatcher.isClosed(), "Created 'QueuedEventDispatcher' must not be closed.");
-            assertFalse(eventQueue.isClosed(), "External 'EventQueue' must not be closed");
+    public void constructorWithNullEventDispatcher() {
+        final EventDispatcher eventDispatcher = new SynchronousEventDispatcher();
+        try (final EventDispatcher ed = new QueuedEventDispatcher(eventDispatcher)) {
+            assertFalse(ed.isClosed(), "Created 'QueuedEventDispatcher' must not be closed.");
+            assertFalse(eventDispatcher.isClosed(), "External 'eventDispatcher' must not be closed");
         } finally {
-            eventQueue.close();
+            eventDispatcher.close();
         }
-        assertTrue(eventQueue.isClosed(), "External 'EventQueue' must be closed");
+        assertTrue(eventDispatcher.isClosed(), "External 'EventQueue' must be closed");
     }
 
     @Test
-    @DisplayName("Constructor - null EventQueue throws NullPointerException")
+    @DisplayName("Constructor - null EventDispatcher throws NullPointerException")
     public void constructorNullExecutorServiceThrowsNPE() {
-        final EventQueue nullEventQueue = null;
+        final EventDispatcher nullEventDispatcher = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(nullEventQueue)) {}
+                    try (final EventDispatcher ed = new QueuedEventDispatcher(nullEventDispatcher)) {}
                 }
         );
     }
 
-    @DisplayName("Constructor - default ThreadingMode with null ExecutorService throws NullPointerException")
-    @ParameterizedTest(name = "Constructor - default ThreadingMode.{0} as default and null ExecutorService throws NullPointerException")
+    @DisplayName("Constructor - default ThreadingMode with null EventDispatcher throws NullPointerException")
+    @ParameterizedTest(name = "Constructor - default ThreadingMode.{0} as default and null EventDispatcher throws NullPointerException")
     @EnumSource(ThreadingMode.class)
     public void constructorNullExecutorServiceThrowsNPE(
             final ThreadingMode defaultThreadingMode
     ) {
-        final EventQueue nullEventQueue = null;
+        final EventDispatcher nullEventDispatcher = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(defaultThreadingMode, nullEventQueue)) {}
+                    try (final EventDispatcher ed = new QueuedEventDispatcher(defaultThreadingMode, nullEventDispatcher)) {}
                 }
         );
     }
@@ -105,16 +103,16 @@ public class QueuedEventDispatcherTest
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(nullDefaultThreadingMode)) {}
+                    try (final EventDispatcher ed = new QueuedEventDispatcher(nullDefaultThreadingMode)) {}
                 }
         );
 
-        final EventQueue eventQueue = new SharableEventQueue();
+        final EventDispatcher eventQueue = new SynchronousEventDispatcher();
         try {
             assertThrows(
                     NullPointerException.class,
                     () -> {
-                        try (final EventDispatcher eventDispatcher = new QueuedEventDispatcher(nullDefaultThreadingMode, eventQueue)) {}
+                        try (final EventDispatcher ed = new QueuedEventDispatcher(nullDefaultThreadingMode, eventQueue)) {}
                     }
             );
         } finally {
