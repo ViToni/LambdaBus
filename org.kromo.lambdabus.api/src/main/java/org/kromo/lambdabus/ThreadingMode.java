@@ -25,8 +25,10 @@ import java.util.concurrent.Executor;
  * The {@link ThreadingMode} is used to indicate to the event bus how events
  * should be dispatched.
  *
- * <p>As event subscribers might block when an event is dispatched to them,
- * specific events can be posted with a non-default {@link ThreadingMode}.</p>
+ * <p>
+ * As event subscribers might block when an event is dispatched to them,
+ * specific events can be posted with a non-default {@link ThreadingMode}.
+ * </p>
  *
  * @author Victor Toni - initial API
  *
@@ -44,24 +46,23 @@ public enum ThreadingMode {
     SYNC,
 
     /**
-     * Posting should be non-blocking and dispatching should be done in a
-     * separate thread.
+     * Posting should be non-blocking and dispatching should be done in a separate
+     * thread.
      * <p>
      * Note:<br>
-     * Since all dispatching is done in one thread, subscribers (even of
-     * different subscriber classes) can block each other in the dispatching
-     * thread.
+     * Since all dispatching is done in one thread, subscribers (even of different
+     * subscriber classes) can block each other in the dispatching thread.
      * </p>
      */
     ASYNC,
 
     /**
-     * Dispatching should be done in one thread per event, individual
-     * subscribers to one event type might block each other.
+     * Dispatching should be done in one thread per event, individual subscribers to
+     * one event type might block each other.
      * <p>
      * Note:<br>
-     * An event will be dispatched in a separate thread regardless of the
-     * number of registered subscribers for this event class.<br>
+     * An event will be dispatched in a separate thread regardless of the number of
+     * registered subscribers for this event class.<br>
      * If there are many events for blocking subscribers, using a constrained
      * {@link Executor} may cause a bottleneck.
      * </p>
@@ -73,8 +74,8 @@ public enum ThreadingMode {
      * subscribers won't block each other.
      * <p>
      * Note:<br>
-     * If an event class has {@code N} subscribers up to {@code N} threads will be used while
-     * dispatching (depending on the executor used).<br>
+     * If an event class has {@code N} subscribers up to {@code N} threads will be
+     * used while dispatching (depending on the executor used).<br>
      * If there are many events for blocking subscribers, using a constrained
      * {@link Executor} may cause a bottleneck.
      * </p>

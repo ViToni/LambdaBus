@@ -26,27 +26,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.kromo.lambdabus.DeadEvent;
 import org.kromo.lambdabus.LambdaBus;
 import org.kromo.lambdabus.Subscription;
 import org.kromo.lambdabus.ThreadingMode;
-import org.kromo.lambdabus.util.NullEventPublisherLogger;
-import org.kromo.lambdabus.util.UnsupportedThreadingModeReporter;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
 import org.kromo.lambdabus.dispatcher.impl.SynchronousEventDispatcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.kromo.lambdabus.util.NullEventPublisherLogger;
+import org.kromo.lambdabus.util.UnsupportedThreadingModeReporter;
 
 /**
  * The {@link DispatchingLambdaBus} uses a strategy pattern to change
- * dispatching behavior.
- * Dispatching is delegated to an implementation of the {@link EventDispatcher}.
- * Subscriptions management logic is handled by an instance of {@code SubscriptionManager}
+ * dispatching behavior. Dispatching is delegated to an implementation of the
+ * {@link EventDispatcher}. Subscriptions management logic is handled by an
+ * instance of {@code SubscriptionManager}
  *
  * @author Victor Toni - initial API and implementation
  *
  */
-public class DispatchingLambdaBus implements LambdaBus {
+public class DispatchingLambdaBus
+        implements LambdaBus {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -56,12 +58,14 @@ public class DispatchingLambdaBus implements LambdaBus {
     private final NullEventPublisherLogger nullEventPublisherLogger = new NullEventPublisherLogger();
 
     /**
-     * Default {@link Runnable} to be executed when a {@code null} event has been received.
+     * Default {@link Runnable} to be executed when a {@code null} event has been
+     * received.
      */
     private final Runnable defaultRunnableForNullEvent = nullEventPublisherLogger::logNullEventSource;
 
     /**
-     * {@link Runnable} to be executed when a {@code null} event has been posted to the bus.
+     * {@link Runnable} to be executed when a {@code null} event has been posted to
+     * the bus.
      */
     private final AtomicReference<Runnable> runnableForNullEventRef = new AtomicReference<>();
 
@@ -88,16 +92,17 @@ public class DispatchingLambdaBus implements LambdaBus {
     }
 
     /**
-     * Creates an instance using the given {@link EventDispatcher} for actual dispatching.
+     * Creates an instance using the given {@link EventDispatcher} for actual
+     * dispatching.
      *
      * @param eventDispatcher
-     *            non-{@code null} {@link EventDispatcher} which handles the actual event dispatching
+     *            non-{@code null} {@link EventDispatcher} which handles the actual
+     *            event dispatching
      * @throws NullPointerException
      *             if {@code eventDispatcher} is {@code null}
      */
     public DispatchingLambdaBus(
-            final EventDispatcher eventDispatcher
-    ) {
+            final EventDispatcher eventDispatcher) {
         this(eventDispatcher, new DefaultSubscriptionManager());
     }
 
@@ -106,20 +111,22 @@ public class DispatchingLambdaBus implements LambdaBus {
      * dispatching and {@link SubscriptionManager}.
      *
      * @param eventDispatcher
-     *            non-{@code null} {@link EventDispatcher} which handles the
-     *            actual event dispatching
+     *            non-{@code null} {@link EventDispatcher} which handles the actual
+     *            event dispatching
      * @param subscriptionManager
      *            non-{@code null} {@link SubscriptionManager}
      * @throws NullPointerException
-     *             if any of {@code eventDispatcher} {@code subscriptionManager} are {@code null}
+     *             if any of {@code eventDispatcher} {@code subscriptionManager} are
+     *             {@code null}
      */
     public DispatchingLambdaBus(
             final EventDispatcher eventDispatcher,
-            final SubscriptionManager subscriptionManager
-    ) {
-        this.eventDispatcher = Objects.requireNonNull(eventDispatcher, "'eventDispatcher' must not be null");
+            final SubscriptionManager subscriptionManager) {
+        this.eventDispatcher = Objects.requireNonNull(eventDispatcher,
+                "'eventDispatcher' must not be null");
 
-        this.subscriptionManager = Objects.requireNonNull(subscriptionManager, "'subscriptionManager' must not be null");
+        this.subscriptionManager = Objects.requireNonNull(subscriptionManager,
+                "'subscriptionManager' must not be null");
 
         setDefaultRunnableForNullEventWithoutCheckingBusState();
     }
@@ -129,8 +136,7 @@ public class DispatchingLambdaBus implements LambdaBus {
      */
     @Override
     public final <T> void post(
-            final T event
-    ) {
+            final T event) {
         post(event, getDefaultThreadingMode());
     }
 
@@ -140,15 +146,15 @@ public class DispatchingLambdaBus implements LambdaBus {
     @Override
     public final <T> void post(
             final T event,
-            final ThreadingMode threadingModeHint
-    ) {
+            final ThreadingMode threadingModeHint) {
         validateBusIsOpen(", events not accepted anymore!");
 
         Objects.requireNonNull(threadingModeHint, "'threadingModeHint' must not be null");
 
         if (Objects.nonNull(event)) {
             // ensure that we pass only supported ThreadingModes
-            final ThreadingMode supportedThreadingMode = getSupportedThreadingMode(threadingModeHint);
+            final ThreadingMode supportedThreadingMode = getSupportedThreadingMode(
+                    threadingModeHint);
 
             // has to be implemented by subclass
             acceptNonNullEvent(event, supportedThreadingMode);
@@ -170,8 +176,7 @@ public class DispatchingLambdaBus implements LambdaBus {
     @Override
     public <T> Subscription subscribe(
             final Class<T> eventClass,
-            final Consumer<T> eventHandler
-    ) {
+            final Consumer<T> eventHandler) {
         validateBusIsOpen(", subscriber not accepted anymore!");
 
         return subscriptionManager.subscribe(eventClass, eventHandler);
@@ -182,8 +187,7 @@ public class DispatchingLambdaBus implements LambdaBus {
      */
     @Override
     public <T> boolean hasSubscriberForClass(
-            final Class<T> eventClass
-    ) {
+            final Class<T> eventClass) {
         return subscriptionManager.hasHandlerForSpecificType(eventClass);
     }
 
@@ -192,7 +196,7 @@ public class DispatchingLambdaBus implements LambdaBus {
      */
     @Override
     public final void close() {
-        if(closed.compareAndSet(false, true)) {
+        if (closed.compareAndSet(false, true)) {
             // quit dispatching
             eventDispatcher.close();
 
@@ -211,8 +215,8 @@ public class DispatchingLambdaBus implements LambdaBus {
     }
 
     /**
-     * Sets the default {@link Runnable} which gets executed whenever a
-     * {@code null} event is posted to the bus.<br>
+     * Sets the default {@link Runnable} which gets executed whenever a {@code null}
+     * event is posted to the bus.<br>
      * The {@link #defaultRunnableForNullEvent} is used as default.
      */
     public final void setDefaultRunnableForNullEvent() {
@@ -220,8 +224,8 @@ public class DispatchingLambdaBus implements LambdaBus {
     }
 
     /**
-     * Sets the default {@link Runnable} which gets executed whenever a
-     * {@code null} event is posted to the bus.<br>
+     * Sets the default {@link Runnable} which gets executed whenever a {@code null}
+     * event is posted to the bus.<br>
      * The {@link #defaultRunnableForNullEvent} is used as default.
      */
     protected final void setDefaultRunnableForNullEventWithoutCheckingBusState() {
@@ -229,8 +233,8 @@ public class DispatchingLambdaBus implements LambdaBus {
     }
 
     /**
-     * Sets the {@link Runnable} which gets executed whenever a {@code null}
-     * event is posted to the bus.
+     * Sets the {@link Runnable} which gets executed whenever a {@code null} event
+     * is posted to the bus.
      *
      * @param runnable
      *            non-{@code null} {@link Runnable} which gets executed on
@@ -241,28 +245,26 @@ public class DispatchingLambdaBus implements LambdaBus {
      *             if the bus has been closed already
      */
     public final void setRunnableForNullEvent(
-            final Runnable runnable
-    ) {
+            final Runnable runnable) {
         validateBusIsOpen();
 
         setRunnableForNullEventWithoutCheckingBusState(runnable);
     }
 
     /**
-     * Sets the {@link Runnable} which gets executed whenever a {@code null}
-     * event is posted to the bus.
+     * Sets the {@link Runnable} which gets executed whenever a {@code null} event
+     * is posted to the bus.
      *
      * @param runnableForNullEvent
-     *            non-{@code null} {@link Runnable} which gets executed on any {@code null}
-     *            event
+     *            non-{@code null} {@link Runnable} which gets executed on any
+     *            {@code null} event
      * @throws NullPointerException
      *             if runnable is {@code null}
      * @throws IllegalStateException
      *             if the bus has been closed already
      */
     protected final void setRunnableForNullEventWithoutCheckingBusState(
-            final Runnable runnableForNullEvent
-    ) {
+            final Runnable runnableForNullEvent) {
         Objects.requireNonNull(runnableForNullEvent, "'runnableForNullEvent' must not be null");
         runnableForNullEventRef.set(runnableForNullEvent);
     }
@@ -281,20 +283,18 @@ public class DispatchingLambdaBus implements LambdaBus {
     }
 
     /**
-     * Checks if a {@link Runnable} was set to get executed whenever a
-     * {@code null} event is posted to the bus.
+     * Checks if a {@link Runnable} was set to get executed whenever a {@code null}
+     * event is posted to the bus.
      *
      * @throws IllegalStateException
      *             if the bus has been closed already
-     * @return {@code true} if a {@link Runnable} is set, {@code false}
-     *         otherwise
+     * @return {@code true} if a {@link Runnable} is set, {@code false} otherwise
      */
     public final boolean hasRunnableForNullEvent() {
         validateBusIsOpen();
 
         return Objects.nonNull(
-                runnableForNullEventRef.get()
-        );
+                runnableForNullEventRef.get());
     }
 
     /**
@@ -322,34 +322,32 @@ public class DispatchingLambdaBus implements LambdaBus {
 
     private <T> void acceptNonNullEvent(
             final T event,
-            final ThreadingMode supportedThreadingMode
-    ) {
+            final ThreadingMode supportedThreadingMode) {
         tryToDispatchNonNullEvent(event, supportedThreadingMode);
     }
 
     private <T> void dispatchNonNullEventToHandler(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final ThreadingMode supportedThreadingMode
-    ) {
+            final ThreadingMode supportedThreadingMode) {
         /*
-        * Delegate to the dispatcher so that it can decide on its own which
-        * dispatching strategy to use.
-        */
+         * Delegate to the dispatcher so that it can decide on its own which dispatching
+         * strategy to use.
+         */
         eventDispatcher.dispatchEventToHandler(
                 event,
                 eventHandlerCollection,
                 supportedThreadingMode);
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Protected helper methods
-    //##########################################################################
+    // ##########################################################################
 
     /**
-     * Checks whether a {@link ThreadingMode} is supported by the event bus, if it is it will be
-     * returned otherwise the default {@link ThreadingMode} ({@link #getDefaultThreadingMode()})
-     * will be returned.
+     * Checks whether a {@link ThreadingMode} is supported by the event bus, if it
+     * is it will be returned otherwise the default {@link ThreadingMode}
+     * ({@link #getDefaultThreadingMode()}) will be returned.
      *
      * @param threadingModeHint
      *            {@link ThreadingMode} to check
@@ -358,8 +356,7 @@ public class DispatchingLambdaBus implements LambdaBus {
      * @see DispatchingLambdaBus#getDefaultThreadingMode()
      */
     protected final ThreadingMode getSupportedThreadingMode(
-            final ThreadingMode threadingModeHint
-    ) {
+            final ThreadingMode threadingModeHint) {
         if (isSupportedThreadingMode(threadingModeHint)) {
             return threadingModeHint;
         }
@@ -374,7 +371,8 @@ public class DispatchingLambdaBus implements LambdaBus {
      *
      * @param threadingMode
      *            to check if it is supported
-     * @return {@code true} if {@link ThreadingMode} is supported, {@code false} otherwise
+     * @return {@code true} if {@link ThreadingMode} is supported, {@code false}
+     *         otherwise
      */
     protected final boolean isSupportedThreadingMode(final ThreadingMode threadingMode) {
         return getSupportedThreadingModes().contains(threadingMode);
@@ -400,14 +398,15 @@ public class DispatchingLambdaBus implements LambdaBus {
      */
     protected final void validateBusIsOpen(final String errorMessage) {
         if (isClosed()) {
-            throw new IllegalStateException(getClass().getSimpleName() + " already stopped" + errorMessage);
+            throw new IllegalStateException(
+                    getClass().getSimpleName() + " already stopped" + errorMessage);
         }
     }
 
     /**
      * Tries to dispatch a non-{@code null} event to matching subscriber.<br>
-     * If no matching subscriber were found the {@link DeadEvent}
-     * {@link Consumer} will be called (if registered).
+     * If no matching subscriber were found the {@link DeadEvent} {@link Consumer}
+     * will be called (if registered).
      *
      * @param <T>
      *            type of event
@@ -421,19 +420,20 @@ public class DispatchingLambdaBus implements LambdaBus {
      */
     protected final <T> void tryToDispatchNonNullEvent(
             final T event,
-            final ThreadingMode supportedThreadingMode
-    ) {
+            final ThreadingMode supportedThreadingMode) {
         @SuppressWarnings("unchecked")
         final Class<T> eventClass = (Class<T>) event.getClass();
 
-        final Collection<Consumer<T>> eventHandlerCollection = subscriptionManager.getHandlerFor(eventClass);
+        final Collection<Consumer<T>> eventHandlerCollection = subscriptionManager
+                .getHandlerFor(eventClass);
         if (!eventHandlerCollection.isEmpty()) {
             dispatchNonNullEventToHandler(
                     event,
                     eventHandlerCollection,
                     supportedThreadingMode);
         } else {
-            final Collection<Consumer<DeadEvent>> deadEventHandlerCollection = subscriptionManager.getHandlerFor(DeadEvent.class);
+            final Collection<Consumer<DeadEvent>> deadEventHandlerCollection = subscriptionManager
+                    .getHandlerFor(DeadEvent.class);
             if (!deadEventHandlerCollection.isEmpty()) {
                 final DeadEvent deadEvent = new DeadEvent(event);
                 dispatchNonNullEventToHandler(
@@ -450,17 +450,17 @@ public class DispatchingLambdaBus implements LambdaBus {
      * <p>
      * Implementation note:<br>
      * Internally the logging is done via the class
-     * {@link UnsupportedThreadingModeReporter} so that excessive occurrence of
-     * log entries about unsupported {@link ThreadingMode}s can be filtered out easily.
+     * {@link UnsupportedThreadingModeReporter} so that excessive occurrence of log
+     * entries about unsupported {@link ThreadingMode}s can be filtered out easily.
      * </p>
      *
      * @param unsupportedThreadingMode
      *            unsupported {@link ThreadingMode} to be logged
      */
     protected final void logUnsupportedThreadingMode(
-            final ThreadingMode unsupportedThreadingMode
-    ) {
-        UnsupportedThreadingModeReporter.report(getDefaultThreadingMode(), unsupportedThreadingMode);
+            final ThreadingMode unsupportedThreadingMode) {
+        UnsupportedThreadingModeReporter.report(getDefaultThreadingMode(),
+                unsupportedThreadingMode);
     }
 
 }

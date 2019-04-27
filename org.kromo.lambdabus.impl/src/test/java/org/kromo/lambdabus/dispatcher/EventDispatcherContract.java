@@ -66,14 +66,18 @@ public abstract class EventDispatcherContract<EventDispatcherType extends Abstra
                     eventDispatcher.isClosed(),
                     eventDispatcherName + " is closed");
 
-            eventDispatcher.dispatchEventToHandler("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC);
+            eventDispatcher.dispatchEventToHandler("event",
+                    Collections.singletonList(System.out::println), ThreadingMode.SYNC);
 
             eventDispatcher.close();
             assertTrue(
                     eventDispatcher.isClosed(),
                     eventDispatcherName + " is not closed after close()");
 
-            assertThrows(IllegalStateException.class, () -> eventDispatcher.dispatchEventToHandler("event", Collections.singletonList(System.out::println), ThreadingMode.SYNC));
+            assertThrows(
+                    IllegalStateException.class,
+                    () -> eventDispatcher.dispatchEventToHandler("event",
+                            Collections.singletonList(System.out::println), ThreadingMode.SYNC));
         } finally {
             eventDispatcher.close();
         }
@@ -91,20 +95,26 @@ public abstract class EventDispatcherContract<EventDispatcherType extends Abstra
 
             assertNotNull(
                     eventDispatcher.getSupportedThreadingModes(),
-                    "'" + eventDispatcherName + ".getSupportedThreadingModes()' must not return null");
+                    "'" + eventDispatcherName
+                            + ".getSupportedThreadingModes()' must not return null");
 
             assertFalse(
-                    eventDispatcher.getSupportedThreadingModes().isEmpty(),
-                    "'" + eventDispatcherName + ".getSupportedThreadingModes()' must not return empty Set");
+                    eventDispatcher.getSupportedThreadingModes()
+                            .isEmpty(),
+                    "'" + eventDispatcherName
+                            + ".getSupportedThreadingModes()' must not return empty Set");
 
-            for (final ThreadingMode supportedThreadingMode : eventDispatcher.getSupportedThreadingModes()) {
+            for (final ThreadingMode supportedThreadingMode : eventDispatcher
+                    .getSupportedThreadingModes()) {
                 assertNotNull(
                         supportedThreadingMode,
-                        "'" + eventDispatcherName + ".getDefaultThreadingMode()' must not contain null");
+                        "'" + eventDispatcherName
+                                + ".getDefaultThreadingMode()' must not contain null");
             }
 
             final ThreadingMode defaultThreadingMode = eventDispatcher.getDefaultThreadingMode();
-            final Set<ThreadingMode> supportedThreadingModes = eventDispatcher.getSupportedThreadingModes();
+            final Set<ThreadingMode> supportedThreadingModes = eventDispatcher
+                    .getSupportedThreadingModes();
 
             assertTrue(supportedThreadingModes.contains(defaultThreadingMode),
                     "'supportedThreadingModes' does not contain 'defaultThreadingMode'");

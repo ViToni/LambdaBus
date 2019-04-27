@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -96,9 +97,9 @@ public class DispatchingUtilTest {
 
     private static final Random rnd = new SecureRandom();
 
-    //##########################################################################
+    // ##########################################################################
     // Test cases for {@link DispatchingUtil#dispatchEventSafely(Object, Consumer)}
-    //##########################################################################
+    // ##########################################################################
 
     @Nested
     public class dispatchEventSafelyTest {
@@ -117,7 +118,8 @@ public class DispatchingUtilTest {
             final Consumer<Object> eventConsumer = (dispatchedEvent) -> {
                 counter.incrementAndGet();
                 objectRef.set(dispatchedEvent);
-                threadHashCodes.add(Thread.currentThread().hashCode());
+                threadHashCodes.add(Thread.currentThread()
+                        .hashCode());
             };
 
             for (int i = 0; i < eventCount; i++) {
@@ -128,11 +130,13 @@ public class DispatchingUtilTest {
                 assertEquals(event, objectRef.get(), "Wrong event was dispatched to consumer");
             }
 
-            final Integer thisThreadHashCode = Thread.currentThread().hashCode();
+            final Integer thisThreadHashCode = Thread.currentThread()
+                    .hashCode();
 
             // threads didn't change from event to event
             assertEquals(1, threadHashCodes.size());
-            assertEquals(thisThreadHashCode, threadHashCodes.iterator().next());
+            assertEquals(thisThreadHashCode, threadHashCodes.iterator()
+                    .next());
         }
 
         @Test
@@ -163,23 +167,21 @@ public class DispatchingUtilTest {
             assertDispatchEventSafelyDoesNotThrow(throwable);
         }
 
-        //##########################################################################
+        // ##########################################################################
         // Helper methods
-        //##########################################################################
+        // ##########################################################################
 
         private void assertDispatchEventSafelyThrows(final Throwable throwable) {
             final Object event = new Object();
 
             assertThrows(
                     throwable.getClass(),
-                    () -> dispatchEventSafely(event, throwable)
-            );
+                    () -> dispatchEventSafely(event, throwable));
 
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             assertThrows(
                     throwable.getClass(),
-                    () -> dispatchEventSafely(event, throwable, spyLogger)
-            );
+                    () -> dispatchEventSafely(event, throwable, spyLogger));
             verifyNoMoreInteractions(spyLogger);
         }
 
@@ -187,26 +189,26 @@ public class DispatchingUtilTest {
             final Object event = new Object();
 
             assertDoesNotThrow(
-                    () -> dispatchEventSafely(event, throwable)
-            );
+                    () -> dispatchEventSafely(event, throwable));
 
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             assertDoesNotThrow(
-                    () -> dispatchEventSafely(event, throwable, spyLogger)
-            );
+                    () -> dispatchEventSafely(event, throwable, spyLogger));
             verify(spyLogger, times(1))
-                .warn(
-                        anyString(),
-                        any(event.getClass()),
-                        eq(throwable)
-                );
+                    .warn(
+                            anyString(),
+                            any(event.getClass()),
+                            eq(throwable));
         }
 
         private <T> void dispatchEventSafely(final T event, final Throwable throwable) {
             dispatchEventSafely(event, throwable, null);
         }
 
-        private <T> void dispatchEventSafely(final T event, final Throwable throwable, final Logger logger) {
+        private <T> void dispatchEventSafely(
+                final T event,
+                final Throwable throwable,
+                final Logger logger) {
             assertNotNull(event, "Event to dispatch was NULL");
             assertNotNull(throwable, "Exception to be raised was NULL");
 
@@ -220,9 +222,10 @@ public class DispatchingUtilTest {
         }
     }
 
-    //##########################################################################
-    // Test cases for {@link DispatchingUtil#dispatchEventToSubscriber(Object, Collection)}
-    //##########################################################################
+    // ##########################################################################
+    // Test cases for {@link DispatchingUtil#dispatchEventToSubscriber(Object,
+    // Collection)}
+    // ##########################################################################
 
     @Nested
     public class dispatchEventToSubscriberTest {
@@ -257,24 +260,24 @@ public class DispatchingUtilTest {
             dispatchEventToSubscriber(useDefaultLogger, testExceptionsToo);
         }
 
-        //##########################################################################
+        // ##########################################################################
         // Helper methods
-        //##########################################################################
+        // ##########################################################################
 
         private void dispatchEventToSubscriber(
                 final boolean useDefaultLogger,
-                final boolean testExceptionsToo
-        ) {
+                final boolean testExceptionsToo) {
             final int eventCount = DEFAULT_EVENT_COUNT;
             final int evenEventCount = eventCount / 2 + eventCount % 2;
-            final int oddEventCount = eventCount / 2 ;
+            final int oddEventCount = eventCount / 2;
             final int subscriberCount = DEFAULT_SUBSCRIBER_COUNT;
-            final int exceptionThrowingSubscriberCount =
-                    testExceptionsToo ? subscriberCount / 2 : 0;
+            final int exceptionThrowingSubscriberCount = testExceptionsToo
+                    ? subscriberCount / 2
+                    : 0;
 
-            final int totalEventCount     = subscriberCount * eventCount ;
-            final int expectedEvenCount   = subscriberCount * evenEventCount;
-            final int expectedOddCount    = subscriberCount * oddEventCount;
+            final int totalEventCount = subscriberCount * eventCount;
+            final int expectedEvenCount = subscriberCount * evenEventCount;
+            final int expectedOddCount = subscriberCount * oddEventCount;
             final int totalExceptionCount = exceptionThrowingSubscriberCount * eventCount;
 
             final AtomicInteger evenCounter = new AtomicInteger();
@@ -288,7 +291,8 @@ public class DispatchingUtilTest {
             final Consumer<String> eventConsumer = (dispatchedEvent) -> {
                 final int n = Integer.valueOf(dispatchedEvent);
                 final boolean even = isEven(n);
-                threadHashCodes.add(Thread.currentThread().hashCode());
+                threadHashCodes.add(Thread.currentThread()
+                        .hashCode());
 
                 if (even) {
                     evenCounter.incrementAndGet();
@@ -309,7 +313,7 @@ public class DispatchingUtilTest {
             };
 
             final List<Consumer<String>> eventHandlerCollection = new ArrayList<>();
-            for(int i = 0; i < subscriberCount; i++) {
+            for (int i = 0; i < subscriberCount; i++) {
                 final boolean odd = isOdd(i);
                 if (testExceptionsToo && odd) {
                     eventHandlerCollection.add(exceptionalConsumer);
@@ -318,7 +322,7 @@ public class DispatchingUtilTest {
                 }
             }
 
-            for(int loopIndex = 0; loopIndex < eventCount; loopIndex++) {
+            for (int loopIndex = 0; loopIndex < eventCount; loopIndex++) {
                 // create unique events
                 final String event = String.format("%03d", loopIndex);
                 dispatchEventAndAssert(
@@ -345,9 +349,10 @@ public class DispatchingUtilTest {
                 final Set<Integer> threadHashCodes,
                 final boolean useDefaultLogger,
                 final int exceptionThrowingSubscriberCount,
-                final Class<? extends Exception> exceptionClass
-        ) {
-            final Logger spyLogger = useDefaultLogger ? null : Mockito.spy(new SpyableLogger(logger)) ;
+                final Class<? extends Exception> exceptionClass) {
+            final Logger spyLogger = useDefaultLogger
+                    ? null
+                    : Mockito.spy(new SpyableLogger(logger));
 
             dispatchEventAndAssert(
                     event,
@@ -362,12 +367,13 @@ public class DispatchingUtilTest {
                 if (0 == exceptionThrowingSubscriberCount) {
                     verifyNoMoreInteractions(spyLogger);
                 } else {
-                    verify(spyLogger, timeout(MAX_WAIT_TIME.toMillis()).times(exceptionThrowingSubscriberCount))
-                        .warn(
-                                anyString(),
-                                eq(event),
-                                isA(exceptionClass)
-                        );
+                    verify(spyLogger,
+                            timeout(MAX_WAIT_TIME.toMillis())
+                                    .times(exceptionThrowingSubscriberCount))
+                                            .warn(
+                                                    anyString(),
+                                                    eq(event),
+                                                    isA(exceptionClass));
                 }
             }
         }
@@ -379,8 +385,7 @@ public class DispatchingUtilTest {
                 final AtomicInteger handledCounter,
                 final Set<Integer> threadHashCodes,
                 final boolean useDefaultLogger,
-                final Logger logger
-        ) {
+                final Logger logger) {
             if (useDefaultLogger) {
                 DispatchingUtil.dispatchEventToHandler(event, eventHandlerCollection);
             } else {
@@ -397,9 +402,11 @@ public class DispatchingUtilTest {
         }
     }
 
-    //##########################################################################
-    // Test cases for {@link DispatchingUtil#dispatchEventToSubscriberThreadedPerEvent(Object, Collection, CompletableFuture, java.util.concurrent.Executor)}
-    //##########################################################################
+    // ##########################################################################
+    // Test cases for {@link
+    // DispatchingUtil#dispatchEventToSubscriberThreadedPerEvent(Object, Collection,
+    // CompletableFuture, java.util.concurrent.Executor)}
+    // ##########################################################################
 
     @Nested
     public class dispatchEventToSubscriberThreadedPerEventTest {
@@ -429,11 +436,12 @@ public class DispatchingUtilTest {
         @Test
         public void dispatchEventToSubscriber_RejectedExecutionException() {
             final int threadPoolSize = 1;
-            final Logger spyLogger = spy(new SpyableLogger(logger)) ;
+            final Logger spyLogger = spy(new SpyableLogger(logger));
 
             executorService = new ThreadPoolExecutor(threadPoolSize, threadPoolSize,
                     0L, TimeUnit.MILLISECONDS,
-                    new SynchronousQueue<>(), // required so that tasks don't queue up but are rejected
+                    new SynchronousQueue<>(), // required so that tasks don't queue up but are
+                                              // rejected
                     threadFactory);
 
             final AtomicInteger startedCounter = new AtomicInteger();
@@ -445,9 +453,9 @@ public class DispatchingUtilTest {
             phaser.register();
 
             /*
-             * This consumer will block for some time. Since we are using an
-             * Executor with a single thread and a SynchronousQueue no other
-             * task can be queued/executed until it completes.
+             * This consumer will block for some time. Since we are using an Executor with a
+             * single thread and a SynchronousQueue no other task can be queued/executed
+             * until it completes.
              */
             final Consumer<String> blockingConsumer = (dispatchedEvent) -> {
                 startedCounter.incrementAndGet();
@@ -460,7 +468,8 @@ public class DispatchingUtilTest {
                 phaser.arriveAndAwaitAdvance();     // used to check if completed
             };
 
-            final List<Consumer<String>> eventHandlerCollection = Collections.singletonList(blockingConsumer);
+            final List<Consumer<String>> eventHandlerCollection = Collections
+                    .singletonList(blockingConsumer);
 
             final String firstEvent = String.format("%03d", 0);
             DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
@@ -469,8 +478,8 @@ public class DispatchingUtilTest {
                     executorService,
                     spyLogger);
 
-            final Supplier<String> arrivedPartiesSupplier =
-                    () -> "Arrived parties value: " + phaser.getArrivedParties();
+            final Supplier<String> arrivedPartiesSupplier = () -> "Arrived parties value: "
+                    + phaser.getArrivedParties();
 
             final Executable arriveAndAwaitAdvance = phaser::arriveAndAwaitAdvance;
 
@@ -498,18 +507,19 @@ public class DispatchingUtilTest {
             assertEquals(0, handledCounter.get());
 
             final ArgumentCaptor<String> strCaptor = ArgumentCaptor.forClass(String.class);
-            final ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+            final ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor
+                    .forClass(Exception.class);
             verify(spyLogger, times(1))
-                .error(
-                        anyString(),
-                        strCaptor.capture(),
-                        exceptionCaptor.capture()
-                );
+                    .error(
+                            anyString(),
+                            strCaptor.capture(),
+                            exceptionCaptor.capture());
 
             assertEquals(secondEvent, strCaptor.getValue());
 
             assertNotNull(exceptionCaptor.getValue());
-            assertEquals(RejectedExecutionException.class, exceptionCaptor.getValue().getClass());
+            assertEquals(RejectedExecutionException.class, exceptionCaptor.getValue()
+                    .getClass());
 
             // check that the first task did not complete yet
             assertEquals(1, startedCounter.get());
@@ -560,25 +570,24 @@ public class DispatchingUtilTest {
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
-        //##########################################################################
+        // ##########################################################################
         // Helper methods
-        //##########################################################################
+        // ##########################################################################
 
         private void dispatchEventToSubscriber(
                 final boolean useDefaultLogger,
-                final boolean testExceptionToo
-        ) {
+                final boolean testExceptionToo) {
             final int eventCount = DEFAULT_EVENT_COUNT;
             final int evenEventCount = eventCount / 2 + eventCount % 2;
-            final int oddEventCount = eventCount / 2 ;
+            final int oddEventCount = eventCount / 2;
             final int subscriberCount = DEFAULT_SUBSCRIBER_COUNT;
             final int exceptionThrowingSubscriberCount = subscriberCount / 2;
 
             executorService = Executors.newFixedThreadPool(subscriberCount, threadFactory);
 
-            final int totalEventCount     = subscriberCount * eventCount ;
-            final int expectedEvenCount   = subscriberCount * evenEventCount;
-            final int expectedOddCount    = subscriberCount * oddEventCount;
+            final int totalEventCount = subscriberCount * eventCount;
+            final int expectedEvenCount = subscriberCount * evenEventCount;
+            final int expectedOddCount = subscriberCount * oddEventCount;
             final int totalExceptionCount = exceptionThrowingSubscriberCount * eventCount;
 
             final AtomicInteger evenCounter = new AtomicInteger();
@@ -589,9 +598,10 @@ public class DispatchingUtilTest {
             final Map<TestEvent, Set<Integer>> threadHashCodesMap = new ConcurrentHashMap<>();
 
             final Consumer<TestEvent> eventConsumer = (dispatchedEvent) -> {
-                final Set<Integer> threadHashCodes =
-                        threadHashCodesMap.computeIfAbsent(dispatchedEvent, (event) -> ConcurrentHashMap.newKeySet());
-                threadHashCodes.add(Thread.currentThread().hashCode());
+                final Set<Integer> threadHashCodes = threadHashCodesMap
+                        .computeIfAbsent(dispatchedEvent, (event) -> ConcurrentHashMap.newKeySet());
+                threadHashCodes.add(Thread.currentThread()
+                        .hashCode());
 
                 randomDelay(subscriberCount);
 
@@ -620,7 +630,7 @@ public class DispatchingUtilTest {
             };
 
             final List<Consumer<TestEvent>> eventHandlerCollection = new ArrayList<>();
-            for(int i = 0; i < subscriberCount; i++) {
+            for (int i = 0; i < subscriberCount; i++) {
                 final boolean odd = isOdd(i);
                 if (testExceptionToo && odd) {
                     eventHandlerCollection.add(exceptionalConsumer);
@@ -629,7 +639,7 @@ public class DispatchingUtilTest {
                 }
             }
 
-            for(int loopIndex = 0; loopIndex < eventCount; loopIndex++) {
+            for (int loopIndex = 0; loopIndex < eventCount; loopIndex++) {
                 // create unique events
                 final String id = String.format("%03d", loopIndex);
                 final CountDownLatch dispatchedLatch = new CountDownLatch(subscriberCount);
@@ -665,8 +675,7 @@ public class DispatchingUtilTest {
                 final boolean testExceptionToo,
                 final Class<? extends Exception> exceptionClass,
                 final int exceptionThrowingSubscriberCount,
-                final Executor executor
-        ) {
+                final Executor executor) {
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             if (useDefaultLogger) {
                 DispatchingUtil.dispatchEventToHandlerThreadedPerEvent(
@@ -698,10 +707,10 @@ public class DispatchingUtilTest {
                 assertEquals(exceptionCount, exceptionCounter.get());
             }
 
-            if(!useDefaultLogger) {
+            if (!useDefaultLogger) {
                 if (testExceptionToo) {
                     verify(spyLogger, times(exceptionThrowingSubscriberCount))
-                        .warn(anyString(), eq(event), isA(exceptionClass));
+                            .warn(anyString(), eq(event), isA(exceptionClass));
                 } else {
                     verifyNoMoreInteractions(spyLogger);
                 }
@@ -712,25 +721,27 @@ public class DispatchingUtilTest {
 
         private <T> void assertThreadHandling(
                 final T event,
-                final Map<T, Set<Integer>> threadHashCodesMap
-        ) {
-            final int thisThreadHashCode = Thread.currentThread().hashCode();
+                final Map<T, Set<Integer>> threadHashCodesMap) {
+            final int thisThreadHashCode = Thread.currentThread()
+                    .hashCode();
             assertThreadHandling(thisThreadHashCode, event, threadHashCodesMap);
         }
 
         private <T> void assertThreadHandling(final Map<T, Set<Integer>> threadHashCodesMap) {
-            final int thisThreadHashCode = Thread.currentThread().hashCode();
-            for(final Map.Entry<T, Set<Integer>> threadHashCodesEntry : threadHashCodesMap.entrySet()) {
+            final int thisThreadHashCode = Thread.currentThread()
+                    .hashCode();
+            for (final Map.Entry<T, Set<Integer>> threadHashCodesEntry : threadHashCodesMap
+                    .entrySet()) {
                 final T event = threadHashCodesEntry.getKey();
 
                 assertThreadHandling(thisThreadHashCode, event, threadHashCodesMap);
             }
         }
+
         private <T> void assertThreadHandling(
                 final int thisThreadHashCode,
                 final T event,
-                final Map<T, Set<Integer>> threadHashCodesMap
-        ) {
+                final Map<T, Set<Integer>> threadHashCodesMap) {
             final Set<Integer> threadHashCodes = threadHashCodesMap.get(event);
 
             assertNotNull(threadHashCodes);
@@ -744,9 +755,11 @@ public class DispatchingUtilTest {
 
     }
 
-    //##########################################################################
-    // Test cases for {@link DispatchingUtil#dispatchEventToSubscriberThreadedPerSubscriber(Object, Collection, CompletableFuture, java.util.concurrent.Executor)}
-    //##########################################################################
+    // ##########################################################################
+    // Test cases for {@link
+    // DispatchingUtil#dispatchEventToSubscriberThreadedPerSubscriber(Object,
+    // Collection, CompletableFuture, java.util.concurrent.Executor)}
+    // ##########################################################################
 
     @Nested
     public class dispatchEventToSubscriberThreadedPerSubscriberTest {
@@ -775,16 +788,18 @@ public class DispatchingUtilTest {
 
         @Test
         public void dispatchEventToSubscriber_RejectedExecutionException() {
-            final Logger spyLogger = spy(new SpyableLogger(logger)) ;
+            final Logger spyLogger = spy(new SpyableLogger(logger));
 
             final int subscriberCount = DEFAULT_SUBSCRIBER_COUNT;
             final int threadPoolSize = subscriberCount / 2;
             final int rejectedSubscriberCount = subscriberCount - threadPoolSize;
 
+            // required so that tasks don't queue up but are rejected
+            final BlockingQueue<Runnable> workQueue = new SynchronousQueue<>();
             final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
                     threadPoolSize, threadPoolSize,
                     0L, TimeUnit.MILLISECONDS,
-                    new SynchronousQueue<>(), // required so that tasks don't queue up but are rejected
+                    workQueue,
                     threadFactory);
             threadPoolExecutor.allowCoreThreadTimeOut(false);
             threadPoolExecutor.prestartAllCoreThreads();
@@ -802,9 +817,9 @@ public class DispatchingUtilTest {
             phaser.register();
 
             /*
-             * This consumer will block for some time. Since we are using an
-             * Executor with a fixed thread count and a SynchronousQueue no other
-             * tasks can be queued/executed until it completes.
+             * This consumer will block for some time. Since we are using an Executor with a
+             * fixed thread count and a SynchronousQueue no other tasks can be
+             * queued/executed until it completes.
              */
             final Consumer<String> blockingConsumer = (dispatchedEvent) -> {
                 startedCounter.incrementAndGet();
@@ -829,8 +844,8 @@ public class DispatchingUtilTest {
                     executorService,
                     spyLogger);
 
-            final Supplier<String> arrivedPartiesSupplier =
-                    () -> "Arrived parties value: " + phaser.getArrivedParties();
+            final Supplier<String> arrivedPartiesSupplier = () -> "Arrived parties value: "
+                    + phaser.getArrivedParties();
 
             final Executable arriveAndAwaitAdvance = phaser::arriveAndAwaitAdvance;
 
@@ -845,18 +860,20 @@ public class DispatchingUtilTest {
             assertEquals(0, handledCounter.get());
 
             final ArgumentCaptor<String> strCaptor = ArgumentCaptor.forClass(String.class);
-            final ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor.forClass(Exception.class);
+            final ArgumentCaptor<Exception> exceptionCaptor = ArgumentCaptor
+                    .forClass(Exception.class);
             verify(spyLogger, times(rejectedSubscriberCount))
-                .error(
-                        anyString(),
-                        strCaptor.capture(),
-                        exceptionCaptor.capture()
-                );
+                    .error(
+                            anyString(),
+                            strCaptor.capture(),
+                            exceptionCaptor.capture());
 
             for (int i = 0; i < rejectedSubscriberCount; i++) {
-                assertEquals(event, strCaptor.getAllValues().get(i));
+                assertEquals(event, strCaptor.getAllValues()
+                        .get(i));
 
-                final Exception exception = exceptionCaptor.getAllValues().get(i);
+                final Exception exception = exceptionCaptor.getAllValues()
+                        .get(i);
                 assertNotNull(exception);
                 assertEquals(RejectedExecutionException.class, exception.getClass());
             }
@@ -906,17 +923,16 @@ public class DispatchingUtilTest {
             dispatchEventToSubscriber(useDefaultLogger, testExceptionToo);
         }
 
-        //##########################################################################
+        // ##########################################################################
         // Helper methods
-        //##########################################################################
+        // ##########################################################################
 
         private void dispatchEventToSubscriber(
                 final boolean useDefaultLogger,
-                final boolean testExceptionToo
-        ) {
+                final boolean testExceptionToo) {
             final int eventCount = DEFAULT_EVENT_COUNT;
             final int evenEventCount = eventCount / 2 + eventCount % 2;
-            final int oddEventCount = eventCount / 2 ;
+            final int oddEventCount = eventCount / 2;
             final int subscriberCount = DEFAULT_SUBSCRIBER_COUNT;
             final int exceptionThrowingSubscriberCount = subscriberCount / 2;
 
@@ -929,9 +945,9 @@ public class DispatchingUtilTest {
 
             executorService = threadPoolExecutor;
 
-            final int totalEventCount     = subscriberCount * eventCount ;
-            final int expectedEvenCount   = subscriberCount * evenEventCount;
-            final int expectedOddCount    = subscriberCount * oddEventCount;
+            final int totalEventCount = subscriberCount * eventCount;
+            final int expectedEvenCount = subscriberCount * evenEventCount;
+            final int expectedOddCount = subscriberCount * oddEventCount;
             final int totalExceptionCount = exceptionThrowingSubscriberCount * eventCount;
 
             final AtomicInteger evenCounter = new AtomicInteger();
@@ -942,11 +958,12 @@ public class DispatchingUtilTest {
             final Map<TestEvent, Set<Integer>> threadHashCodesMap = new ConcurrentHashMap<>();
 
             final Consumer<TestEvent> eventConsumer = (dispatchedEvent) -> {
-                final int threadHashCode = Thread.currentThread().hashCode();
+                final int threadHashCode = Thread.currentThread()
+                        .hashCode();
 
                 final Set<Integer> threadHashCodes = threadHashCodesMap.computeIfAbsent(
-                                dispatchedEvent,
-                                (event) -> ConcurrentHashMap.newKeySet());
+                        dispatchedEvent,
+                        (event) -> ConcurrentHashMap.newKeySet());
 
                 threadHashCodes.add(threadHashCode);
 
@@ -979,7 +996,7 @@ public class DispatchingUtilTest {
 
             final AtomicInteger exceptionalConsumerCounter = new AtomicInteger();
             final List<Consumer<TestEvent>> eventHandlerCollection = new ArrayList<>();
-            for(int i = 0; i < subscriberCount; i++) {
+            for (int i = 0; i < subscriberCount; i++) {
                 final boolean odd = isOdd(i);
                 if (testExceptionToo && odd) {
                     eventHandlerCollection.add(exceptionalConsumer);
@@ -989,7 +1006,7 @@ public class DispatchingUtilTest {
                 }
             }
 
-            for(int loopIndex = 0; loopIndex < eventCount; loopIndex++) {
+            for (int loopIndex = 0; loopIndex < eventCount; loopIndex++) {
                 // create unique event
                 final TestEvent event = createEvent(
                         loopIndex,
@@ -1021,8 +1038,7 @@ public class DispatchingUtilTest {
         private TestEvent createEvent(
                 final int loopIndex,
                 final int subscriberCount,
-                final int exceptionalConsumerCount
-        ) {
+                final int exceptionalConsumerCount) {
             final String id = String.format("%03d", loopIndex);
             final CountDownLatch dispatchedLatch = new CountDownLatch(subscriberCount);
             final CountDownLatch exceptionalLatch = new CountDownLatch(exceptionalConsumerCount);
@@ -1041,8 +1057,7 @@ public class DispatchingUtilTest {
                 final boolean testExceptionToo,
                 final Class<? extends Exception> exceptionClass,
                 final int exceptionThrowingSubscriberCount,
-                final Executor executor
-        ) {
+                final Executor executor) {
             final Logger spyLogger = Mockito.spy(new SpyableLogger(logger));
             if (useDefaultLogger) {
                 DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(
@@ -1082,14 +1097,15 @@ public class DispatchingUtilTest {
                 assertEquals(exceptionCount, exceptionCounter.get());
             }
 
-            if(!useDefaultLogger) {
+            if (!useDefaultLogger) {
                 if (testExceptionToo) {
-                    verify(spyLogger, timeout(MAX_WAIT_TIME.toMillis()).times(exceptionThrowingSubscriberCount))
-                        .warn(
-                                anyString(),
-                                eq(event),
-                                isA(exceptionClass)
-                        );
+                    verify(spyLogger,
+                            timeout(MAX_WAIT_TIME.toMillis())
+                                    .times(exceptionThrowingSubscriberCount))
+                                            .warn(
+                                                    anyString(),
+                                                    eq(event),
+                                                    isA(exceptionClass));
                 } else {
                     verifyNoMoreInteractions(spyLogger);
                 }
@@ -1098,16 +1114,17 @@ public class DispatchingUtilTest {
         }
 
         private <T> void assertThreadHandling(final Map<T, Set<Integer>> threadHashCodesMap) {
-            final int thisThreadHashCode = Thread.currentThread().hashCode();
-            for(final Map.Entry<T, Set<Integer>> threadHashCodesEntry : threadHashCodesMap.entrySet()) {
+            final int thisThreadHashCode = Thread.currentThread()
+                    .hashCode();
+            for (final Map.Entry<T, Set<Integer>> threadHashCodesEntry : threadHashCodesMap
+                    .entrySet()) {
                 assertThreadHandling(thisThreadHashCode, threadHashCodesEntry.getValue());
             }
         }
 
         private void assertThreadHandling(
                 final int thisThreadHashCode,
-                final Set<Integer> threadHashCodes
-        ) {
+                final Set<Integer> threadHashCodes) {
             assertNotNull(threadHashCodes);
 
             // dispatching occurred in more than one thread per event
@@ -1119,12 +1136,13 @@ public class DispatchingUtilTest {
 
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Static helper methods
-    //##########################################################################
+    // ##########################################################################
 
     /**
-     * Compiler infers <E> to a RuntimeException. Now we can throw everything!
+     * Compiler infers {@code <E>} to a {@link RuntimeException}.<br>
+     * Now we can throw everything!
      *
      * @param <E>
      *            type of exception to throw
@@ -1148,10 +1166,10 @@ public class DispatchingUtilTest {
 
     /**
      * Delay with a bit of randomness.<br>
-     * Internally it uses a recursive Fibonacci function to find a new
-     * sequence index for a second call to the Fibonacci sequence.
-     * This unusual approach is used since {@code Thread.sleep()} might take to
-     * long (and needs to handle exceptions).
+     * Internally it uses a recursive Fibonacci function to find a new sequence
+     * index for a second call to the Fibonacci sequence. This unusual approach is
+     * used since {@code Thread.sleep()} might take to long (and needs to handle
+     * exceptions).
      *
      * @param minIndex
      *            minimum index of the first Fibonacci sequence value
@@ -1181,7 +1199,8 @@ public class DispatchingUtilTest {
     }
 
     /**
-     * Special event used to track when an event has been dispatched to all subscribers.
+     * Special event used to track when an event has been dispatched to all
+     * subscribers.
      */
     private static class TestEvent {
         public final String id;
@@ -1190,19 +1209,19 @@ public class DispatchingUtilTest {
 
         public TestEvent(
                 final String id,
-                final CountDownLatch dispatchedLatch
-        ) {
+                final CountDownLatch dispatchedLatch) {
             this(id, dispatchedLatch, new CountDownLatch(0));
         }
 
         public TestEvent(
                 final String id,
                 final CountDownLatch dispatchedLatch,
-                final CountDownLatch exceptionLatch
-        ) {
+                final CountDownLatch exceptionLatch) {
             this.id = Objects.requireNonNull(id, "'id' must not be null");
-            this.dispatchedLatch = Objects.requireNonNull(dispatchedLatch, "'dispatchedLatch' must not be null");
-            this.exceptionLatch = Objects.requireNonNull(exceptionLatch, "'exceptionLatch' must not be null");
+            this.dispatchedLatch = Objects.requireNonNull(dispatchedLatch,
+                    "'dispatchedLatch' must not be null");
+            this.exceptionLatch = Objects.requireNonNull(exceptionLatch,
+                    "'exceptionLatch' must not be null");
         }
 
         @Override

@@ -41,7 +41,8 @@ import org.kromo.lambdabus.Subscription;
  * @author Victor Toni - initial API and implementation
  *
  */
-public class DefaultSubscriptionManager implements SubscriptionManager {
+public class DefaultSubscriptionManager
+        implements SubscriptionManager {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -52,8 +53,8 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
     private final Map<Class<?>, Collection<Consumer<?>>> eventHandlerCollectionMap;
 
     /**
-     * Tracks all {@link Subscription}s not closed yet so that they can be
-     * closed on {@link #close()}.
+     * Tracks all {@link Subscription}s not closed yet so that they can be closed on
+     * {@link #close()}.
      */
     private final Collection<Subscription> subscriptionCollection = new CopyOnWriteArrayList<>();
 
@@ -64,9 +65,9 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
 
 
     /**
-     * Used to create a new {@link Collection} to store event handler.
-     * This supplier is used when a new type has been used the first time to
-     * create a subscription.
+     * Used to create a new {@link Collection} to store event handler. This supplier
+     * is used when a new type has been used the first time to create a
+     * subscription.
      */
     private final Supplier<Collection<Consumer<?>>> eventHandlerCollectionSupplier;
 
@@ -79,12 +80,11 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
 
 
     /**
-     * Creates an instance using the given {@link Supplier} for actual
-     * dispatching.
+     * Creates an instance using the given {@link Supplier} for actual dispatching.
      *
      * @param eventHandlerCollectionMapSupplier
-     *            non-{@code null} {@link Supplier} used to create the map
-     *            between types and their collection of event handlers
+     *            non-{@code null} {@link Supplier} used to create the map between
+     *            types and their collection of event handlers
      * @param eventHandlerCollectionSupplier
      *            non-{@code null} {@link Supplier} which creates
      *            {@link Collection}s storing the event handler
@@ -92,10 +92,9 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      *             if any of {@code eventHandlerCollectionMapSupplier} or
      *             {@code eventHandlerCollectionSupplier} is {@code null}
      */
-    public DefaultSubscriptionManager( //
+    public DefaultSubscriptionManager(
             final Supplier<Map<Class<?>, Collection<Consumer<?>>>> eventHandlerCollectionMapSupplier,
-            final Supplier<Collection<Consumer<?>>> eventHandlerCollectionSupplier
-    ) {
+            final Supplier<Collection<Consumer<?>>> eventHandlerCollectionSupplier) {
         eventHandlerCollectionMap = Objects.requireNonNull(eventHandlerCollectionMapSupplier,
                 "'eventHandlerCollectionMapSupplier' must not be null")
                 .get();
@@ -111,14 +110,14 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
     @Override
     public <T> Subscription subscribe(
             final Class<T> eventClass,
-            final Consumer<T> eventHandler
-    ) {
+            final Consumer<T> eventHandler) {
         validateIsOpen(", subscriber not accepted anymore!");
 
         Objects.requireNonNull(eventClass, "'eventClass' must not be null");
         Objects.requireNonNull(eventHandler, "'eventHandler' must not be null");
 
-        final Collection<Consumer<T>> eventHandlerCollection = getEventHandlerCollectionOrCreateIfAbsent(eventClass);
+        final Collection<Consumer<T>> eventHandlerCollection = getEventHandlerCollectionOrCreateIfAbsent(
+                eventClass);
 
         final Subscription subscription = addEventHandlerAndReturnSubscription(
                 eventClass,
@@ -135,8 +134,7 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      */
     @Override
     public <T> boolean hasHandlerForSpecificType(
-            final Class<T> eventClass
-    ) {
+            final Class<T> eventClass) {
 
         // We don't use getHandlerFor() because we don't need any casting
         // related to T and we want to restrict the search to the specific
@@ -151,14 +149,14 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      */
     @Override
     public <T> boolean hasHandlerFor(
-            final Class<T> eventClass
-    ) {
+            final Class<T> eventClass) {
         if (hasHandlerForSpecificType(eventClass)) {
             return true;
         }
 
         for (final Class<?> eventInterface : eventClass.getInterfaces()) {
-            final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap.get(eventInterface);
+            final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap
+                    .get(eventInterface);
             // First match wins. Interfaces retain declaration order.
             if (containsHandler(eventHandlerCollection)) {
                 return true;
@@ -174,7 +172,7 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      */
     @Override
     public final void close() {
-        if(closed.compareAndSet(false, true)) {
+        if (closed.compareAndSet(false, true)) {
             closeSubscriptions();
         }
     }
@@ -187,9 +185,9 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
         return closed.get();
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Methods which can be overridden to customize behavior
-    //##########################################################################
+    // ##########################################################################
 
     /**
      * Adds an event handler ({@link Consumer}) as subscriber to the internal
@@ -199,25 +197,22 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      * @param <T>
      *            event type the subscriber registered for
      * @param eventClass
-     *            non-{@code null} {@link Class} of events the subscription is
-     *            for
+     *            non-{@code null} {@link Class} of events the subscription is for
      * @param eventHandler
      *            non-{@code null} {@link Consumer} to subscribe
      * @param eventHandlerCollection
-     *            non-{@code null} {@link Collection} of {@link Consumer} to
-     *            which the subscriber should be added to
+     *            non-{@code null} {@link Collection} of {@link Consumer} to which
+     *            the subscriber should be added to
      * @return non-{@code null} {@link Subscription} which will unsubscribe the
      *         {@link Consumer} (remove it from the {@link Collection}
      */
     protected <T> Subscription addEventHandlerAndReturnSubscription(
             final Class<T> eventClass,
             final Consumer<T> eventHandler,
-            final Collection<Consumer<T>> eventHandlerCollection
-    ) {
+            final Collection<Consumer<T>> eventHandlerCollection) {
         eventHandlerCollection.add(eventHandler);
 
-        final Runnable closeRunnable =
-                () -> eventHandlerCollection.remove(eventHandler);
+        final Runnable closeRunnable = () -> eventHandlerCollection.remove(eventHandler);
 
         return new SubscriptionImpl(eventClass, closeRunnable);
     }
@@ -228,17 +223,17 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      * @param <T>
      *            type of the subscriber
      * @param clazz
-     *            parameter only used to match signature for functional
-     *            interface needed for
+     *            parameter only used to match signature for functional interface
+     *            needed for
      *            {@link Map#computeIfAbsent(Object, java.util.function.Function)}
      * @return {@link Collection}, default class used is
-     *            {@link CopyOnWriteArrayList}
+     *         {@link CopyOnWriteArrayList}
      */
     protected <T> Collection<T> createEventHandlerCollection(
-            final Class<?> clazz
-    ) {
+            final Class<?> clazz) {
         @SuppressWarnings("unchecked")
-        final Collection<T> eventHandlerCollection = (Collection<T>) this.eventHandlerCollectionSupplier.get();
+        final Collection<T> eventHandlerCollection = (Collection<T>) this.eventHandlerCollectionSupplier
+                .get();
 
         return eventHandlerCollection;
     }
@@ -249,9 +244,8 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      * Implementation note:<br>
      * The default implementation of {@link #createEventHandlerCollection(Class)}
      * returns an instance of type {@link java.util.List}. When overriding
-     * {@link #createEventHandlerCollection(Class)} it might be useful to
-     * override this method, too, so that both return a {@link Collection} of
-     * the same type.
+     * {@link #createEventHandlerCollection(Class)} it might be useful to override
+     * this method, too, so that both return a {@link Collection} of the same type.
      * </p>
      *
      * @param <T>
@@ -262,9 +256,9 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
         return Collections.emptyList();
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Protected helper methods
-    //##########################################################################
+    // ##########################################################################
 
     /**
      * Closes all subscriber {@link Subscription}s.
@@ -282,10 +276,10 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      *             if the {@code SubscriberManager} has been closed already
      */
     protected final void validateIsOpen(
-            final String errorMessage
-    ) {
+            final String errorMessage) {
         if (isClosed()) {
-            throw new IllegalStateException(getClass().getSimpleName() + " already closed" + errorMessage);
+            throw new IllegalStateException(
+                    getClass().getSimpleName() + " already closed" + errorMessage);
         }
     }
 
@@ -300,15 +294,16 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      */
     @Override
     public final <T> Collection<Consumer<T>> getHandlerFor(
-            final Class<T> eventClass
-    ) {
-        final Collection<Consumer<?>> eventHandlerCollectionForClass = eventHandlerCollectionMap.get(eventClass);
+            final Class<T> eventClass) {
+        final Collection<Consumer<?>> eventHandlerCollectionForClass = eventHandlerCollectionMap
+                .get(eventClass);
         if (containsHandler(eventHandlerCollectionForClass)) {
             return castHandlerCollection(eventHandlerCollectionForClass);
         }
 
         // no subscriber found for class, searching directly implemented interfaces
-        final Collection<Consumer<?>> eventHandlerCollectionForDirectInterfaceOfClass = getHandlerCollectionForDirectInterface(eventClass);
+        final Collection<Consumer<?>> eventHandlerCollectionForDirectInterfaceOfClass = getHandlerCollectionForDirectInterface(
+                eventClass);
         if (containsHandler(eventHandlerCollectionForDirectInterfaceOfClass)) {
             return castHandlerCollection(eventHandlerCollectionForDirectInterfaceOfClass);
         }
@@ -327,8 +322,7 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      * @return cast {@link Collection}
      */
     protected final <T> Collection<Consumer<T>> castHandlerCollection(
-            final Collection<Consumer<?>> eventHandlerCollection
-    ) {
+            final Collection<Consumer<?>> eventHandlerCollection) {
 
         // This is a dirty hack because otherwise we cannot cast directly to
         // Collection<Consumer<T>> even if we know for sure that the handler
@@ -347,10 +341,10 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      * @return found {@link Collection}, empty {@link Collection} otherwise
      */
     protected final Collection<Consumer<?>> getHandlerCollectionForDirectInterface(
-            final Class<?> eventClass
-    ) {
+            final Class<?> eventClass) {
         for (final Class<?> eventInterface : eventClass.getInterfaces()) {
-            final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap.get(eventInterface);
+            final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap
+                    .get(eventInterface);
             // First match wins. Interfaces retain declaration order.
             if (containsHandler(eventHandlerCollection)) {
                 return eventHandlerCollection;
@@ -373,20 +367,20 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      *         {@link #createEventHandlerCollection(Class)}) otherwise
      */
     protected final <T> Collection<Consumer<T>> getEventHandlerCollectionOrCreateIfAbsent(
-            final Class<T> eventClass
-    ) {
-        final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap.computeIfAbsent(
-                eventClass,
-                this::createEventHandlerCollection
+            final Class<T> eventClass) {
+        final Collection<Consumer<?>> eventHandlerCollection = eventHandlerCollectionMap
+                .computeIfAbsent(
+                        eventClass,
+                        this::createEventHandlerCollection
 
-        );
+                );
 
         return castHandlerCollection(eventHandlerCollection);
     }
 
     /**
-     * Checks whether the {@link Collection} of {@link Consumer} contains any
-     * event handler.
+     * Checks whether the {@link Collection} of {@link Consumer} contains any event
+     * handler.
      *
      * @param eventHandlerCollection
      *            {@code Collection} of {@code Consumer} to check
@@ -394,8 +388,7 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
      *         {@code false} otherwise
      */
     protected static boolean containsHandler(
-            final Collection<Consumer<?>> eventHandlerCollection
-    ) {
+            final Collection<Consumer<?>> eventHandlerCollection) {
         return (Objects.nonNull(eventHandlerCollection) && !eventHandlerCollection.isEmpty());
     }
 
@@ -416,10 +409,10 @@ public class DefaultSubscriptionManager implements SubscriptionManager {
 
         SubscriptionImpl(
                 final Class<?> eventClass,
-                final Runnable closeRunnable
-        ) {
+                final Runnable closeRunnable) {
             this.eventClass = Objects.requireNonNull(eventClass, "'eventClass' must not be null");
-            this.closeRunnable = Objects.requireNonNull(closeRunnable, "'closeRunnable' must not be null");
+            this.closeRunnable = Objects.requireNonNull(closeRunnable,
+                    "'closeRunnable' must not be null");
 
             logger.trace("Created subscription for class: {}", eventClass);
         }

@@ -29,7 +29,7 @@ package org.kromo.lambdabus;
  *
  */
 public interface Subscription
-    extends AutoCloseable {
+        extends AutoCloseable {
 
     /**
      * Returns the class the subscription has been created for.

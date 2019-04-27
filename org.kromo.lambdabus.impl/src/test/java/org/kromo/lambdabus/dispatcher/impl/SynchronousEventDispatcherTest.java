@@ -28,7 +28,7 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
  *
  */
 public class SynchronousEventDispatcherTest
-    extends EventDispatcherContract<SynchronousEventDispatcher> {
+        extends EventDispatcherContract<SynchronousEventDispatcher> {
 
     @Override
     protected SynchronousEventDispatcher createEventDispatcher() {

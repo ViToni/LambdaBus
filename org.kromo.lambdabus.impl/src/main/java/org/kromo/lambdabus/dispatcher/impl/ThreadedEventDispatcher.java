@@ -50,7 +50,7 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  *
  */
 public class ThreadedEventDispatcher
-    extends AbstractEventDispatcher {
+        extends AbstractEventDispatcher {
 
     private static final ThreadingMode DEFAULT_THREADING_MODE = ThreadingMode.ASYNC_PER_EVENT;
     private static final EnumSet<ThreadingMode> SUPPORTED_THREADING_MODES;
@@ -60,7 +60,8 @@ public class ThreadedEventDispatcher
     }
 
     /**
-     * Non-{@code null} {@link ExecutorService} used to dispatching asynchronous events.
+     * Non-{@code null} {@link ExecutorService} used to dispatching asynchronous
+     * events.
      */
     private final ExecutorService executorService;
     private final String toString;
@@ -71,9 +72,7 @@ public class ThreadedEventDispatcher
     public ThreadedEventDispatcher() {
         this(
                 new DaemonThreadPoolExecutor(
-                        new LinkedBlockingQueue<>()
-                )
-        );
+                        new LinkedBlockingQueue<>()));
     }
 
     /**
@@ -87,8 +86,7 @@ public class ThreadedEventDispatcher
      *             if {@code executorService} is {@code null}
      */
     public ThreadedEventDispatcher(
-            final ExecutorService executorService
-    ) {
+            final ExecutorService executorService) {
         this(
                 executorService,
                 DEFAULT_THREADING_MODE,
@@ -102,20 +100,18 @@ public class ThreadedEventDispatcher
      *            non-{@code null} {@link ExecutorService} used to execute the
      *            dispatching of events
      * @param defaultThreadingMode
-     *            non-{@code null} {@link ThreadingMode} to be used as default
-     *            when posting to the bus (unsupported modes will be mapped to
-     *            this one)
+     *            non-{@code null} {@link ThreadingMode} to be used as default when
+     *            posting to the bus (unsupported modes will be mapped to this one)
      *
      * @throws NullPointerException
-     *             if any of {@code executorService} or
-     *             {@code defaultThreadingMode} is {@code null}
+     *             if any of {@code executorService} or {@code defaultThreadingMode}
+     *             is {@code null}
      * @throws IllegalArgumentException
      *             if {@code defaultThreadingMode} is not supported
      */
     public ThreadedEventDispatcher(
             final ExecutorService executorService,
-            final ThreadingMode defaultThreadingMode
-    ) {
+            final ThreadingMode defaultThreadingMode) {
         this(
                 executorService,
                 defaultThreadingMode,
@@ -129,9 +125,8 @@ public class ThreadedEventDispatcher
      *            non-{@code null} {@link ExecutorService} used to execute the
      *            dispatching of events
      * @param defaultThreadingMode
-     *            non-{@code null} {@link ThreadingMode} to be used as default
-     *            when posting to the bus (unsupported modes will be mapped to
-     *            this one)
+     *            non-{@code null} {@link ThreadingMode} to be used as default when
+     *            posting to the bus (unsupported modes will be mapped to this one)
      * @param supportedThreadingModes
      *            non-empty {@link Set} of supported {@link ThreadingMode}s
      *
@@ -146,11 +141,10 @@ public class ThreadedEventDispatcher
     private ThreadedEventDispatcher(
             final ExecutorService executorService,
             final ThreadingMode defaultThreadingMode,
-            final Set<ThreadingMode> supportedThreadingModes
-    ) {
+            final Set<ThreadingMode> supportedThreadingModes) {
         super(defaultThreadingMode, supportedThreadingModes);
 
-        Objects.requireNonNull(executorService,"'executorService' must not be null");
+        Objects.requireNonNull(executorService, "'executorService' must not be null");
 
         this.toString = getClass().getSimpleName() + '(' + executorService + ')';
 
@@ -172,8 +166,7 @@ public class ThreadedEventDispatcher
     protected final <T> void dispatchEventToHandlerNonSync(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final ThreadingMode supportedThreadingMode
-    ) {
+            final ThreadingMode supportedThreadingMode) {
         switch (supportedThreadingMode) {
             case ASYNC_PER_SUBSCRIBER:
                 DispatchingUtil.dispatchEventToHandlerThreadedPerHandler(

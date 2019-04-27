@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Helper class to execute a task multiple times and in parallel. It is supposed to start all
- * threads at the same time.
+ * Helper class to execute a task multiple times and in parallel. It is supposed
+ * to start all threads at the same time.
  *
  * @author Victor Toni - initial API and implementation
  */
@@ -48,7 +48,8 @@ public class MultithreadedTasks {
     }
 
     /**
-     * By default, use as many threads as possible to achieve as much parallelism as possible.
+     * By default, use as many threads as possible to achieve as much parallelism as
+     * possible.
      */
     private static final ExecutionPolicy DEFAULT_POLICY = ExecutionPolicy.PARALLELISM;
 
@@ -60,8 +61,8 @@ public class MultithreadedTasks {
 
     /**
      * Maximum number of threads to use for task execution.<br>
-     * (If a task is to be repeated {@code N} times and {@code N < maxThreads}
-     * at most N threads will be created.)
+     * (If a task is to be repeated {@code N} times and {@code N < maxThreads} at
+     * most N threads will be created.)
      */
     private final int maxThreads;
 
@@ -77,8 +78,7 @@ public class MultithreadedTasks {
      *            max number of threads used to execute tasks
      */
     public MultithreadedTasks(
-            final int maxThreads
-    ) {
+            final int maxThreads) {
         this(maxThreads, MultithreadedTasks.class.getSimpleName());
     }
 
@@ -93,14 +93,14 @@ public class MultithreadedTasks {
      */
     public MultithreadedTasks(
             final int maxThreads,
-            final String threadNamePrefix
-    ) {
+            final String threadNamePrefix) {
         if (maxThreads < 1) {
             throw new IllegalArgumentException("'maxThreads' must not be less than ONE");
         }
         this.maxThreads = maxThreads;
 
-        this.threadNamePrefix = Objects.requireNonNull(threadNamePrefix, "'threadNamePrefix' must not be");
+        this.threadNamePrefix = Objects.requireNonNull(threadNamePrefix,
+                "'threadNamePrefix' must not be");
     }
 
     /**
@@ -114,8 +114,7 @@ public class MultithreadedTasks {
      */
     public int executeTask(
             final int nTimes,
-            final Runnable task
-    ) {
+            final Runnable task) {
         return executeTask(nTimes, task, DEFAULT_POLICY);
     }
 
@@ -133,8 +132,7 @@ public class MultithreadedTasks {
     public int executeTask(
             final int nTimes,
             final Runnable task,
-            final ExecutionPolicy executionPolicy
-    ) {
+            final ExecutionPolicy executionPolicy) {
         if (nTimes < 1) {
             throw new IllegalArgumentException("'nTimes' must not be less than ONE");
         }
@@ -145,7 +143,7 @@ public class MultithreadedTasks {
         // don't need more threads than tasks
         final int numberOfThreads = Math.min(nTimes, maxThreads);
 
-         // Synchronization of thread start and iterations
+        // Synchronization of thread start and iterations
         final Phaser phaser = new Phaser();
 
         // Synchronization aid for waiting on end of all threads
@@ -164,17 +162,15 @@ public class MultithreadedTasks {
             try {
                 // wait for all threads to have been created and started
                 phaser.arriveAndAwaitAdvance();
-                while (
-                        null == exceptionRef.get() &&
-                        counter.incrementAndGet() <= nTimes
-                ) {
+                while (null == exceptionRef.get() &&
+                        counter.incrementAndGet() <= nTimes) {
                     try {
                         task.run();
 
                         if (executionPolicy == ExecutionPolicy.PARALLELISM) {
                             /*
-                             * Sync at this point to use as many threads as possible.
-                             * Otherwise, the "first" few threads might process all the tasks.
+                             * Sync at this point to use as many threads as possible. Otherwise, the
+                             * "first" few threads might process all the tasks.
                              */
                             phaser.arriveAndAwaitAdvance();
                         }
@@ -199,7 +195,8 @@ public class MultithreadedTasks {
 
         // create threads and start them
         for (int i = 0; i < numberOfThreads; i++) {
-            threadFactory.newThread(runnable).start();
+            threadFactory.newThread(runnable)
+                    .start();
         }
 
         // everything is set up let the waiting worker threads start at once
@@ -213,7 +210,8 @@ public class MultithreadedTasks {
             exceptionRef.compareAndSet(null, e);
 
             // restore interrupted state
-            Thread.currentThread().interrupt();
+            Thread.currentThread()
+                    .interrupt();
         }
 
         final Exception exception = exceptionRef.get();
@@ -226,7 +224,8 @@ public class MultithreadedTasks {
     }
 
     /**
-     * Compiler infers {@code <E>} to a RuntimeException. Now we can throw everything!
+     * Compiler infers {@code <E>} to a RuntimeException. Now we can throw
+     * everything!
      *
      * @param <E>
      *            type of exception to throw
@@ -237,15 +236,13 @@ public class MultithreadedTasks {
      */
     @SuppressWarnings("unchecked")
     private static <E extends Throwable> void sneakyThrow(
-            final Throwable e
-    ) throws E {
+            final Throwable e) throws E {
         throw (E) e;
     }
 
     private static ThreadFactory createThreadFactory(
             final String threadFactoryPrefix,
-            final int executionCount
-    ) {
+            final int executionCount) {
         final String threadNamePrefix = threadFactoryPrefix + "-execution-" + executionCount;
 
         return new SimpleThreadFactory(threadNamePrefix);

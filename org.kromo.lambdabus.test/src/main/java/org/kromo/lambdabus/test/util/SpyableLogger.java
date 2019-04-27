@@ -7,10 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
 /**
- * {@link Logger}s returned by {@link LoggerFactory} seem to be final and thus cannot be spied on.
- * This delegating non-final class to can be used to spy on logging calls.
+ * {@link Logger}s returned by {@link LoggerFactory} seem to be final and thus
+ * cannot be spied on. This delegating non-final class to can be used to spy on
+ * logging calls.
  */
-public class SpyableLogger implements Logger {
+public class SpyableLogger
+        implements Logger {
     private final Logger delegate;
 
     public SpyableLogger(final Logger logger) {

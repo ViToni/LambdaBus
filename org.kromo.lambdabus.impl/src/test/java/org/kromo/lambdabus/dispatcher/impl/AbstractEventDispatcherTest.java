@@ -44,8 +44,9 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
  * @author Victor Toni - initial implementation
  *
  */
-public class AbstractEventDispatcherTest extends
-    EventDispatcherContract<AbstractEventDispatcher> {
+public class AbstractEventDispatcherTest
+        extends
+        EventDispatcherContract<AbstractEventDispatcher> {
 
     @Override
     protected AbstractEventDispatcher createEventDispatcher() {
@@ -53,105 +54,107 @@ public class AbstractEventDispatcherTest extends
     }
 
     @ParameterizedTest(name = "Constructor with default ThreadingMode.{0}")
-    @EnumSource(value=ThreadingMode.class)
+    @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor with default ThreadingMode")
     public void constructor_with_defaultThreadingMode(
-            final ThreadingMode threadingMode
-    ) {
-            try (final EventDispatcher ed = new TestingAbstractEventDispatcher(threadingMode)) {}
+            final ThreadingMode threadingMode) {
+        try (final EventDispatcher ed = new TestingAbstractEventDispatcher(threadingMode)) {
+        }
     }
 
-    @ParameterizedTest(name = "Constructor with default ThreadingMode.{0} and supported EnumSet.of(ThreadingMode.{0})")
-    @EnumSource(value=ThreadingMode.class)
+    @ParameterizedTest(
+        name = "Constructor with default ThreadingMode.{0} and supported EnumSet.of(ThreadingMode.{0})")
+    @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor with default ThreadingMode and supported ThreadingModes")
     public void constructor_with_defaultThreadingMode_and_supportedThreadingModes(
-            final ThreadingMode threadingMode
-    ) {
+            final ThreadingMode threadingMode) {
         final Set<ThreadingMode> supportedThreadingModes = EnumSet.of(threadingMode);
-        try (final EventDispatcher ed = new TestingAbstractEventDispatcher(threadingMode, supportedThreadingModes)) {}
+        try (final EventDispatcher ed = new TestingAbstractEventDispatcher(threadingMode,
+                supportedThreadingModes)) {
+        }
     }
 
     @Test
     @DisplayName("Constructor - Setting null default ThreadingMode throws NullPointerException")
     public void constructor_null_defaultThreadingMode_throws_NPE() {
         assertThrows(
-            NullPointerException.class,
-            () -> new TestingAbstractEventDispatcher(ThreadingMode.SYNC, null));
+                NullPointerException.class,
+                () -> new TestingAbstractEventDispatcher(ThreadingMode.SYNC, null));
     }
 
     @Test
     @DisplayName("Constructor - Setting null supported ThreadingModes throws NullPointerException")
     public void constructor_null_supportedThreadingModes_throws_NPE() {
         assertThrows(
-            NullPointerException.class,
-            () -> new TestingAbstractEventDispatcher(ThreadingMode.SYNC, null));
+                NullPointerException.class,
+                () -> new TestingAbstractEventDispatcher(ThreadingMode.SYNC, null));
     }
 
-    @ParameterizedTest(name = "Constructor - Setting unsupported default ThreadingMode.{0} throws IllegalArgumentException")
-    @EnumSource(value=ThreadingMode.class)
+    @ParameterizedTest(
+        name = "Constructor - Setting unsupported default ThreadingMode.{0} throws IllegalArgumentException")
+    @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting unsupported default ThreadingMode throws IllegalArgumentException")
     public void constructor_unsupported_ThreadingMode_throws_exception(
-            final ThreadingMode threadingMode
-    ) {
+            final ThreadingMode threadingMode) {
         final Set<ThreadingMode> allOtherThreadingModes = EnumSet.allOf(ThreadingMode.class);
         allOtherThreadingModes.remove(threadingMode);
         assertThrows(
-            IllegalArgumentException.class,
-            () -> new TestingAbstractEventDispatcher(threadingMode, allOtherThreadingModes));
+                IllegalArgumentException.class,
+                () -> new TestingAbstractEventDispatcher(threadingMode, allOtherThreadingModes));
     }
 
-    @ParameterizedTest(name = "Constructor - {0} - Setting null supportedThreadingModes throws NullPointerException")
-    @EnumSource(value=ThreadingMode.class)
+    @ParameterizedTest(
+        name = "Constructor - {0} - Setting null supportedThreadingModes throws NullPointerException")
+    @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting null supportedThreadingModes throws NullPointerException")
     public void constructor_null_supportedThreadingModes_throws_NPE(
-            final ThreadingMode threadingMode
-    ) {
+            final ThreadingMode threadingMode) {
         assertThrows(
-            NullPointerException.class,
-            () -> new TestingAbstractEventDispatcher(threadingMode, null));
+                NullPointerException.class,
+                () -> new TestingAbstractEventDispatcher(threadingMode, null));
     }
 
-    @ParameterizedTest(name = "Constructor - {0} - Setting empty supportedThreadingModes throws IllegalArgumentException")
-    @EnumSource(value=ThreadingMode.class)
+    @ParameterizedTest(
+        name = "Constructor - {0} - Setting empty supportedThreadingModes throws IllegalArgumentException")
+    @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting empty supportedThreadingModes throws IllegalArgumentException")
     public void constructor_null_supportedThreadingModes_throws_exception(
-            final ThreadingMode threadingMode
-    ) {
+            final ThreadingMode threadingMode) {
         assertThrows(
-            IllegalArgumentException.class,
-            () -> new TestingAbstractEventDispatcher(threadingMode, EnumSet.noneOf(ThreadingMode.class)));
+                IllegalArgumentException.class,
+                () -> new TestingAbstractEventDispatcher(threadingMode,
+                        EnumSet.noneOf(ThreadingMode.class)));
     }
 
-    @ParameterizedTest(name = "Constructor - {0} - Setting supportedThreadingModes containing null ThreadingMode throws NullPointerException")
-    @EnumSource(value=ThreadingMode.class)
+    @ParameterizedTest(
+        name = "Constructor - {0} - Setting supportedThreadingModes containing null ThreadingMode throws NullPointerException")
+    @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting supportedThreadingModes containing null ThreadingMode throws NullPointerException")
     public void constructor_supportedThreadingModes_with_null_ThreadingMode_throws_NPE(
-            final ThreadingMode threadingMode
-    ) {
-        final Set<ThreadingMode> allThreadingModesAndNull = new HashSet<>(EnumSet.allOf(ThreadingMode.class));
+            final ThreadingMode threadingMode) {
+        final Set<ThreadingMode> allThreadingModesAndNull = new HashSet<>(
+                EnumSet.allOf(ThreadingMode.class));
         allThreadingModesAndNull.add(null);
         assertThrows(
-            NullPointerException.class,
-            () -> new TestingAbstractEventDispatcher(threadingMode, allThreadingModesAndNull));
+                NullPointerException.class,
+                () -> new TestingAbstractEventDispatcher(threadingMode, allThreadingModesAndNull));
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Helper class to instantiate the abstract class to be tested
-    //##########################################################################
+    // ##########################################################################
 
     private final static class TestingAbstractEventDispatcher
-        extends AbstractEventDispatcher {
+            extends AbstractEventDispatcher {
 
         TestingAbstractEventDispatcher(
-                final ThreadingMode defaultThreadingMode
-        ) {
+                final ThreadingMode defaultThreadingMode) {
             super(defaultThreadingMode);
         }
 
         TestingAbstractEventDispatcher(
                 final ThreadingMode defaultThreadingMode,
-                final Set<ThreadingMode> supportedThreadingModes
-        ) {
+                final Set<ThreadingMode> supportedThreadingModes) {
             super(defaultThreadingMode, supportedThreadingModes);
         }
 
@@ -159,8 +162,7 @@ public class AbstractEventDispatcherTest extends
         protected final <T> void dispatchEventToHandlerNonSync(
                 final T event,
                 final Collection<Consumer<T>> eventHandlerCollection,
-                final ThreadingMode supportedThreadingMode
-        ) {
+                final ThreadingMode supportedThreadingMode) {
             assertNotNull(event);
             assertNotNull(eventHandlerCollection);
             eventHandlerCollection.forEach(Assertions::assertNotNull);

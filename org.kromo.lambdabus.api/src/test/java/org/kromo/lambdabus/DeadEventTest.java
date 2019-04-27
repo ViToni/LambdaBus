@@ -19,14 +19,14 @@
  */
 package org.kromo.lambdabus;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for the {@link DeadEvent} class.
@@ -100,11 +100,13 @@ public class DeadEventTest {
         for (int i = 0; i < count; i++) {
             final DeadEvent deadEvent = new DeadEvent(event);
             list.add(deadEvent);
-            assertEquals(i+1, list.size(), "No events added");
+            assertEquals(i + 1, list.size(), "No events added");
 
             // compare hashCode of all DeadEvents created yet
             for (int j = 0; j < i; j++) {
-                assertEquals(list.get(j).hashCode(), deadEvent.hashCode(), "Events do not have the same hashCode");
+                final DeadEvent previouslyCreatedDeadEvent = list.get(j);
+                assertEquals(previouslyCreatedDeadEvent.hashCode(), deadEvent.hashCode(),
+                        "Events do not have the same hashCode");
             }
         }
     }

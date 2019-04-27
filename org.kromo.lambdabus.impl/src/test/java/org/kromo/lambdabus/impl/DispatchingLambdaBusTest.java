@@ -23,6 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyCollection;
+import static org.mockito.Mockito.same;
 import static org.mockito.Mockito.times;
 
 import java.util.EnumSet;
@@ -34,10 +37,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.kromo.lambdabus.dispatcher.EventDispatcher;
 import org.mockito.Mockito;
 
 import org.kromo.lambdabus.ThreadingMode;
+import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**
  * Test for the {@link DispatchingLambdaBus}
@@ -52,9 +55,9 @@ public class DispatchingLambdaBusTest {
     public void defaultConstructor() {
         assertDoesNotThrow(
                 () -> {
-                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus()) {}
-                }
-        );
+                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus()) {
+                    }
+                });
     }
 
     @Test
@@ -64,9 +67,10 @@ public class DispatchingLambdaBusTest {
 
         assertDoesNotThrow(
                 () -> {
-                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(eventDispatcher)) {}
-                }
-        );
+                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
+                            eventDispatcher)) {
+                    }
+                });
     }
 
     @Test
@@ -78,9 +82,9 @@ public class DispatchingLambdaBusTest {
         assertDoesNotThrow(
                 () -> {
                     try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
-                            eventDispatcher, subscriptionManager)) {}
-                }
-        );
+                            eventDispatcher, subscriptionManager)) {
+                    }
+                });
     }
 
     @Test
@@ -90,9 +94,10 @@ public class DispatchingLambdaBusTest {
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(nullEventDispatcher)) {}
-                }
-        );
+                    try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
+                            nullEventDispatcher)) {
+                    }
+                });
     }
 
     @Test
@@ -104,9 +109,9 @@ public class DispatchingLambdaBusTest {
                 NullPointerException.class,
                 () -> {
                     try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(
-                            eventDispatcher, nullSubscriptionManager)) {}
-                }
-        );
+                            eventDispatcher, nullSubscriptionManager)) {
+                    }
+                });
     }
 
     @Test
@@ -114,29 +119,34 @@ public class DispatchingLambdaBusTest {
     public void setDefaultRunnableForNullEventAndUnsetDefaultRunnableForNullEvent() {
         try (final EventDispatcher eventDispatcher = createMockEventDispatcher()) {
             try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(eventDispatcher)) {
-            assertTrue(lb.hasRunnableForNullEvent(), "Should have a Runnable for null events");
+                assertTrue(lb.hasRunnableForNullEvent(), "Should have a Runnable for null events");
 
-            lb.setDefaultRunnableForNullEvent();
-            assertTrue(lb.hasRunnableForNullEvent(), "Should still have a Runnable for null events");
+                lb.setDefaultRunnableForNullEvent();
+                assertTrue(lb.hasRunnableForNullEvent(),
+                        "Should still have a Runnable for null events");
 
-            lb.unsetRunnableForNullEvent();
-            assertFalse(lb.hasRunnableForNullEvent(), "Must not have a Runnable for null events");
+                lb.unsetRunnableForNullEvent();
+                assertFalse(lb.hasRunnableForNullEvent(),
+                        "Must not have a Runnable for null events");
 
-            lb.unsetRunnableForNullEvent();
-            assertFalse(lb.hasRunnableForNullEvent(), "Must not have a Runnable for null events");
+                lb.unsetRunnableForNullEvent();
+                assertFalse(lb.hasRunnableForNullEvent(),
+                        "Must not have a Runnable for null events");
 
-            lb.setDefaultRunnableForNullEvent();
-            assertTrue(lb.hasRunnableForNullEvent(), "Must have a Runnable for null events");
+                lb.setDefaultRunnableForNullEvent();
+                assertTrue(lb.hasRunnableForNullEvent(), "Must have a Runnable for null events");
 
-            lb.setDefaultRunnableForNullEvent();
-            assertTrue(lb.hasRunnableForNullEvent(), "Must have a Runnable for null events");
+                lb.setDefaultRunnableForNullEvent();
+                assertTrue(lb.hasRunnableForNullEvent(), "Must have a Runnable for null events");
 
-            lb.unsetRunnableForNullEvent();
-            assertFalse(lb.hasRunnableForNullEvent(), "Must not have a Runnable for null events");
+                lb.unsetRunnableForNullEvent();
+                assertFalse(lb.hasRunnableForNullEvent(),
+                        "Must not have a Runnable for null events");
 
-            lb.unsetRunnableForNullEvent();
-            assertFalse(lb.hasRunnableForNullEvent(), "Must not have a Runnable for null events");
-        }
+                lb.unsetRunnableForNullEvent();
+                assertFalse(lb.hasRunnableForNullEvent(),
+                        "Must not have a Runnable for null events");
+            }
         }
     }
 
@@ -145,10 +155,9 @@ public class DispatchingLambdaBusTest {
     public void settingNullRunnableForNullEventThrows_NPE() {
         try (final EventDispatcher eventDispatcher = createMockEventDispatcher()) {
             try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(eventDispatcher)) {
-
                 assertThrows(
-                    NullPointerException.class,
-                    () -> lb.setRunnableForNullEvent(null));
+                        NullPointerException.class,
+                        () -> lb.setRunnableForNullEvent(null));
             }
         }
     }
@@ -158,38 +167,39 @@ public class DispatchingLambdaBusTest {
     public void settingRunnableForNullEventOnClosedLambdaBusThrowsIllegalStateException() {
         try (final EventDispatcher eventDispatcher = createMockEventDispatcher()) {
             try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(eventDispatcher)) {
-
                 lb.close();
 
                 assertThrows(
-                    IllegalStateException.class,
-                    () -> lb.setRunnableForNullEvent(System.out::println));
+                        IllegalStateException.class,
+                        () -> lb.setRunnableForNullEvent(System.out::println));
             }
         }
     }
 
-    @ParameterizedTest(name = "Posting with unsupported ThreadingMode reverts to default ThreadingMode.{0}")
-    @EnumSource(value=ThreadingMode.class)
+    @ParameterizedTest(
+        name = "Posting with unsupported ThreadingMode reverts to default ThreadingMode.{0}")
+    @EnumSource(value = ThreadingMode.class)
     @DisplayName("Posting with unsupported ThreadingMode reverts to default ThreadingMode.")
     public void postingWithUnsupportedThreadingModeRevertsToDefaultThreadingMode(
-            final ThreadingMode unsupportedThreadingMode
-    ) {
+            final ThreadingMode unsupportedThreadingMode) {
         final Set<ThreadingMode> supportedThreadingModeSet = EnumSet.allOf(ThreadingMode.class);
         supportedThreadingModeSet.remove(unsupportedThreadingMode);
 
         final int eventCount = 97;
         for (final ThreadingMode defaultThreadingMode : supportedThreadingModeSet) {
             final AtomicInteger receivedEventCount = new AtomicInteger();
-            try (final EventDispatcher eventDispatcher = createMockEventDispatcher(defaultThreadingMode, supportedThreadingModeSet)) {
+            try (final EventDispatcher eventDispatcher = createMockEventDispatcher(
+                    defaultThreadingMode, supportedThreadingModeSet)) {
                 try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(eventDispatcher)) {
-                    final Consumer<TestEvent> testSubscriber = event -> receivedEventCount.incrementAndGet();
+                    final Consumer<TestEvent> testSubscriber = event -> receivedEventCount
+                            .incrementAndGet();
 
                     lb.subscribe(TestEvent.class, testSubscriber);
                     for (int i = 0; i < eventCount; i++) {
                         final Object event = new TestEvent();
                         /*
-                         * If the received ThreadingMode is supported will be tested
-                         * by the testing bus implementation.
+                         * If the received ThreadingMode is supported will be tested by the testing
+                         * bus implementation.
                          */
                         lb.post(event, unsupportedThreadingMode);
 
@@ -197,30 +207,28 @@ public class DispatchingLambdaBusTest {
                         // 1) assert the event is the same as the one posted
                         // 2) the ThreadingMode is not same as the one posted but the default one
                         // since the posted one is not supported
-                        Mockito //
-                            .verify(eventDispatcher, times(1)) //
-                                .dispatchEventToHandler( //
-                                        Mockito.same(event), //
-                                        Mockito.anyCollection(), //
-                                        Mockito.same(defaultThreadingMode) //
-                        );
+                        Mockito
+                                .verify(eventDispatcher, times(1))
+                                .dispatchEventToHandler(
+                                        same(event),
+                                        anyCollection(),
+                                        same(defaultThreadingMode));
 
                     }
-                    Mockito //
-                        .verify(eventDispatcher, times(eventCount)) //
-                            .dispatchEventToHandler( //
-                                    Mockito.any(TestEvent.class), //
-                                    Mockito.anyCollection(), //
-                                    Mockito.same(defaultThreadingMode) //
-                            );
+                    Mockito
+                            .verify(eventDispatcher, times(eventCount))
+                            .dispatchEventToHandler(
+                                    any(TestEvent.class),
+                                    anyCollection(),
+                                    same(defaultThreadingMode));
                 }
             }
         }
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Setting up mocked EventDispatcher
-    //##########################################################################
+    // ##########################################################################
 
     EventDispatcher createMockEventDispatcher() {
         return createMockEventDispatcher(ThreadingMode.SYNC, EnumSet.of(ThreadingMode.SYNC));
@@ -228,24 +236,25 @@ public class DispatchingLambdaBusTest {
 
     EventDispatcher createMockEventDispatcher(
             final ThreadingMode defaultThreadingMode,
-            final Set<ThreadingMode> supportedThreadingModes
-    ) {
+            final Set<ThreadingMode> supportedThreadingModes) {
         final EventDispatcher eventDispatcher = Mockito.mock(EventDispatcher.class);
-        Mockito //
-            .doReturn(defaultThreadingMode) //
-            .when(eventDispatcher).getDefaultThreadingMode();
-        Mockito //
-            .doReturn(supportedThreadingModes) //
-            .when(eventDispatcher).getSupportedThreadingModes();
+        Mockito
+                .doReturn(defaultThreadingMode)
+                .when(eventDispatcher)
+                .getDefaultThreadingMode();
+        Mockito
+                .doReturn(supportedThreadingModes)
+                .when(eventDispatcher)
+                .getSupportedThreadingModes();
 
         return eventDispatcher;
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Our own private event class for tests
-    //##########################################################################
+    // ##########################################################################
 
-    private static class TestEvent { }
-
+    private static class TestEvent {
+    }
 
 }

@@ -1,4 +1,5 @@
 package org.kromo.lambdabus.examples;
+
 import java.util.function.Consumer;
 
 public class LambdasAreNoObjects {
@@ -23,8 +24,10 @@ public class LambdasAreNoObjects {
         System.out.println("Comparing lambdas:");
         System.out.println("(a == b)    = " + (a == b));
         System.out.println("a.equals(b) = " + a.equals(b));
-        System.out.println(a.getClass().getCanonicalName());
-        System.out.println(b.getClass().getCanonicalName());
+        System.out.println(a.getClass()
+                .getCanonicalName());
+        System.out.println(b.getClass()
+                .getCanonicalName());
         System.out.println("------------------------------");
     }
 

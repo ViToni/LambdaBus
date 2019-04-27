@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.kromo.lambdabus.ThreadingMode;
 
 /**
- * Helper class to centralize logging about usage of unsupported {@link ThreadingMode}s.
+ * Helper class to centralize logging about usage of unsupported
+ * {@link ThreadingMode}s.
  *
  * @author Victor Toni - initial API and implementation
  *
@@ -38,17 +39,16 @@ public class UnsupportedThreadingModeReporter {
 
     private void internalReport(
             final ThreadingMode supportedThreadingMode,
-            final ThreadingMode unsupportedThreadingMode
-    ) {
+            final ThreadingMode unsupportedThreadingMode) {
         if (!supportedThreadingMode.equals(unsupportedThreadingMode)) {
-            logger.warn("Unsupported ThreadingMode: {}, will use {}", unsupportedThreadingMode, supportedThreadingMode);
+            logger.warn("Unsupported ThreadingMode: {}, will use {}", unsupportedThreadingMode,
+                    supportedThreadingMode);
         }
     }
 
     public static void report(
             final ThreadingMode supportedThreadingMode,
-            final ThreadingMode unsupportedThreadingMode
-    ) {
+            final ThreadingMode unsupportedThreadingMode) {
         INSTANCE.internalReport(supportedThreadingMode, unsupportedThreadingMode);
     }
 }

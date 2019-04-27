@@ -60,8 +60,7 @@ public class DaemonThreadFactoryTest {
     public void constructor_factoryName() {
         final String factoryName = getClass().getSimpleName();
         assertDoesNotThrow(
-                () -> new DaemonThreadFactory(factoryName)
-        );
+                () -> new DaemonThreadFactory(factoryName));
     }
 
     @Test
@@ -70,8 +69,7 @@ public class DaemonThreadFactoryTest {
         final String nullFactoryName = null;
         assertThrows(
                 NullPointerException.class,
-                () -> new DaemonThreadFactory(nullFactoryName)
-        );
+                () -> new DaemonThreadFactory(nullFactoryName));
     }
 
     @Test
@@ -89,8 +87,7 @@ public class DaemonThreadFactoryTest {
         final ThreadGroup nullThreadGroup = null;
         assertThrows(
                 NullPointerException.class,
-                () -> new DaemonThreadFactory(factoryName, nullThreadGroup)
-        );
+                () -> new DaemonThreadFactory(factoryName, nullThreadGroup));
     }
 
     @Test
@@ -101,8 +98,7 @@ public class DaemonThreadFactoryTest {
         for (int i = Thread.MIN_PRIORITY; i <= Thread.MAX_PRIORITY; i++) {
             final int priority = i;
             assertDoesNotThrow(
-                    () -> new DaemonThreadFactory(factoryName, priority)
-            );
+                    () -> new DaemonThreadFactory(factoryName, priority));
         }
 
     }
@@ -116,8 +112,7 @@ public class DaemonThreadFactoryTest {
         for (int i = Thread.MIN_PRIORITY; i <= Thread.MAX_PRIORITY; i++) {
             final int priority = i;
             assertDoesNotThrow(
-                    () -> new DaemonThreadFactory(factoryName, threadGroup, priority)
-            );
+                    () -> new DaemonThreadFactory(factoryName, threadGroup, priority));
         }
     }
 
@@ -129,26 +124,22 @@ public class DaemonThreadFactoryTest {
         final int priorityTooLow = Thread.MIN_PRIORITY - 1;
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, priorityTooLow)
-        );
+                () -> new DaemonThreadFactory(factoryName, priorityTooLow));
 
         final int priorityTooHigh = Thread.MAX_PRIORITY + 1;
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, priorityTooHigh)
-        );
+                () -> new DaemonThreadFactory(factoryName, priorityTooHigh));
 
         final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, threadGroup, priorityTooLow)
-        );
+                () -> new DaemonThreadFactory(factoryName, threadGroup, priorityTooLow));
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, threadGroup, priorityTooHigh)
-        );
+                () -> new DaemonThreadFactory(factoryName, threadGroup, priorityTooHigh));
     }
 
     @Test
@@ -158,16 +149,18 @@ public class DaemonThreadFactoryTest {
         final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
         final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName, threadGroup);
 
-        final Runnable runnable = () -> { };
+        final Runnable runnable = () -> {};
         {
-            Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+            Thread.currentThread()
+                    .setPriority(Thread.MIN_PRIORITY);
             final Thread thread = threadFactory.newThread(runnable);
             assertEquals(threadGroup, thread.getThreadGroup());
             assertEquals(Thread.NORM_PRIORITY, thread.getPriority());
             assertTrue(thread.isDaemon());
         }
         {
-            Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+            Thread.currentThread()
+                    .setPriority(Thread.MAX_PRIORITY);
             final Thread thread = threadFactory.newThread(runnable);
             assertEquals(threadGroup, thread.getThreadGroup());
             assertEquals(Thread.NORM_PRIORITY, thread.getPriority());
@@ -208,7 +201,8 @@ public class DaemonThreadFactoryTest {
                     try {
                         assertNotNull(System.getSecurityManager());
 
-                        final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName);
+                        final DaemonThreadFactory threadFactory = new DaemonThreadFactory(
+                                factoryName);
 
                         final Thread thread = threadFactory.newThread(emptyRunnable);
 
@@ -236,13 +230,12 @@ public class DaemonThreadFactoryTest {
             }
         };
 
-        final Thread testingThread  = new Thread(threadGroup, testRunnable);
+        final Thread testingThread = new Thread(threadGroup, testRunnable);
         testingThread.setUncaughtExceptionHandler(
                 (thread, throwable) -> {
                     // catch the first exception thrown within thread
                     throwableRef.compareAndSet(null, throwable);
-                }
-        );
+                });
 
         testingThread.start();
 
@@ -257,21 +250,22 @@ public class DaemonThreadFactoryTest {
     @MethodSource("priorityRange")
     @DisplayName("Threads created and setup with corrected defaults")
     public void newThread_creates_thread_and_sets_it_up(
-            final int priority
-    ) throws InterruptedException {
+            final int priority) throws InterruptedException {
         final int count = 10;
 
         final String factoryName = getClass().getSimpleName();
-        final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group--priority-" + priority);
-        final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName, threadGroup, priority);
+        final ThreadGroup threadGroup = new ThreadGroup(
+                factoryName + "-thread-group--priority-" + priority);
+        final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName, threadGroup,
+                priority);
 
         final AtomicInteger counter = new AtomicInteger();
         final CountDownLatch doneLatch = new CountDownLatch(count);
         final Set<String> threadNames = new HashSet<>();
         for (int i = 0; i < count; i++) {
             final Runnable runnable = () -> {
-                    counter.incrementAndGet();
-                    doneLatch.countDown();
+                counter.incrementAndGet();
+                doneLatch.countDown();
             };
             final Thread thread = threadFactory.newThread(runnable);
             assertEquals(threadGroup, thread.getThreadGroup());
@@ -290,7 +284,7 @@ public class DaemonThreadFactoryTest {
     @DisplayName("toString changes on new Thread (because it contains stats)")
     public void toString_changes_on_new_Thread() {
         final int count = 100;
-        final Set<String> strings = new HashSet<>(count+1);
+        final Set<String> strings = new HashSet<>(count + 1);
 
         final String factoryName = getClass().getSimpleName();
         final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
@@ -306,7 +300,7 @@ public class DaemonThreadFactoryTest {
             strings.add(threadFactory.toString());
         }
 
-        assertEquals(count+1, strings.size());
+        assertEquals(count + 1, strings.size());
     }
 
     @Test
@@ -315,7 +309,7 @@ public class DaemonThreadFactoryTest {
         final int factoryCount = 13;
         final int threadCount = 17;
 
-        final List<Set<String>> stringSets = new ArrayList<>(threadCount+1);
+        final List<Set<String>> stringSets = new ArrayList<>(threadCount + 1);
         for (int i = 0; i <= threadCount; i++) {
             final Set<String> strings = new HashSet<>(factoryCount);
             stringSets.add(strings);
@@ -327,7 +321,8 @@ public class DaemonThreadFactoryTest {
 
             final String factoryName = getClass().getSimpleName();
             final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
-            final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName, threadGroup);
+            final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName,
+                    threadGroup);
 
             assertNotNull(threadFactory.toString());
             strings.add(threadFactory.toString());
@@ -352,13 +347,13 @@ public class DaemonThreadFactoryTest {
     }
 
     /**
-     * This {@link SecurityManager} allows all and is needed so that we can
-     * unset the {@link SecurityManager} after the test run (and don't influence
-     * other tests).
+     * This {@link SecurityManager} allows all and is needed so that we can unset
+     * the {@link SecurityManager} after the test run (and don't influence other
+     * tests).
      *
      */
     private static class LenientSecurityManager
-        extends SecurityManager {
+            extends SecurityManager {
         @Override
         public void checkPermission(final Permission permission) {
             // we need this to be able to unset the SecurityManager after usage

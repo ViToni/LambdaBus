@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.kromo.lambdabus.LambdaBus;
 
 /**
- * Helper class which consolidates dispatching logic so that it can be reused by different
- * {@link LambdaBus} implementations.
+ * Helper class which consolidates dispatching logic so that it can be reused by
+ * different {@link LambdaBus} implementations.
  *
  * @author Victor Toni - initial API and implementation
  *
@@ -55,8 +55,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandler
-     *            non-{@code null} {@link Consumer} for objects of type
-     *            {@code T} to which the event should be dispatched
+     *            non-{@code null} {@link Consumer} for objects of type {@code T} to
+     *            which the event should be dispatched
      * @param logger
      *            to be used in case of an {@link Exception}
      * @throws Error
@@ -65,18 +65,16 @@ public final class DispatchingUtil {
     private <T> void internalDispatchEventSafely(
             final T event,
             final Consumer<? super T> eventHandler,
-            final Logger logger
-    ) {
+            final Logger logger) {
         try {
             eventHandler.accept(event);
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             /*
              * Since we are using lambdas and threads the stack-trace might not be very
              * useful. We reduce the stack-trace to the place were the exception occurred.
              */
             final StackTraceElement[] reducedStackTrace = {
-                    e.getStackTrace()[0]
+                e.getStackTrace()[0]
             };
             e.setStackTrace(reducedStackTrace);
             logger.warn("Exception while dispatching event '{}'", event, e);
@@ -100,8 +98,7 @@ public final class DispatchingUtil {
      */
     private <T> void internalDispatchEventSafely(
             final T event,
-            final Consumer<? super T> eventHandler
-    ) {
+            final Consumer<? super T> eventHandler) {
         internalDispatchEventSafely(
                 event,
                 eventHandler,
@@ -117,21 +114,19 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched to
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched to
      * @param logger
      *            to be used in case of an {@link Exception}
      * @throws Error
-     *             if any of {@code eventHandler} in the {@link Collection} throws it
-     *             while handling the event, {@link Exception}s are caught and
+     *             if any of {@code eventHandler} in the {@link Collection} throws
+     *             it while handling the event, {@link Exception}s are caught and
      *             logged
      */
     private <T> void internalDispatchEventToHandler(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final Logger logger
-    ) {
+            final Logger logger) {
         for (final Consumer<? super T> eventHandler : eventHandlerCollection) {
             internalDispatchEventSafely(
                     event,
@@ -149,18 +144,16 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched to
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched to
      * @throws Error
-     *             if any of {@code eventHandler} in the {@link Collection} throws it
-     *             while handling the event, {@link Exception}s are caught and
+     *             if any of {@code eventHandler} in the {@link Collection} throws
+     *             it while handling the event, {@link Exception}s are caught and
      *             logged
      */
     private <T> void internalDispatchEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventHandlerCollection
-    ) {
+            final Collection<Consumer<T>> eventHandlerCollection) {
         internalDispatchEventToHandler(
                 event,
                 eventHandlerCollection,
@@ -179,9 +172,8 @@ public final class DispatchingUtil {
      *            non-{@code null} object to dispatch
      *
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      *
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
@@ -194,14 +186,12 @@ public final class DispatchingUtil {
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
             final Executor executor,
-            final Logger logger
-    ) {
+            final Logger logger) {
         // Create one task for dispatching the event.
-        final Runnable dispatchingTask =
-                () -> internalDispatchEventToHandler(
-                        event,
-                        eventHandlerCollection,
-                        logger);
+        final Runnable dispatchingTask = () -> internalDispatchEventToHandler(
+                event,
+                eventHandlerCollection,
+                logger);
 
         try {
             /*
@@ -223,9 +213,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched to
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched to
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
@@ -233,8 +222,7 @@ public final class DispatchingUtil {
     private <T> void internalDispatchEventToHandlerThreadedPerEvent(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final Executor executor
-    ) {
+            final Executor executor) {
         internalDispatchEventToHandlerThreadedPerEvent(
                 event,
                 eventHandlerCollection,
@@ -252,9 +240,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched to
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched to
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
@@ -265,22 +252,22 @@ public final class DispatchingUtil {
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
             final Executor executor,
-            final Logger logger
-    ) {
+            final Logger logger) {
         for (final Consumer<T> eventHandler : eventHandlerCollection) {
             /*
              * Create a task for each subscriber to be informed so that long-running
              * subscribers processes don't block others.
              */
-            final Runnable dispatchingTask = () -> internalDispatchEventSafely(event, eventHandler, logger);
+            final Runnable dispatchingTask = () -> internalDispatchEventSafely(event, eventHandler,
+                    logger);
             try {
                 /*
-                 * Execute the dispatching task per subscriber in its own
-                 * thread.
+                 * Execute the dispatching task per subscriber in its own thread.
                  */
                 executor.execute(dispatchingTask);
             } catch (final RejectedExecutionException e) {
-                logger.error("Failed to execute subscriber dispatching task for event: {}", event, e);
+                logger.error("Failed to execute subscriber dispatching task for event: {}", event,
+                        e);
             }
         }
     }
@@ -295,9 +282,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
@@ -305,8 +291,7 @@ public final class DispatchingUtil {
     private <T> void internalDispatchEventToHandlerThreadedPerSubscriber(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final Executor executor
-    ) {
+            final Executor executor) {
         internalDispatchEventToHandlerThreadedPerHandler(
                 event,
                 eventHandlerCollection,
@@ -314,9 +299,9 @@ public final class DispatchingUtil {
                 defaultLogger);
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Statically exposed methods
-    //##########################################################################
+    // ##########################################################################
 
     /**
      * Dispatches an event to a {@link Consumer} while catching any exception if
@@ -338,8 +323,7 @@ public final class DispatchingUtil {
     public static <T> void dispatchEventSafely(
             final T event,
             final Consumer<T> eventHandler,
-            final Logger logger
-   ) {
+            final Logger logger) {
         INSTANCE.internalDispatchEventSafely(
                 event,
                 eventHandler,
@@ -363,8 +347,7 @@ public final class DispatchingUtil {
      */
     public static <T> void dispatchEventSafely(
             final T event,
-            final Consumer<T> eventHandler
-    ) {
+            final Consumer<T> eventHandler) {
         INSTANCE.internalDispatchEventSafely(
                 event,
                 eventHandler);
@@ -379,21 +362,19 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      * @param logger
      *            to be used in case of an {@link Exception}
      * @throws Error
-     *             if any of {@code eventHandler} in the {@link Collection} throws it
-     *             while handling the event, {@link Exception}s are caught and
+     *             if any of {@code eventHandler} in the {@link Collection} throws
+     *             it while handling the event, {@link Exception}s are caught and
      *             logged
      */
     public static <T> void dispatchEventToHandler(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final Logger logger
-    ) {
+            final Logger logger) {
         INSTANCE.internalDispatchEventToHandler(
                 event,
                 eventHandlerCollection,
@@ -409,18 +390,16 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      * @throws Error
-     *             if any of {@code eventHandler} in the {@link Collection} throws it
-     *             while handling the event, {@link Exception}s are caught and
+     *             if any of {@code eventHandler} in the {@link Collection} throws
+     *             it while handling the event, {@link Exception}s are caught and
      *             logged
      */
     public static <T> void dispatchEventToHandler(
             final T event,
-            final Collection<Consumer<T>> eventHandlerCollection
-    ) {
+            final Collection<Consumer<T>> eventHandlerCollection) {
         INSTANCE.internalDispatchEventToHandler(
                 event,
                 eventHandlerCollection);
@@ -435,9 +414,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            task
@@ -448,8 +426,7 @@ public final class DispatchingUtil {
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
             final Executor executor,
-            final Logger logger
-    ) {
+            final Logger logger) {
         INSTANCE.internalDispatchEventToHandlerThreadedPerEvent(
                 event,
                 eventHandlerCollection,
@@ -466,9 +443,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            task
@@ -476,8 +452,7 @@ public final class DispatchingUtil {
     public static <T> void dispatchEventToHandlerThreadedPerEvent(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final Executor executor
-    ) {
+            final Executor executor) {
         INSTANCE.internalDispatchEventToHandlerThreadedPerEvent(
                 event,
                 eventHandlerCollection,
@@ -493,9 +468,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
@@ -506,14 +480,12 @@ public final class DispatchingUtil {
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
             final Executor executor,
-            final Logger logger
-    ) {
+            final Logger logger) {
         INSTANCE.internalDispatchEventToHandlerThreadedPerHandler(
                 event,
                 eventHandlerCollection,
                 executor,
-                logger
-        );
+                logger);
     }
 
     /**
@@ -525,9 +497,8 @@ public final class DispatchingUtil {
      * @param event
      *            non-{@code null} object to dispatch
      * @param eventHandlerCollection
-     *            non-empty {@link Collection} of non-{@code null}
-     *            {@link Consumer} of type {@code T} to which the event should
-     *            be dispatched
+     *            non-empty {@link Collection} of non-{@code null} {@link Consumer}
+     *            of type {@code T} to which the event should be dispatched
      * @param executor
      *            {@link Executor} which will be used to execute the dispatching
      *            tasks
@@ -535,13 +506,11 @@ public final class DispatchingUtil {
     public static <T> void dispatchEventToHandlerThreadedPerHandler(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final Executor executor
-    ) {
+            final Executor executor) {
         INSTANCE.internalDispatchEventToHandlerThreadedPerSubscriber(
                 event,
                 eventHandlerCollection,
-                executor
-        );
+                executor);
     }
 
 }

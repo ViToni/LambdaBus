@@ -20,8 +20,7 @@ public class GreetingIdentifier {
     }
 
     public static void testLambdaBus(
-            final Supplier<LambdaBus> lbSupplier
-    ) {
+            final Supplier<LambdaBus> lbSupplier) {
         try (final LambdaBus lb = lbSupplier.get()) {
             System.out.println("--------------------------------");
             System.out.println("LambdaBus implementation: " + lb);

@@ -39,16 +39,16 @@ import org.junit.jupiter.api.Test;
  *
  */
 public class DefaultSubscriptionManagerTest
-    extends SubscriptionManagerContract<SubscriptionManager> {
+        extends SubscriptionManagerContract<SubscriptionManager> {
 
     @Test
     @DisplayName("Default Constructor")
     public void defaultConstructor() {
         assertDoesNotThrow(
                 () -> {
-                    try (final SubscriptionManager subscriptionManager = new DefaultSubscriptionManager()) {}
-                }
-        );
+                    try (final SubscriptionManager subscriptionManager = new DefaultSubscriptionManager()) {
+                    }
+                });
     }
 
     @Test
@@ -61,10 +61,9 @@ public class DefaultSubscriptionManagerTest
                 () -> {
                     try (final SubscriptionManager subscriptionManager = new DefaultSubscriptionManager(
                             subscriberCollectionMapSupplier,
-                            subscriberCollectionSupplier
-                            )) {}
-                }
-        );
+                            subscriberCollectionSupplier)) {
+                    }
+                });
     }
 
     @Test
@@ -78,10 +77,9 @@ public class DefaultSubscriptionManagerTest
                 () -> {
                     try (final SubscriptionManager subscriptionManager = new DefaultSubscriptionManager(
                             nullSubscriberCollectionMapSupplier,
-                            subscriberCollectionSupplier
-                            )) {}
-                }
-        );
+                            subscriberCollectionSupplier)) {
+                    }
+                });
     }
 
     @Test
@@ -95,10 +93,9 @@ public class DefaultSubscriptionManagerTest
                 () -> {
                     try (final SubscriptionManager subscriptionManager = new DefaultSubscriptionManager(
                             subscriberCollectionMapSupplier,
-                            nullSubscriberCollectionSupplier
-                            )) {}
-                }
-        );
+                            nullSubscriberCollectionSupplier)) {
+                    }
+                });
     }
 
     @Override

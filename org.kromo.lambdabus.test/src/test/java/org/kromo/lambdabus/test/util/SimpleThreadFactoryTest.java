@@ -80,14 +80,15 @@ public class SimpleThreadFactoryTest {
 
         final String threadNamePrefix = "threadNamePrefix";
 
-        final Supplier<String> threadNameSupplier = new SimpleThreadFactory.ThreadNameSupplier(threadNamePrefix);
+        final Supplier<String> threadNameSupplier = new SimpleThreadFactory.ThreadNameSupplier(
+                threadNamePrefix);
         final ThreadFactory threadFactory = new SimpleThreadFactory(threadNameSupplier);
 
         assertThreadFactoryNewThread(threadFactory);
     }
 
     private void assertThreadFactoryNewThread(final ThreadFactory threadFactory) {
-        final Runnable runnable = () -> { };
+        final Runnable runnable = () -> {};
 
         final Set<String> threadNames = new HashSet<>();
         final List<Thread> threads = new ArrayList<>();
@@ -95,7 +96,8 @@ public class SimpleThreadFactoryTest {
         for (int i = 0; i < count; i++) {
             final Thread thread = threadFactory.newThread(runnable);
             assertTrue(thread.isDaemon(), "Thread is not a daemon thread");
-            assertEquals(thread.getPriority(), Thread.NORM_PRIORITY, "Thread has not normal priority");
+            assertEquals(thread.getPriority(), Thread.NORM_PRIORITY,
+                    "Thread has not normal priority");
             assertFalse(threads.contains(thread), "Thread has not normal priority");
 
             threads.add(thread);
@@ -126,7 +128,8 @@ public class SimpleThreadFactoryTest {
         public void testNewThread() {
             final String threadNamePrefix = "threadNamePrefix";
 
-            final Supplier<String> threadNameSupplier = new SimpleThreadFactory.ThreadNameSupplier(threadNamePrefix);
+            final Supplier<String> threadNameSupplier = new SimpleThreadFactory.ThreadNameSupplier(
+                    threadNamePrefix);
 
             final Set<String> threadNames = new HashSet<>();
             final int count = 100;

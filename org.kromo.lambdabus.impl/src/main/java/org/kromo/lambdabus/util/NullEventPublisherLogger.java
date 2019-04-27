@@ -42,7 +42,8 @@ public class NullEventPublisherLogger {
 
     public NullEventPublisherLogger(final int relevantStackTraceElementIndex) {
         if (relevantStackTraceElementIndex < 0) {
-            throw new IllegalArgumentException("'relevantStackTraceElementIndex' must not be less than ZERO");
+            throw new IllegalArgumentException(
+                    "'relevantStackTraceElementIndex' must not be less than ZERO");
         }
 
         this.relevantStackTraceElementIndex = relevantStackTraceElementIndex;
@@ -51,9 +52,11 @@ public class NullEventPublisherLogger {
     /**
      * Track down the source of the {@code null} event and log it.
      *
-     * <p>Implementation note:<br>
-     * Tracking down is done by creating an {@link Exception} and following the stack-trace.
-     * Since this might be "expensive" it's only activated when TRACE level is enabled for logging.
+     * <p>
+     * Implementation note:<br>
+     * Tracking down is done by creating an {@link Exception} and following the
+     * stack-trace. Since this might be "expensive" it's only activated when TRACE
+     * level is enabled for logging.
      * </p>
      */
     public void logNullEventSource() {
@@ -64,7 +67,8 @@ public class NullEventPublisherLogger {
                 final StackTraceElement nullEventPublisher = stackTrace[relevantStackTraceElementIndex];
                 log.trace("Null event posted by: {}", nullEventPublisher);
             } else {
-                log.info("Failed to detect publisher of null event, not enough StackTraceElements({}) to be removed: {}",
+                log.info(
+                        "Failed to detect publisher of null event, not enough StackTraceElements({}) to be removed: {}",
                         stackTrace.length, relevantStackTraceElementIndex);
             }
         }

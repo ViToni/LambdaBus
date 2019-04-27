@@ -42,17 +42,16 @@ import org.kromo.lambdabus.util.DispatchingUtil;
  *
  * When an event is not dispatched directly usually a {@link Runnable} would be
  * created which contains the event itself and its consumers (at the time the
- * event has been published).
- * As such an {@link EventDispatcher} doesn't share state with an individual
- * event bus and an {@code EventDispatcher} instance could be shared among
- * low-throughput event-bus instances, blocking consumer might block all
- * event-busses though.
+ * event has been published). As such an {@link EventDispatcher} doesn't share
+ * state with an individual event bus and an {@code EventDispatcher} instance
+ * could be shared among low-throughput event-bus instances, blocking consumer
+ * might block all event-busses though.
  *
  * @author Victor Toni - initial implementation
  *
  */
 public abstract class AbstractEventDispatcher
-    implements EventDispatcher {
+        implements EventDispatcher {
 
     /**
      * Flag indicating whether the bus is closed.
@@ -79,12 +78,11 @@ public abstract class AbstractEventDispatcher
      *             if defaultThreadingMode is {@code null}
      */
     protected AbstractEventDispatcher(
-            final ThreadingMode defaultThreadingMode
-    ) {
+            final ThreadingMode defaultThreadingMode) {
         this(
-                Objects.requireNonNull(defaultThreadingMode, "'defaultThreadingMode' must not be null"),
-                EnumSet.of(defaultThreadingMode)
-        );
+                Objects.requireNonNull(defaultThreadingMode,
+                        "'defaultThreadingMode' must not be null"),
+                EnumSet.of(defaultThreadingMode));
     }
 
     /**
@@ -106,23 +104,26 @@ public abstract class AbstractEventDispatcher
      */
     protected AbstractEventDispatcher(
             final ThreadingMode defaultThreadingMode,
-            final Set<ThreadingMode> supportedThreadingModes
-    ) {
+            final Set<ThreadingMode> supportedThreadingModes) {
         Objects.requireNonNull(defaultThreadingMode, "'defaultThreadingMode' must not be null");
-        Objects.requireNonNull(supportedThreadingModes, "'supportedThreadingModes' must not be null");
+        Objects.requireNonNull(supportedThreadingModes,
+                "'supportedThreadingModes' must not be null");
         if (supportedThreadingModes.isEmpty()) {
             throw new IllegalArgumentException("'supportedThreadingModes' must not be empty");
         }
-        final Set<ThreadingMode> copyOfSupportedThreadingModes = new HashSet<>(supportedThreadingModes);
+        final Set<ThreadingMode> copyOfSupportedThreadingModes = new HashSet<>(
+                supportedThreadingModes);
         for (final ThreadingMode threadingMode : copyOfSupportedThreadingModes) {
             if (null == threadingMode) {
-                throw new NullPointerException("'supportedThreadingModes' contains NULL ThreadingMode");
+                throw new NullPointerException(
+                        "'supportedThreadingModes' contains NULL ThreadingMode");
             }
         }
 
         if (!copyOfSupportedThreadingModes.contains(defaultThreadingMode)) {
             throw new IllegalArgumentException("Default ThreadingMode " + defaultThreadingMode
-                    + " not contained within supported ThreadingModes: " + copyOfSupportedThreadingModes);
+                    + " not contained within supported ThreadingModes: "
+                    + copyOfSupportedThreadingModes);
         }
 
         this.supportedThreadingModes = EnumSet.copyOf(copyOfSupportedThreadingModes);
@@ -135,7 +136,7 @@ public abstract class AbstractEventDispatcher
      */
     @Override
     public final void close() {
-        if(closed.compareAndSet(false, true)) {
+        if (closed.compareAndSet(false, true)) {
             cleanupBeforeClose();
         }
     }
@@ -155,8 +156,8 @@ public abstract class AbstractEventDispatcher
      * further processing.
      *
      * <p>
-     * All parameters are non-{@code null} because the calling method has
-     * checked them already.
+     * All parameters are non-{@code null} because the calling method has checked
+     * them already.
      * </p>
      *
      * @param <T>
@@ -165,8 +166,7 @@ public abstract class AbstractEventDispatcher
      *            non-{@code null} object to be dispatched
      * @param eventHandlerCollection
      *            non-{@code null} {@link Collection} of non-{@code null}
-     *            {@link Consumer}s registered for the {@link Class} of the
-     *            event
+     *            {@link Consumer}s registered for the {@link Class} of the event
      * @param supportedThreadingMode
      *            non-{@code null} {@link ThreadingMode} how the event should be
      *            dispatched
@@ -175,10 +175,10 @@ public abstract class AbstractEventDispatcher
     public final <T> void dispatchEventToHandler(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final ThreadingMode supportedThreadingMode
-    ) {
+            final ThreadingMode supportedThreadingMode) {
         if (isClosed()) {
-            throw new IllegalStateException(getClass().getSimpleName() + " is closed. Event not dispatched: " + event);
+            throw new IllegalStateException(
+                    getClass().getSimpleName() + " is closed. Event not dispatched: " + event);
         }
 
         // SYNC events are dispatched directly
@@ -188,9 +188,9 @@ public abstract class AbstractEventDispatcher
                     eventHandlerCollection);
         } else {
             // all other modes events are delegated
-            dispatchEventToHandlerNonSync( //
-                    event, //
-                    eventHandlerCollection, //
+            dispatchEventToHandlerNonSync(
+                    event,
+                    eventHandlerCollection,
                     supportedThreadingMode);
         }
     }
@@ -215,24 +215,22 @@ public abstract class AbstractEventDispatcher
         return this.supportedThreadingModes;
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Methods required to be implemented by sub-classes
-    //##########################################################################
+    // ##########################################################################
 
     protected abstract <T> void dispatchEventToHandlerNonSync(
             final T event,
             final Collection<Consumer<T>> eventHandlerCollection,
-            final ThreadingMode supportedThreadingMode
-    );
+            final ThreadingMode supportedThreadingMode);
 
-    //##########################################################################
+    // ##########################################################################
     // Methods which can be overridden to customize behavior
-    //##########################################################################
+    // ##########################################################################
 
     /**
      * Cleanup before closing the bus.
      */
-    protected void cleanupBeforeClose() {
-    }
+    protected void cleanupBeforeClose() {}
 
 }

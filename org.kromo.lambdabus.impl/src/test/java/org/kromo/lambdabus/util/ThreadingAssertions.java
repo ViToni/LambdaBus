@@ -51,7 +51,7 @@ import org.kromo.lambdabus.test.util.MultithreadedTasks;
  */
 public final class ThreadingAssertions {
 
-    private ThreadingAssertions () {
+    private ThreadingAssertions() {
         // no instance
     }
 
@@ -64,8 +64,8 @@ public final class ThreadingAssertions {
 
     /**
      * Test that all events are processed in order.<br>
-     * If posting would be asynchronously a previous {@link CompletableFuture}
-     * might be not complete yet.
+     * If posting would be asynchronously a previous {@link CompletableFuture} might
+     * be not complete yet.
      *
      * @param eventCount
      *            number of events to create
@@ -81,15 +81,14 @@ public final class ThreadingAssertions {
             final int eventCount,
             final Supplier<LambdaBus> lambdaBusSupplier,
             final BiConsumer<LambdaBus, Object> postMethodReference,
-            final Logger logger
-    ) {
+            final Logger logger) {
         try (final LambdaBus lb = lambdaBusSupplier.get()) {
             final CountDownLatch doneLatch = new CountDownLatch(eventCount);
 
             final AtomicBoolean outOfSync = new AtomicBoolean(false);
             final AtomicInteger counter = new AtomicInteger();
             final Consumer<Integer> intConsumer = (intEvent) -> {
-                if(! counter.compareAndSet(intEvent, intEvent + 1)) {
+                if (!counter.compareAndSet(intEvent, intEvent + 1)) {
                     outOfSync.set(true);
                 }
                 doneLatch.countDown();
@@ -97,7 +96,7 @@ public final class ThreadingAssertions {
 
             lb.subscribe(Integer.class, intConsumer);
 
-            for(int i = 0; i < eventCount; i++) {
+            for (int i = 0; i < eventCount; i++) {
                 assertFalse(outOfSync.get());
                 postMethodReference.accept(lb, i);
             }
@@ -107,8 +106,7 @@ public final class ThreadingAssertions {
             final Executable result = doneLatch::await;
             assertTimeout(
                     DEFAULT_TIMEOUT,
-                    result
-            );
+                    result);
         }
     }
 
@@ -137,8 +135,7 @@ public final class ThreadingAssertions {
             final Supplier<LambdaBus> lambdaBusSupplier,
             final BiConsumer<LambdaBus, Object> postMethodReference,
             final Class<?> testingClass,
-            final Logger logger
-    ) {
+            final Logger logger) {
         final int subscriberCount = 107;
         final int totalCount = eventCount * subscriberCount;
 
@@ -148,7 +145,8 @@ public final class ThreadingAssertions {
         final CountDownLatch doneLatch = new CountDownLatch(totalCount);
         final Consumer<String> stringSubscriber = eventName -> {
             final Integer publisherThreadHashCode = threadHashCodes.get(eventName);
-            final Integer currentThreadHashCode = Thread.currentThread().hashCode();
+            final Integer currentThreadHashCode = Thread.currentThread()
+                    .hashCode();
             if (!currentThreadHashCode.equals(publisherThreadHashCode)) {
                 final String errorMessage = String.format(
                         "Thread hash codes do not match. Publisher (expected): %s, Consumer (actual): %s",
@@ -160,19 +158,22 @@ public final class ThreadingAssertions {
 
         final AtomicInteger counter = new AtomicInteger(-1);
         try (final LambdaBus lb = lambdaBusSupplier.get()) {
-            for(int i = 0; i < subscriberCount; i++) {
+            for (int i = 0; i < subscriberCount; i++) {
                 lb.subscribe(String.class, stringSubscriber);
             }
 
             final Runnable postRunnable = () -> {
                 final int index = counter.incrementAndGet();
-                final String eventName = String.format("%s_event-%05d", testingClass.getSimpleName(), index);
-                final Integer publisherThreadHashCode = Thread.currentThread().hashCode();
+                final String eventName = String.format("%s_event-%05d",
+                        testingClass.getSimpleName(), index);
+                final Integer publisherThreadHashCode = Thread.currentThread()
+                        .hashCode();
                 threadHashCodes.put(eventName, publisherThreadHashCode);
                 postMethodReference.accept(lb, eventName);
             };
 
-            final String threadFactoryName = testingClass + "-pool-" + INSTANCE_COUNT.incrementAndGet();
+            final String threadFactoryName = testingClass + "-pool-"
+                    + INSTANCE_COUNT.incrementAndGet();
 
             final MultithreadedTasks tasks = new MultithreadedTasks(threadCount, threadFactoryName);
             tasks.executeTask(eventCount, postRunnable);
@@ -186,8 +187,7 @@ public final class ThreadingAssertions {
             final Executable result = doneLatch::await;
             assertTimeout(
                     DEFAULT_TIMEOUT,
-                    result
-            );
+                    result);
 
             final Set<Integer> uniqueThreadNames = new HashSet<>(threadHashCodes.values());
             logger.trace("Number of threads used for dispatching: {}", uniqueThreadNames.size());

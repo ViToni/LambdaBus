@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class DaemonThreadFactory
-    implements ThreadFactory {
+        implements ThreadFactory {
 
     private final Logger logger = LoggerFactory.getLogger(DaemonThreadFactory.class);
 
@@ -90,8 +90,7 @@ public class DaemonThreadFactory
      */
     public DaemonThreadFactory(
             final String factoryName,
-            final int threadPriority
-    ) {
+            final int threadPriority) {
         this(factoryName, getThreadGroupToBeUsed(), threadPriority);
     }
 
@@ -107,8 +106,7 @@ public class DaemonThreadFactory
      */
     public DaemonThreadFactory(
             final String factoryName,
-            final ThreadGroup threadGroup
-    ) {
+            final ThreadGroup threadGroup) {
         this(factoryName, threadGroup, Thread.NORM_PRIORITY);
     }
 
@@ -130,15 +128,18 @@ public class DaemonThreadFactory
     public DaemonThreadFactory(
             final String factoryName,
             final ThreadGroup threadGroup,
-            final int threadPriority
-    ) {
+            final int threadPriority) {
         Objects.requireNonNull(factoryName, "'factoryName' must not be null");
         Objects.requireNonNull(threadGroup, "'threadGroup' must not be null");
         if (threadPriority < Thread.MIN_PRIORITY) {
-            throw new IllegalArgumentException("'threadPriority' must not be less than Thread.MIN_PRIORITY: " + Thread.MIN_PRIORITY);
+            throw new IllegalArgumentException(
+                    "'threadPriority' must not be less than Thread.MIN_PRIORITY: "
+                            + Thread.MIN_PRIORITY);
         }
         if (Thread.MAX_PRIORITY < threadPriority) {
-            throw new IllegalArgumentException("'threadPriority' must not be greater than Thread.MAX_PRIORITY: " + Thread.MAX_PRIORITY);
+            throw new IllegalArgumentException(
+                    "'threadPriority' must not be greater than Thread.MAX_PRIORITY: "
+                            + Thread.MAX_PRIORITY);
         }
 
         this.factoryName = factoryName;
@@ -153,10 +154,9 @@ public class DaemonThreadFactory
 
         final String threadName = factoryName + "-thread-" + threadNumber.incrementAndGet();
         final Thread thread = new Thread(
-            getThreadGroup(),
-            runnable,
-            threadName
-        );
+                getThreadGroup(),
+                runnable,
+                threadName);
 
         thread.setDaemon(true);
 
@@ -182,14 +182,14 @@ public class DaemonThreadFactory
         if (securityManager != null) {
             return securityManager.getThreadGroup();
         } else {
-            return Thread.currentThread().getThreadGroup();
+            return Thread.currentThread()
+                    .getThreadGroup();
         }
     }
 
     @Override
     public String toString() {
-        return
-                getClass().getSimpleName() +
+        return getClass().getSimpleName() +
                 "(name:" + factoryName +
                 ",created threads:" + threadNumber.get() + ")";
     }

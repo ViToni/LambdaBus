@@ -1,18 +1,32 @@
 package org.kromo.lambdabus.examples;
 
 public class InterfaceOrder {
-    private interface A {}
-    private interface B {}
-    private interface C {}
-    private static class SuperImpl
-        implements A, B, C {}
+    private interface A {
+    }
 
-    private interface M {}
-    private interface N {}
-    private interface O {}
+    private interface B {
+    }
+
+    private interface C {
+    }
+
+    private static class SuperImpl
+            implements A, B, C {
+    }
+
+    private interface M {
+    }
+
+    private interface N {
+    }
+
+    private interface O {
+    }
+
     private static class SomeImpl
-        extends SuperImpl
-        implements M, N, O {}
+            extends SuperImpl
+            implements M, N, O {
+    }
 
     public static void main(String[] args) {
         final Class<SomeImpl> clazz = SomeImpl.class;
@@ -24,7 +38,7 @@ public class InterfaceOrder {
         if (prefix.isEmpty()) {
             System.out.println("Class '" + clazz + "'");
         } else {
-            System.out.println("\n" +prefix + "Super-Class '" + clazz + "'");
+            System.out.println("\n" + prefix + "Super-Class '" + clazz + "'");
         }
         final Class<?>[] interfazzes = clazz.getInterfaces();
         if (0 < interfazzes.length) {
@@ -34,7 +48,7 @@ public class InterfaceOrder {
             }
         }
         final Class<?> superClass = clazz.getSuperclass();
-        if(null != superClass) {
+        if (null != superClass) {
             printClassInformation(superClass, prefix + "\t");
         }
     }

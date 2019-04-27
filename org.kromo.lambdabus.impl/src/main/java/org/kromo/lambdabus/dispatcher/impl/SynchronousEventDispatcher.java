@@ -27,14 +27,14 @@ import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**
  * Implementation of the {@link EventDispatcher} interface that synchronously
- * dispatches events to subscribers (in the same {@link Thread} as the
- * publisher of the event).
+ * dispatches events to subscribers (in the same {@link Thread} as the publisher
+ * of the event).
  *
  * @author Victor Toni - initial implementation
  *
  */
 public class SynchronousEventDispatcher
-    extends AbstractEventDispatcher {
+        extends AbstractEventDispatcher {
 
     private static final ThreadingMode DEFAULT_THREADING_MODE = ThreadingMode.SYNC;
 
@@ -47,15 +47,15 @@ public class SynchronousEventDispatcher
         return getClass().getSimpleName();
     }
 
-   @Override
-   protected final <T> void dispatchEventToHandlerNonSync(
-           final T event,
-           final Collection<Consumer<T>> eventHandlerCollection,
-           final ThreadingMode unsupportedThreadingMode
-   ) {
-       // will never reach this point
-       // nothing to do here since non-SYNC dispatching is not supported
-       throw new UnsupportedOperationException("ThreadingMode '" + unsupportedThreadingMode + "' not supported");
-   }
+    @Override
+    protected final <T> void dispatchEventToHandlerNonSync(
+            final T event,
+            final Collection<Consumer<T>> eventHandlerCollection,
+            final ThreadingMode unsupportedThreadingMode) {
+        // will never reach this point
+        // nothing to do here since non-SYNC dispatching is not supported
+        throw new UnsupportedOperationException(
+                "ThreadingMode '" + unsupportedThreadingMode + "' not supported");
+    }
 
 }

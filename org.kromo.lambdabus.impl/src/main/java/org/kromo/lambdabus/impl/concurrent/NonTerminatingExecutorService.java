@@ -36,16 +36,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class acts as a decorator for an existing {@link ExecutorService} to avoid shutdown.
- * <p>When sharing an {@link ExecutorService} between classes which are supposed to clean up
- * used executors this class helps keeping the control of the {@link ExecutorService} in a
- * central place.
+ * This class acts as a decorator for an existing {@link ExecutorService} to
+ * avoid shutdown.
  * <p>
+ * When sharing an {@link ExecutorService} between classes which are supposed to
+ * clean up used executors this class helps keeping the control of the
+ * {@link ExecutorService} in a central place.
+ * <p>
+ *
  * @author Victor Toni - initial implementation
  *
  */
 public class NonTerminatingExecutorService
-    implements ExecutorService {
+        implements ExecutorService {
 
     private final Logger logger = LoggerFactory.getLogger(NonTerminatingExecutorService.class);
 
@@ -54,21 +57,26 @@ public class NonTerminatingExecutorService
     private final AtomicBoolean isShutdown;
 
     public NonTerminatingExecutorService(final ExecutorService executorService) {
-        this.executorService = Objects.requireNonNull(executorService, "'executorService' must not be null");
+        this.executorService = Objects.requireNonNull(executorService,
+                "'executorService' must not be null");
         this.isShutdown = new AtomicBoolean(executorService.isShutdown());
     }
 
     @Override
     public void shutdown() {
         if (isShutdown.compareAndSet(false, true)) {
-            logger.debug("Called shutdown() - call will not be delegated to: {}", executorService.getClass().getSimpleName());
+            logger.debug("Called shutdown() - call will not be delegated to: {}",
+                    executorService.getClass()
+                            .getSimpleName());
         }
     }
 
     @Override
     public List<Runnable> shutdownNow() {
         if (isShutdown.compareAndSet(false, true)) {
-            logger.debug("Called shutdownNow() - call will not be delegated to: {}", executorService.getClass().getSimpleName());
+            logger.debug("Called shutdownNow() - call will not be delegated to: {}",
+                    executorService.getClass()
+                            .getSimpleName());
         }
         return Collections.emptyList();
     }
@@ -76,7 +84,9 @@ public class NonTerminatingExecutorService
     @Override
     public boolean isShutdown() {
         if (executorService.isShutdown() && isShutdown.compareAndSet(false, true)) {
-            logger.debug("Shutdown because of shutdown internal ExecutorService: {}", executorService.getClass().getSimpleName());
+            logger.debug("Shutdown because of shutdown internal ExecutorService: {}",
+                    executorService.getClass()
+                            .getSimpleName());
         }
 
         return isShutdown.get();
@@ -85,17 +95,18 @@ public class NonTerminatingExecutorService
     @Override
     public boolean isTerminated() {
         if (executorService.isTerminated() && isShutdown.compareAndSet(false, true)) {
-            logger.debug("Shutdown because of terminated internal ExecutorService: {}", executorService.getClass().getSimpleName());
+            logger.debug("Shutdown because of terminated internal ExecutorService: {}",
+                    executorService.getClass()
+                            .getSimpleName());
         }
 
         return isShutdown.get();
     }
 
     @Override
-    public boolean awaitTermination( //
-            final long timeout, //
-            final TimeUnit unit //
-    ) {
+    public boolean awaitTermination(
+            final long timeout,
+            final TimeUnit unit) {
         final long futureTime = System.nanoTime() + unit.toNanos(timeout);
 
         // very naive approach, might need some love
@@ -114,62 +125,55 @@ public class NonTerminatingExecutorService
     }
 
     @Override
-    public <T> Future<T> submit( //
-            final Callable<T> task //
-    ) {
+    public <T> Future<T> submit(
+            final Callable<T> task) {
         rejectIfTerminated(task, "task");
         return executorService.submit(task);
     }
 
     @Override
-    public <T> Future<T> submit( //
-            final Runnable task, //
-            final T result //
-    ) {
+    public <T> Future<T> submit(
+            final Runnable task,
+            final T result) {
         rejectIfTerminated(task, "task");
         return executorService.submit(task, result);
     }
 
     @Override
     public Future<?> submit(
-            final Runnable task //
-    ) {
+            final Runnable task) {
         rejectIfTerminated(task, "task");
         return executorService.submit(task);
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll( //
-            final Collection<? extends Callable<T>> tasks //
-    ) throws InterruptedException {
+    public <T> List<Future<T>> invokeAll(
+            final Collection<? extends Callable<T>> tasks) throws InterruptedException {
         rejectIfTerminated(tasks, "tasks");
         return executorService.invokeAll(tasks);
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll( //
-            final Collection<? extends Callable<T>> tasks, //
-            final long timeout, //
-            final TimeUnit unit //
-    ) throws InterruptedException {
+    public <T> List<Future<T>> invokeAll(
+            final Collection<? extends Callable<T>> tasks,
+            final long timeout,
+            final TimeUnit unit) throws InterruptedException {
         rejectIfTerminated(tasks, "tasks");
         return executorService.invokeAll(tasks, timeout, unit);
     }
 
     @Override
-    public <T> T invokeAny( //
-            final Collection<? extends Callable<T>> tasks //
-    ) throws InterruptedException, ExecutionException {
+    public <T> T invokeAny(
+            final Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
         rejectIfTerminated(tasks, "tasks");
         return executorService.invokeAny(tasks);
     }
 
     @Override
-    public <T> T invokeAny( //
-            final Collection<? extends Callable<T>> tasks, //
-            final long timeout, //
-            final TimeUnit unit //
-    ) throws InterruptedException, ExecutionException, TimeoutException {
+    public <T> T invokeAny(
+            final Collection<? extends Callable<T>> tasks,
+            final long timeout,
+            final TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         rejectIfTerminated(tasks, "tasks");
         return executorService.invokeAny(tasks, timeout, unit);
     }
@@ -177,7 +181,7 @@ public class NonTerminatingExecutorService
     protected <T> void rejectIfTerminated(final T t, final String name) {
         Objects.requireNonNull(t, name);
         if (isShutdown()) {
-            throw new RejectedExecutionException( //
+            throw new RejectedExecutionException(
                     "Rejected " + t + " because ExecutorService is shutdown.");
         }
     }

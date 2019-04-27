@@ -15,9 +15,8 @@ public class HelloLambdaWorld {
         final LambdaBus lb = new DispatchingLambdaBus(eventDispatcher);
 
         /*
-         * For every "String" event published to the bus
-         * call System.out.println() with the String as
-         * parameter.
+         * For every "String" event published to the bus call System.out.println() with
+         * the String as parameter.
          */
         lb.subscribe(String.class, System.out::println);
 
@@ -27,9 +26,8 @@ public class HelloLambdaWorld {
         lb.post("Hello Old World.");
 
         /*
-         * Publishes a "String" event via the method reference
-         * of the event bus. The use of method references
-         * avoids the need to "know" the event bus.
+         * Publishes a "String" event via the method reference of the event bus. The use
+         * of method references avoids the need to "know" the event bus.
          */
         postRef.accept("Hello Lambda World.");
 

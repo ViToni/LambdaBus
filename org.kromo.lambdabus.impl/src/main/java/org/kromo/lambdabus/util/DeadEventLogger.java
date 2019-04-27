@@ -35,14 +35,14 @@ public final class DeadEventLogger {
     private final Logger logger = LoggerFactory.getLogger(DeadEventLogger.class);
 
     /**
-     * Logs events (wrapped inside a {@link DeadEvent}) for which no subscriber
-     * was found.
+     * Logs events (wrapped inside a {@link DeadEvent}) for which no subscriber was
+     * found.
      *
      * @param deadEvent
      *            container for event for without subscribers
      */
     public void logDeadEvent(final DeadEvent deadEvent) {
-         logger.debug("No subscribers found for event: {}", deadEvent.event);
+        logger.debug("No subscribers found for event: {}", deadEvent.event);
     }
 
 }

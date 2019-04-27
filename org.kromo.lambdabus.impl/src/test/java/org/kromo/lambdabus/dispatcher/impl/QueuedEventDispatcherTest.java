@@ -41,7 +41,7 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
  *
  */
 public class QueuedEventDispatcherTest
-    extends EventDispatcherContract<QueuedEventDispatcher> {
+        extends EventDispatcherContract<QueuedEventDispatcher> {
 
     @Override
     protected QueuedEventDispatcher createEventDispatcher() {
@@ -62,7 +62,8 @@ public class QueuedEventDispatcherTest
         final EventDispatcher eventDispatcher = new SynchronousEventDispatcher();
         try (final EventDispatcher ed = new QueuedEventDispatcher(eventDispatcher)) {
             assertFalse(ed.isClosed(), "Created 'QueuedEventDispatcher' must not be closed.");
-            assertFalse(eventDispatcher.isClosed(), "External 'eventDispatcher' must not be closed");
+            assertFalse(eventDispatcher.isClosed(),
+                    "External 'eventDispatcher' must not be closed");
         } finally {
             eventDispatcher.close();
         }
@@ -76,24 +77,26 @@ public class QueuedEventDispatcherTest
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher ed = new QueuedEventDispatcher(nullEventDispatcher)) {}
-                }
-        );
+                    try (final EventDispatcher ed = new QueuedEventDispatcher(
+                            nullEventDispatcher)) {
+                    }
+                });
     }
 
     @DisplayName("Constructor - default ThreadingMode with null EventDispatcher throws NullPointerException")
-    @ParameterizedTest(name = "Constructor - default ThreadingMode.{0} as default and null EventDispatcher throws NullPointerException")
+    @ParameterizedTest(
+        name = "Constructor - default ThreadingMode.{0} as default and null EventDispatcher throws NullPointerException")
     @EnumSource(ThreadingMode.class)
     public void constructorNullExecutorServiceThrowsNPE(
-            final ThreadingMode defaultThreadingMode
-    ) {
+            final ThreadingMode defaultThreadingMode) {
         final EventDispatcher nullEventDispatcher = null;
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher ed = new QueuedEventDispatcher(defaultThreadingMode, nullEventDispatcher)) {}
-                }
-        );
+                    try (final EventDispatcher ed = new QueuedEventDispatcher(defaultThreadingMode,
+                            nullEventDispatcher)) {
+                    }
+                });
     }
 
     @Test
@@ -103,18 +106,20 @@ public class QueuedEventDispatcherTest
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    try (final EventDispatcher ed = new QueuedEventDispatcher(nullDefaultThreadingMode)) {}
-                }
-        );
+                    try (final EventDispatcher ed = new QueuedEventDispatcher(
+                            nullDefaultThreadingMode)) {
+                    }
+                });
 
         final EventDispatcher eventQueue = new SynchronousEventDispatcher();
         try {
             assertThrows(
                     NullPointerException.class,
                     () -> {
-                        try (final EventDispatcher ed = new QueuedEventDispatcher(nullDefaultThreadingMode, eventQueue)) {}
-                    }
-            );
+                        try (final EventDispatcher ed = new QueuedEventDispatcher(
+                                nullDefaultThreadingMode, eventQueue)) {
+                        }
+                    });
         } finally {
             eventQueue.close();
         }

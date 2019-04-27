@@ -31,7 +31,7 @@ import org.kromo.lambdabus.impl.DispatchingLambdaBus;
  *
  */
 public class DispatchingLambdaBus_QueuedEventDispatcherTest
-    extends AbstractDispatchingLambdaBusContract {
+        extends AbstractDispatchingLambdaBusContract {
 
     @Override
     protected DispatchingLambdaBus createLambdaBus() {

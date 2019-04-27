@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 /**
- * {@link ThreadFactory} implementation creating daemon threads with normal priority
- * ({@link Thread#NORM_PRIORITY}) and custom naming.
+ * {@link ThreadFactory} implementation creating daemon threads with normal
+ * priority ({@link Thread#NORM_PRIORITY}) and custom naming.
  *
  * @author Victor Toni - initial API and implementation
  *
@@ -76,8 +76,8 @@ public class SimpleThreadFactory
     }
 
     /**
-     * {@link ThreadFactory} implementation creating daemon threads with normal priority
-     * ({@link Thread#NORM_PRIORITY}) and custom naming.
+     * {@link ThreadFactory} implementation creating daemon threads with normal
+     * priority ({@link Thread#NORM_PRIORITY}) and custom naming.
      *
      * @author Victor Toni
      *
@@ -91,8 +91,9 @@ public class SimpleThreadFactory
         private final String threadNamePrefix;
 
         /**
-         * Counter used to indicate which {@link Thread}s was created. The counter will be incremented
-         * by this instance and can be used to detect how many {@link Thread}s have been created.
+         * Counter used to indicate which {@link Thread}s was created. The counter will
+         * be incremented by this instance and can be used to detect how many
+         * {@link Thread}s have been created.
          */
         private final AtomicInteger threadCount = new AtomicInteger();
 
@@ -103,7 +104,8 @@ public class SimpleThreadFactory
          *            prefix for all threads names.
          */
         public ThreadNameSupplier(final String threadNamePrefix) {
-            this.threadNamePrefix = Objects.requireNonNull(threadNamePrefix, "'threadNamePrefix' must not be null");
+            this.threadNamePrefix = Objects.requireNonNull(threadNamePrefix,
+                    "'threadNamePrefix' must not be null");
         }
 
         @Override

@@ -38,7 +38,7 @@ import org.kromo.lambdabus.dispatcher.EventDispatcherContract;
  *
  */
 public class ThreadedEventDispatcherTest
-    extends EventDispatcherContract<ThreadedEventDispatcher> {
+        extends EventDispatcherContract<ThreadedEventDispatcher> {
 
     @Override
     protected ThreadedEventDispatcher createEventDispatcher() {
@@ -70,8 +70,7 @@ public class ThreadedEventDispatcherTest
         final ExecutorService nullExecutorService = null;
         assertThrows(
                 NullPointerException.class,
-                () -> new ThreadedEventDispatcher(nullExecutorService)
-        );
+                () -> new ThreadedEventDispatcher(nullExecutorService));
     }
 
 }

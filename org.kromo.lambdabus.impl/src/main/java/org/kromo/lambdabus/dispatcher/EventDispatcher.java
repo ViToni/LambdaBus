@@ -40,14 +40,14 @@ public interface EventDispatcher
      * @param <T>
      *            the type of the event
      * @param event
-     *            non-{@code null} object which was published to the bus and
-     *            shall be dispatched to subscribers
+     *            non-{@code null} object which was published to the bus and shall
+     *            be dispatched to subscribers
      * @param eventHandlerCollection
      *            non-{@code null} {@link Collection} of non-{@code null}
      *            {@link Consumer} for events of type {@link Class}
      * @param supportedThreadingMode
-     *            non-{@code null} {@link ThreadingMode} how the event should
-     *            be dispatched
+     *            non-{@code null} {@link ThreadingMode} how the event should be
+     *            dispatched
      * @throws IllegalStateException
      *             if {@link EventDispatcher} is already closed
      */

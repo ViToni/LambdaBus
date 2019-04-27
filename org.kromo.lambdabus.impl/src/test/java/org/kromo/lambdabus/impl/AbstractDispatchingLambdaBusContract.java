@@ -41,23 +41,22 @@ import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**
  * Extends the behavioral contract of the {@link LambdaBus} by extending
- * {@link DispatchingLambdaBus} with custom tests. This class should be
- * extended for tests of subclasses of {@link EventDispatcher} used within
+ * {@link DispatchingLambdaBus} with custom tests. This class should be extended
+ * for tests of subclasses of {@link EventDispatcher} used within
  * {@link DispatchingLambdaBus}.
  *
  * @author Victor Toni - initial implementation
  *
  */
 public abstract class AbstractDispatchingLambdaBusContract
-    extends LambdaBusContract<DispatchingLambdaBus> {
+        extends LambdaBusContract<DispatchingLambdaBus> {
 
     @ParameterizedTest(name = "{1}: NullEventRunnable gets called on null event")
     @MethodSource("getPostMethodsWithNames")
     @DisplayName("NullEventRunnable gets called on null event")
     public void nullEventRunnableGetsCalledOnNullEvent(
-        final BiConsumer<LambdaBus, Object> postMethod,
-        final String nameOnlyUsedForUnitTestName
-    ) {
+            final BiConsumer<LambdaBus, Object> postMethod,
+            final String nameOnlyUsedForUnitTestName) {
         final Function<CountDownLatch, Object> nullEventProvider = (doneLatch) -> null;
         final AtomicInteger atomicCounter = new AtomicInteger();
         try (final DispatchingLambdaBus lb = createLambdaBus()) {
@@ -80,9 +79,8 @@ public abstract class AbstractDispatchingLambdaBusContract
     @MethodSource("getPostMethodsWithNames")
     @DisplayName("NullEventRunnable gets not called on non-null event")
     public void nullEventRunnableGetsNotCalledOnNonNullEvent(
-        final BiConsumer<LambdaBus, Object> postMethod,
-        final String nameOnlyUsedForUnitTestName
-    ) {
+            final BiConsumer<LambdaBus, Object> postMethod,
+            final String nameOnlyUsedForUnitTestName) {
         final AtomicInteger atomicCounter = new AtomicInteger();
         try (final DispatchingLambdaBus lb = createLambdaBus()) {
 
@@ -112,7 +110,8 @@ public abstract class AbstractDispatchingLambdaBusContract
             final CountDownLatch calledLatch = new CountDownLatch(1);
             final Runnable exceptionThrowingNullEventRunnable = () -> {
                 try {
-                    throw new RuntimeException("Can be ignored. Just testing NullEventRunnable throwing Exceptions");
+                    throw new RuntimeException(
+                            "Can be ignored. Just testing NullEventRunnable throwing Exceptions");
                 } finally {
                     calledLatch.countDown();
                 }

@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  */
 public class DaemonThreadPoolExecutor
-    extends ThreadPoolExecutor {
+        extends ThreadPoolExecutor {
 
     /**
      * Multiplier applied to the numbers of CPUs to calculate the number of core
@@ -66,35 +66,33 @@ public class DaemonThreadPoolExecutor
     private static final AtomicInteger DEFAULT_INSTANCE_COUNT = new AtomicInteger();
 
     /**
-     * Creates a new {@code ThreadPoolExecutor} with the given initial
-     * parameters.
+     * Creates a new {@code ThreadPoolExecutor} with the given initial parameters.
      *
      * @param workQueue
-     *            the queue to use for holding tasks before they are executed.
-     *            This queue will hold only the {@code Runnable} tasks submitted
-     *            by the {@code execute} method.
+     *            the queue to use for holding tasks before they are executed. This
+     *            queue will hold only the {@code Runnable} tasks submitted by the
+     *            {@code execute} method.
      * @throws NullPointerException
      *             if {@code workQueue} is {@code null}
      */
     public DaemonThreadPoolExecutor(
-            final BlockingQueue<Runnable> workQueue
-    ) {
+            final BlockingQueue<Runnable> workQueue) {
         this(
-                Runtime.getRuntime().availableProcessors(),
+                Runtime.getRuntime()
+                        .availableProcessors(),
                 workQueue);
     }
 
     /**
-     * Creates a new {@code ThreadPoolExecutor} with the given initial
-     * parameters.
+     * Creates a new {@code ThreadPoolExecutor} with the given initial parameters.
      *
      * @param availableProcessors
      *            based on this value the {@code coreThreadCount} and
      *            {@code maxThreadCount} will be calculated
      * @param workQueue
-     *            the queue to use for holding tasks before they are executed.
-     *            This queue will hold only the {@code Runnable} tasks submitted
-     *            by the {@code execute} method.
+     *            the queue to use for holding tasks before they are executed. This
+     *            queue will hold only the {@code Runnable} tasks submitted by the
+     *            {@code execute} method.
      * @throws IllegalArgumentException
      *             if one of the following holds:<br>
      *             {@code availableProcessors < 0}
@@ -103,8 +101,7 @@ public class DaemonThreadPoolExecutor
      */
     public DaemonThreadPoolExecutor(
             final int availableProcessors,
-            final BlockingQueue<Runnable> workQueue
-    ) {
+            final BlockingQueue<Runnable> workQueue) {
         this(
                 availableProcessors * CORE_THREADS_PER_CPU_MULTIPLIER,
                 availableProcessors * MAX_THREADS_PER_CPU_MULTIPLIER,
@@ -112,18 +109,16 @@ public class DaemonThreadPoolExecutor
     }
 
     /**
-     * Creates a new {@code ThreadPoolExecutor} with the given initial
-     * parameters.
+     * Creates a new {@code ThreadPoolExecutor} with the given initial parameters.
      *
      * @param coreThreadCount
-     *            the number of threads to keep in the pool, even if they are
-     *            idle
+     *            the number of threads to keep in the pool, even if they are idle
      * @param maxThreadCount
      *            the maximum number of threads allowed in the pool
      * @param workQueue
-     *            the queue to use for holding tasks before they are executed.
-     *            This queue will hold only the {@code Runnable} tasks submitted
-     *            by the {@code execute} method.
+     *            the queue to use for holding tasks before they are executed. This
+     *            queue will hold only the {@code Runnable} tasks submitted by the
+     *            {@code execute} method.
      * @throws IllegalArgumentException
      *             if one of the following holds:<br>
      *             {@code coreThreadCount < 0}<br>
@@ -135,34 +130,31 @@ public class DaemonThreadPoolExecutor
     public DaemonThreadPoolExecutor(
             final int coreThreadCount,
             final int maxThreadCount,
-            final BlockingQueue<Runnable> workQueue
-    ) {
+            final BlockingQueue<Runnable> workQueue) {
         this(
-            coreThreadCount,
-            maxThreadCount,
-            10L, TimeUnit.SECONDS,
-            workQueue);
+                coreThreadCount,
+                maxThreadCount,
+                10L, TimeUnit.SECONDS,
+                workQueue);
     }
 
     /**
-     * Creates a new {@code ThreadPoolExecutor} with the given initial
-     * parameters.
+     * Creates a new {@code ThreadPoolExecutor} with the given initial parameters.
      *
      * @param coreThreadCount
-     *            the number of threads to keep in the pool, even if they are
-     *            idle
+     *            the number of threads to keep in the pool, even if they are idle
      * @param maxThreadCount
      *            the maximum number of threads allowed in the pool
      * @param keepAliveTime
-     *            when the number of threads is greater than the core, this is
-     *            the maximum time that excess idle threads will wait for new
-     *            tasks before terminating.
+     *            when the number of threads is greater than the core, this is the
+     *            maximum time that excess idle threads will wait for new tasks
+     *            before terminating.
      * @param timeUnit
      *            the time unit for the {@code keepAliveTime} argument
      * @param workQueue
-     *            the queue to use for holding tasks before they are executed.
-     *            This queue will hold only the {@code Runnable} tasks submitted
-     *            by the {@code execute} method.
+     *            the queue to use for holding tasks before they are executed. This
+     *            queue will hold only the {@code Runnable} tasks submitted by the
+     *            {@code execute} method.
      * @throws IllegalArgumentException
      *             if one of the following holds:<br>
      *             {@code coreThreadCount < 0}<br>
@@ -177,39 +169,36 @@ public class DaemonThreadPoolExecutor
             final int maxThreadCount,
             final long keepAliveTime,
             final TimeUnit timeUnit,
-            final BlockingQueue<Runnable> workQueue
-    ) {
+            final BlockingQueue<Runnable> workQueue) {
         this(
-            coreThreadCount,
-            maxThreadCount,
-            keepAliveTime,
-            timeUnit,
-            workQueue,
-            getDefaultThreadFactoryName());
+                coreThreadCount,
+                maxThreadCount,
+                keepAliveTime,
+                timeUnit,
+                workQueue,
+                getDefaultThreadFactoryName());
     }
 
     /**
-     * Creates a new {@code ThreadPoolExecutor} with the given initial
-     * parameters.
+     * Creates a new {@code ThreadPoolExecutor} with the given initial parameters.
      *
      * @param coreThreadCount
-     *            the number of threads to keep in the pool, even if they are
-     *            idle
+     *            the number of threads to keep in the pool, even if they are idle
      * @param maxThreadCount
      *            the maximum number of threads allowed in the pool
      * @param keepAliveTime
-     *            when the number of threads is greater than the core, this is
-     *            the maximum time that excess idle threads will wait for new
-     *            tasks before terminating.
+     *            when the number of threads is greater than the core, this is the
+     *            maximum time that excess idle threads will wait for new tasks
+     *            before terminating.
      * @param timeUnit
      *            the time unit for the {@code keepAliveTime} argument
      * @param workQueue
-     *            the queue to use for holding tasks before they are executed.
-     *            This queue will hold only the {@code Runnable} tasks submitted
-     *            by the {@code execute} method.
+     *            the queue to use for holding tasks before they are executed. This
+     *            queue will hold only the {@code Runnable} tasks submitted by the
+     *            {@code execute} method.
      * @param threadFactoryName
-     *            name to be used by the {@link ThreadFactory} as prefix when
-     *            the executor creates a new thread
+     *            name to be used by the {@link ThreadFactory} as prefix when the
+     *            executor creates a new thread
      * @throws IllegalArgumentException
      *             if one of the following holds:<br>
      *             {@code coreThreadCount < 0}<br>
@@ -226,29 +215,35 @@ public class DaemonThreadPoolExecutor
             final long keepAliveTime,
             final TimeUnit timeUnit,
             final BlockingQueue<Runnable> workQueue,
-            final String threadFactoryName
-    ) {
+            final String threadFactoryName) {
         super(
-            coreThreadCount,
-            maxThreadCount,
-            keepAliveTime,
-            timeUnit,
-            workQueue,
-            new DaemonThreadFactory(threadFactoryName));
+                coreThreadCount,
+                maxThreadCount,
+                keepAliveTime,
+                timeUnit,
+                workQueue,
+                new DaemonThreadFactory(threadFactoryName));
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb
-            .append(getClass().getSimpleName())
-            .append('(')
-            .append("core pool size:").append(getCorePoolSize())
-            .append(",max pool size:").append(getMaximumPoolSize())
-            .append(",active:").append(getActiveCount())
-            .append(',').append(getQueue().getClass().getSimpleName())
-            .append(',') .append(getThreadFactory().getClass().getSimpleName())
-            .append(')');
+                .append(getClass().getSimpleName())
+                .append('(')
+                .append("core pool size:")
+                .append(getCorePoolSize())
+                .append(",max pool size:")
+                .append(getMaximumPoolSize())
+                .append(",active:")
+                .append(getActiveCount())
+                .append(',')
+                .append(getQueue().getClass()
+                        .getSimpleName())
+                .append(',')
+                .append(getThreadFactory().getClass()
+                        .getSimpleName())
+                .append(')');
         return sb.toString();
     }
 

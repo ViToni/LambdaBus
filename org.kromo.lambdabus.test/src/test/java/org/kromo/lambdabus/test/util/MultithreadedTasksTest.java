@@ -38,8 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Testing that {@link MultithreadedTasks} is executing tasks in parallel and does not exceed the count
- * of tasks to be executed.
+ * Testing that {@link MultithreadedTasks} is executing tasks in parallel and
+ * does not exceed the count of tasks to be executed.
  *
  * @author Victor Toni - initial implementation
  *
@@ -48,12 +48,12 @@ public class MultithreadedTasksTest {
 
     private static final int N_THREADS = 113;
 
-    private static final int N_TIMES_HUGE    =     2503;
-    private static final int N_TIMES_LARGE   =      499;
-    private static final int N_TIMES_EQUAL   = N_THREADS;
-    private static final int N_TIMES_SMALL   =       31;
-    private static final int N_TIMES_TINY    =        7;
-    private static final int N_TIMES_ONE     =        1;
+    private static final int N_TIMES_HUGE = 2503;
+    private static final int N_TIMES_LARGE = 499;
+    private static final int N_TIMES_EQUAL = N_THREADS;
+    private static final int N_TIMES_SMALL = 31;
+    private static final int N_TIMES_TINY = 7;
+    private static final int N_TIMES_ONE = 1;
 
     private final Logger log = LoggerFactory.getLogger(MultithreadedTasksTest.class);
 
@@ -73,11 +73,9 @@ public class MultithreadedTasksTest {
     @DisplayName("Constructor does not throw exception")
     public void constructor() {
         assertDoesNotThrow(
-                () -> new MultithreadedTasks(N_THREADS)
-        );
+                () -> new MultithreadedTasks(N_THREADS));
         assertDoesNotThrow(
-                () -> new MultithreadedTasks(N_THREADS, threadNamePrefix)
-        );
+                () -> new MultithreadedTasks(N_THREADS, threadNamePrefix));
     }
 
     @Test
@@ -85,8 +83,7 @@ public class MultithreadedTasksTest {
     public void constructor_null_ThreadFactory_throws_NPE() {
         assertThrows(
                 NullPointerException.class,
-                () -> new MultithreadedTasks(N_THREADS, null)
-        );
+                () -> new MultithreadedTasks(N_THREADS, null));
     }
 
     @Test
@@ -94,50 +91,44 @@ public class MultithreadedTasksTest {
     public void constructor_thread_count_less_ONE_throws_exception() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new MultithreadedTasks(0)
-        );
+                () -> new MultithreadedTasks(0));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new MultithreadedTasks(-1)
-        );
+                () -> new MultithreadedTasks(-1));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new MultithreadedTasks(0, threadNamePrefix)
-        );
+                () -> new MultithreadedTasks(0, threadNamePrefix));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new MultithreadedTasks(-1, threadNamePrefix)
-        );
+                () -> new MultithreadedTasks(-1, threadNamePrefix));
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executeTaskThrowsIllegalArgumentExceptionIfNTimesSmallerThanOne(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
-        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
+        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS,
+                threadNamePrefix);
 
         final int nTimes = 0; // not an allowed value
-        final Runnable task = () -> { };
+        final Runnable task = () -> {};
         assertThrows(
                 IllegalArgumentException.class,
-                () -> multithreadedTasks.executeTask(nTimes, task, executionPolicy)
-        );
+                () -> multithreadedTasks.executeTask(nTimes, task, executionPolicy));
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executeTaskThrowsNullPointerExceptionIfTaskIsNull(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
-        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
+        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS,
+                threadNamePrefix);
 
         final int nTimes = 1;
         final Runnable nullTask = null;
         assertThrows(
                 NullPointerException.class,
-                () -> multithreadedTasks.executeTask(nTimes, nullTask)
-        );
+                () -> multithreadedTasks.executeTask(nTimes, nullTask));
     }
 
     @Test
@@ -155,120 +146,113 @@ public class MultithreadedTasksTest {
             }
         };
 
-        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);
+        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS,
+                threadNamePrefix);
 
         final RuntimeException exceptionThrown = assertThrows(
                 RuntimeException.class,
                 () -> multithreadedTasks.executeTask(nTimes, task));
 
-        assertEquals(msg, exceptionThrown.getMessage(), "Exception message did NOT match expected message");
-        assertTrue(nTimesAfterWhichExceptionIsThrown <= counter.get(), "MultithreadedTasks.executeTask did ended prematurely exceptionally");
-        assertTrue(counter.get() <= nTimes, "MultithreadedTasks.executeTask did NOT end exceptionally");
+        assertEquals(msg, exceptionThrown.getMessage(),
+                "Exception message did NOT match expected message");
+        assertTrue(nTimesAfterWhichExceptionIsThrown <= counter.get(),
+                "MultithreadedTasks.executeTask did ended prematurely exceptionally");
+        assertTrue(counter.get() <= nTimes,
+                "MultithreadedTasks.executeTask did NOT end exceptionally");
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executionsCountDoesNotExceedHugeCount(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
         executionsCountDoesNotExceedCount(N_TIMES_HUGE, executionPolicy);
     }
 
     @Test
-    public void executionsCountDoesNotExceedHugeCount(
-    ) {
+    public void executionsCountDoesNotExceedHugeCount() {
         executionsCountDoesNotExceedCount(N_TIMES_HUGE, null);
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executionsCountDoesNotExceedLargeCount(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
         executionsCountDoesNotExceedCount(N_TIMES_LARGE, executionPolicy);
     }
 
     @Test
-    public void executionsCountDoesNotExceedLargeCount(
-    ) {
+    public void executionsCountDoesNotExceedLargeCount() {
         executionsCountDoesNotExceedCount(N_TIMES_LARGE, null);
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executionsCountDoesNotExceedSmallCount(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
         executionsCountDoesNotExceedCount(N_TIMES_SMALL, executionPolicy);
     }
 
     @Test
-    public void executionsCountDoesNotExceedSmallCount(
-    ) {
+    public void executionsCountDoesNotExceedSmallCount() {
         executionsCountDoesNotExceedCount(N_TIMES_SMALL, null);
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executionsCountDoesNotExceedEqualCount(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
         executionsCountDoesNotExceedCount(N_TIMES_EQUAL, executionPolicy);
     }
 
     @Test
-    public void executionsCountDoesNotExceedEqualCount(
-    ) {
+    public void executionsCountDoesNotExceedEqualCount() {
         executionsCountDoesNotExceedCount(N_TIMES_EQUAL, null);
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executionsCountDoesNotExceedTinyCount(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
         executionsCountDoesNotExceedCount(N_TIMES_TINY, executionPolicy);
     }
 
     @Test
-    public void executionsCountDoesNotExceedTinyCount(
-    ) {
+    public void executionsCountDoesNotExceedTinyCount() {
         executionsCountDoesNotExceedCount(N_TIMES_TINY, null);
     }
 
     @ParameterizedTest
     @EnumSource(MultithreadedTasks.ExecutionPolicy.class)
     public void executionsDoesNotExceedCountOfOne(
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
         executionsCountDoesNotExceedCount(N_TIMES_ONE, executionPolicy);
     }
 
     @Test
-    public void executionsDoesNotExceedCountOfOne(
-    ) {
+    public void executionsDoesNotExceedCountOfOne() {
         executionsCountDoesNotExceedCount(N_TIMES_ONE, null);
     }
 
-    //##########################################################################
+    // ##########################################################################
     // Private helper methods
-    //##########################################################################
+    // ##########################################################################
 
     private void executionsCountDoesNotExceedCount(
             final int eventCount,
-            final MultithreadedTasks.ExecutionPolicy executionPolicy
-    ) {
+            final MultithreadedTasks.ExecutionPolicy executionPolicy) {
         final AtomicInteger counter = new AtomicInteger();
         final Set<Integer> threadHashCodes = ConcurrentHashMap.newKeySet();
 
         final Runnable task = () -> {
             // might have used the name but names might change
-            final int threadHashCode = Thread.currentThread().hashCode();
+            final int threadHashCode = Thread.currentThread()
+                    .hashCode();
             counter.incrementAndGet();
             threadHashCodes.add(threadHashCode);
         };
 
-        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS, threadNamePrefix);
+        final MultithreadedTasks multithreadedTasks = new MultithreadedTasks(N_THREADS,
+                threadNamePrefix);
 
         final int numberOfThreads;
         if (null == executionPolicy) {
@@ -278,7 +262,8 @@ public class MultithreadedTasksTest {
         }
 
         assertEquals(eventCount, counter.get());
-        assertTrue(N_THREADS >= threadHashCodes.size(), "Did use more threads (" + threadHashCodes.size() +  ") than supposed to: " + N_THREADS);
+        assertTrue(N_THREADS >= threadHashCodes.size(), "Did use more threads ("
+                + threadHashCodes.size() + ") than supposed to: " + N_THREADS);
 
         log.debug("{} - Threads: {}/{} used.", testName, threadHashCodes.size(), numberOfThreads);
     }

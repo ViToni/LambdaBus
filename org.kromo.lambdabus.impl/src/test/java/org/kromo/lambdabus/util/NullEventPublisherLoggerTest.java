@@ -56,8 +56,7 @@ public class NullEventPublisherLoggerTest {
             final int param = i;
             assertThrows(
                     IllegalArgumentException.class,
-                    () -> new NullEventPublisherLogger(param)
-            );
+                    () -> new NullEventPublisherLogger(param));
         }
     }
 
