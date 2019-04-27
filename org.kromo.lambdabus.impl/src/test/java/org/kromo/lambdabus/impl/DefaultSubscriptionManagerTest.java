@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2019: Victor Toni
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +16,7 @@
  *
  * Contributors:
  *     Victor Toni - initial implementation
- *******************************************************************************/
+ */
 package org.kromo.lambdabus.impl;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
