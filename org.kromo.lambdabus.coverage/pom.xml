@@ -44,6 +44,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>lambdabus.api.test</artifactId>
+            <version>${lambdabus.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>lambdabus.impl</artifactId>
             <version>${lambdabus.impl.version}</version>
         </dependency>

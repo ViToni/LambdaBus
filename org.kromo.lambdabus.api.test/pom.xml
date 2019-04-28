@@ -4,7 +4,7 @@
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License 2.0 which is available at
     http://www.eclipse.org/legal/epl-2.0.
-   
+    
     This Source Code may also be made available under the following Secondary
     Licenses when the conditions for such availability set forth in the Eclipse
     Public License, v. 2.0 are satisfied:
@@ -18,7 +18,7 @@
         Victor Toni - initial setup
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -27,10 +27,9 @@
         <version>0.12.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>lambdabus.impl</artifactId>
-    <name>LambdaBus Implementation</name>
-    <description>Implementation of a LambdaBus API using composition including EventDispatcher implementations for synchronous and asynchronous event dispatching.
-    Include also mplementations of EventsDispatcher API supporting asynchronous and non-blocking event dispatching.</description>
+    <artifactId>lambdabus.api.test</artifactId>
+    <name>LambdaBus API integration test</name>
+    <description>LambdaBus API and behavioral contract of the API as unit test for implementing classes.</description>
     <packaging>jar</packaging>
 
     <dependencyManagement>
@@ -40,18 +39,20 @@
                 <artifactId>lambdabus.api</artifactId>
                 <version>${lambdabus.api.version}</version>
             </dependency>
-            <!-- Dependencies for testing -->
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>lambdabus.api.test</artifactId>
-                <version>${lambdabus.api.version}</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>lambdabus.test</artifactId>
                 <version>${lambdabus.test.version}</version>
-                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.jupiter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -62,39 +63,16 @@
             <artifactId>lambdabus.api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <!-- Dependencies for testing -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>lambdabus.api.test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>lambdabus.test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -106,15 +84,15 @@
                     <artifactId>bnd-maven-plugin</artifactId>
                     <configuration>
                         <!-- define custom values -->
-                        <instructions>
-                            <Export-Package>
-                                org.kromo.lambdabus.dispatcher,
-                                org.kromo.lambdabus.dispatcher.impl,
-                                org.kromo.lambdabus.impl,
-                                org.kromo.lambdabus.impl.concurrent,
-                                org.kromo.lambdabus.util
-                            </Export-Package>
-                        </instructions>
+                        <bnd><![CDATA[
+                            Bundle-Description: LambdaBus API
+                            Export-Package: org.kromo.lambdabus
+
+                            -exportcontents: \
+                                org.kromo.lambdabus
+
+                            -sources: true
+                        ]]></bnd>
                     </configuration>
                 </plugin>
             </plugins>
@@ -124,16 +102,12 @@
         <plugins>
             <!-- groupId: org.apache.maven.plugins is assumed by default. -->
             <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <!-- We need also the test classes to be made available because they 
-                    contain the contracts of the implementations. -->
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <!-- copy artifacts to the main directory -->
             <plugin>

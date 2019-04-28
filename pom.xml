@@ -62,6 +62,7 @@
 
     <modules>
         <module>org.kromo.lambdabus.api</module>
+        <module>org.kromo.lambdabus.api.test</module>
         <module>org.kromo.lambdabus.impl</module>
         <module>org.kromo.lambdabus.test</module>
         <module>org.kromo.lambdabus.coverage</module>
@@ -153,7 +154,7 @@
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
-             <dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.jupiter.version}</version>
