@@ -36,7 +36,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import org.kromo.lambdabus.LambdaBus;
-import org.kromo.lambdabus.LambdaBusContract;
+import org.kromo.lambdabus.contract.LambdaBusContract;
 import org.kromo.lambdabus.dispatcher.EventDispatcher;
 
 /**

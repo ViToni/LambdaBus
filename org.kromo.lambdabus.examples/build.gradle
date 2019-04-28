@@ -1,11 +1,4 @@
-dependencies {
-    compile project(':org.kromo.lambdabus.impl')
-    compile 'org.slf4j:slf4j-simple:1.7.26'
-}
-
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from(javadoc.destinationDir)
 }
-
-description = 'LambdaBus Examples'

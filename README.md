@@ -73,20 +73,25 @@ public class HelloLambdaWorld {
 ~$ git clone https://github.com/ViToni/lambdabus.git
 ```
 
-### Building with Maven
+### Building with Gradle
 
 ```sh
 ~$ cd lambdabus
-~$ mvn clean install
+~$ ./gradlew clean build
 ```
 
-The build creates the library jars and makes result available in the `target/lib` folder and JavaDoc JARs in the `target/javadoc` folder.
+The build creates the library JARs within each project's `target` folder.
+The build also
+
+* executes tests
 
 ```sh
-~$ mvn site site:stage
+~$ ./gradlew release
 ```
 
-This build creates the documentation and test coverage and the result is provided in the `target/site` folder.
+This build releases artifacts.
+As default SNAPSHOT versions are used.
+The SNAPSHOT can be override from the command line by assigning a value to the [`-snapshot` instruction](https://bnd.bndtools.org/instructions/snapshot.html) using e.g. `-D-snapshot=` for releases.
 
 ## Gotcha!
 

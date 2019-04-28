@@ -1,0 +1,12 @@
+Bundle-Name:    LambdaBus Examples
+
+# no tests
+-nojunit:       true
+
+-buildpath: \
+    org.kromo.lambdabus.api,\
+    org.kromo.lambdabus.impl
+
+# no tests for example classes
+-fixupmessages.test.sources: \
+    "folder 'src*test*java' * path"

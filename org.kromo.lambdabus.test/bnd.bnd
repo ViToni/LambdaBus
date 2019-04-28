@@ -1,0 +1,12 @@
+Bundle-Name:    LambdaBus Test
+
+-buildpath: \
+    osgi.annotation,\
+    slf4j.api
+
+-testpath: \
+    src/test/resources;version=file,\
+    ${junit5}
+
+-fixupmessages.test.resources: \
+    "folder 'src*test*resources' * path"

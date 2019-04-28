@@ -1,0 +1,7 @@
+Bundle-Name:    LambdaBus API
+
+-buildpath: \
+    osgi.annotation
+
+-testpath: \
+    ${junit5}

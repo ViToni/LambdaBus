@@ -1,0 +1,16 @@
+Bundle-Name:    LambdaBus Implementation
+
+-buildpath: \
+    org.kromo.lambdabus.api,\
+    osgi.annotation,\
+    slf4j.api
+
+-testpath: \
+    src/test/resources;version=file,\
+    org.kromo.lambdabus.api.test,\
+    org.kromo.lambdabus.test,\
+    ${junit5},\
+    ${mockito}
+
+-fixupmessages.test.resources: \
+    "folder 'src*test*resources' * path"

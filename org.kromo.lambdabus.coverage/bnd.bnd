@@ -1,0 +1,10 @@
+Bundle-Name:    LambdaBus Code Coverage
+
+# no tests
+-nojunit:       true
+
+-fixupmessages.main.sources: \
+    "folder 'src*main*java' * path"
+
+-fixupmessages.test.sources: \
+    "folder 'src*test*java' * path"

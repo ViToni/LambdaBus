@@ -17,7 +17,7 @@
  * Contributors:
  *     Victor Toni - initial implementation
  */
-package org.kromo.lambdabus;
+package org.kromo.lambdabus.contract;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,6 +47,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import org.kromo.lambdabus.DeadEvent;
+import org.kromo.lambdabus.LambdaBus;
+import org.kromo.lambdabus.Subscription;
+import org.kromo.lambdabus.ThreadingMode;
 import org.kromo.lambdabus.test.util.MultithreadedTasks;
 
 /**
