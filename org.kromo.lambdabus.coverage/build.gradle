@@ -1,0 +1,13 @@
+dependencies {
+    compile project(':org.kromo.lambdabus.api')
+    compile project(':org.kromo.lambdabus.impl')
+    compile project(':org.kromo.lambdabus.test')
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from(javadoc.destinationDir)
+}
+
+description = 'LambdaBus Code Coverage'
+publishing.publications.maven.artifact(javadocJar)

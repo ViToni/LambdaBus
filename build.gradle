@@ -1,0 +1,44 @@
+allprojects {
+    group = 'org.kromo.lambdabus'
+    version = '0.12.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    repositories {
+        mavenLocal()
+        maven {
+            url = 'http://repo.maven.apache.org/maven2'
+        }
+    }
+
+    dependencies {
+        testCompile 'org.junit.platform:junit-platform-runner:1.4.2'
+        testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from(sourceSets.main.allJava)
+    }
+
+    sourceCompatibility = '1.8'
+
+    configurations.all {
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from(components.java)
+                artifact(sourcesJar)
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}

@@ -1,0 +1,8 @@
+rootProject.name = 'lambdabus-root'
+
+include(':org.kromo.lambdabus.api')
+include(':org.kromo.lambdabus.api.test')
+include(':org.kromo.lambdabus.impl')
+include(':org.kromo.lambdabus.test')
+include(':org.kromo.lambdabus.coverage')
+include(':org.kromo.lambdabus.examples')

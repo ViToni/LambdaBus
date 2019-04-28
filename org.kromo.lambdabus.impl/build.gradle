@@ -1,0 +1,24 @@
+dependencies {
+    compile project(':org.kromo.lambdabus.api')
+    compile 'org.slf4j:slf4j-api:1.7.26'
+    testCompile project(':org.kromo.lambdabus.api.test')
+    testCompile project(':org.kromo.lambdabus.test')
+    testCompile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.2'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.2'
+    testCompile 'org.mockito:mockito-core:2.27.0'
+}
+
+task testsJar(type: Jar) {
+    classifier = 'tests'
+    from(sourceSets.test.output)
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from(javadoc.destinationDir)
+}
+
+description = 'LambdaBus Implementation'
+publishing.publications.maven.artifact(testsJar)
+publishing.publications.maven.artifact(javadocJar)
