@@ -89,9 +89,14 @@ The build also
 ~$ ./gradlew release
 ```
 
-This build releases artifacts.
+This build releases artifacts to the `dist` folder.
+
 As default SNAPSHOT versions are used.
-The SNAPSHOT can be override from the command line by assigning a value to the [`-snapshot` instruction](https://bnd.bndtools.org/instructions/snapshot.html) using e.g. `-D-snapshot=` for releases.
+The SNAPSHOT can be overriden from the command line by assigning a value to the [`-snapshot`](https://bnd.bndtools.org/instructions/snapshot.html) instruction using e.g.
+
+```sh
+~$ ./gradlew release "-D-snapshot="
+```
 
 ## Gotcha!
 

@@ -1,3 +1,4 @@
+releaserepo:            ${workspace}/dist/bundles
 mavencentral:           https://repo.maven.apache.org/maven2
 
 # Configure Repositories
@@ -9,4 +10,11 @@ mavencentral:           https://repo.maven.apache.org/maven2
         name="Maven Central";\
         releaseUrl="${mavencentral}";\
         index=${.}/maven/central.mvn;\
-        readOnly=true
+        readOnly=true,\
+    aQute.bnd.repository.maven.provider.MavenBndRepository;\
+        name="Release";\
+        releaseUrl="${fileuri;${releaserepo}}";\
+        snapshotUrl="${fileuri;${releaserepo}}";\
+        noupdateOnRelease=true
+
+-releaserepo: Release
