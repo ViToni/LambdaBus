@@ -1,6 +1,9 @@
 ext {
     // skipping cnf since it is a not a java project
     javaProjects = subprojects.findAll { it.name != "cnf" && it.plugins.hasPlugin('biz.aQute.bnd') }
+
+    // directory to gather artifacts
+    distributionDir = rootProject.file("dist")
 }
 
 allprojects { repositories { mavenCentral() } }
@@ -11,6 +14,17 @@ configure(javaProjects) { project ->
 
     // using bnd to get project description from bundle name
     description = project.bnd.get("Bundle-Name")
+
+    task releaseClean(type: Delete) {
+        doLast {
+            // failOnError needed if 'distributionDir' directory does not exist
+            ant.delete(includeEmptyDirs: 'true', failOnError: 'false') {
+                // delete only files of _this_ project from distributionDir
+                fileset(dir: distributionDir, includes: "**/${project.name}/**")
+            }
+        }
+    }
+    clean { dependsOn releaseClean }
 
     // configure tests to use JUnit5
     tasks.withType(Test) {
@@ -25,3 +39,16 @@ configure(javaProjects) { project ->
         testLogging { events "skipped", "failed" }
     }
 }
+
+task releaseClean(type: Delete) {
+    dependsOn javaProjects.releaseClean
+
+    doLast {
+        // failOnError needed if 'distributionDir' directory does not exist
+        ant.delete(includeEmptyDirs: 'true', failOnError: 'false') {
+            fileset(dir: distributionDir, includes: "**/**")
+        }
+    }
+}
+
+task clean { dependsOn releaseClean }
