@@ -1,8 +1,9 @@
+# Eclipse files & directories
 **/bin/
+.settings/
+
+# Maven files & directories
 **/target/
-**/.project
-**/.classpath
-**/.settings/
 
 # IntelliJ IDEA files & directories
 **/.idea/
@@ -16,3 +17,9 @@
 
 # Ignore Gradle build output directory
 build/
+
+# volatile bnd workspace files
+/cnf/cache/
+
+# directory were we gather all results
+/dist/

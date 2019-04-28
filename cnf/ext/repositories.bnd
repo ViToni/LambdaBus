@@ -1,0 +1,12 @@
+mavencentral:           https://repo.maven.apache.org/maven2
+
+# Configure Repositories
+-plugin: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository;\
+        name="Local";\
+        noupdateOnRelease=true,\
+    aQute.bnd.repository.maven.provider.MavenBndRepository;\
+        name="Maven Central";\
+        releaseUrl="${mavencentral}";\
+        index=${.}/maven/central.mvn;\
+        readOnly=true

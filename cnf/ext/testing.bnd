@@ -1,0 +1,46 @@
+################################################################################
+## Which classes are considered to contain tests
+## see: https://bnd.bndtools.org/chapters/310-testing.html
+################################################################################
+Test-Cases:     ${classes;CONCRETE;NAMED;*Test}
+
+################################################################################
+## JUnit5
+################################################################################
+
+# projects usually need only the JUnit API
+junit5-api: \
+    org.junit.jupiter:junit-jupiter-api,\
+    org.junit.jupiter:junit-jupiter-engine,\
+    org.junit.jupiter:junit-jupiter-params
+
+# the platform is required so that gradle/eclipse find tests
+junit5-platform: \
+    org.junit.platform:junit-platform-commons,\
+    org.junit.platform:junit-platform-engine,\
+    org.junit.platform:junit-platform-launcher
+
+junit5-deps: \
+    org.apiguardian:apiguardian-api,\
+    org.opentest4j
+
+junit5: \
+    ${junit5-api},\
+    ${junit5-platform},\
+    ${junit5-deps}
+
+################################################################################
+## Mockito
+################################################################################
+
+mockito-core: \
+    org.mockito.mockito-core
+
+mockito-deps: \
+    org.objenesis,\
+    net.bytebuddy.byte-buddy,\
+    net.bytebuddy.byte-buddy-agent
+
+mockito: \
+    ${mockito-core},\
+    ${mockito-deps}

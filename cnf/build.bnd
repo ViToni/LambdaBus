@@ -1,0 +1,96 @@
+################################################################################
+## BUILD SETTINGS
+################################################################################
+
+################################################################################
+# Full semantic version
+################################################################################
+base.version:           ${major}.${minor}.${patch}.SNAPSHOT
+
+################################################################################
+# Java Compiler Options
+################################################################################
+javac.source:           1.8
+javac.target:           ${javac.source}
+javac.compliance:       ${javac.source}
+javac.debug:            on
+javac.encoding:         UTF-8
+
+# The bnd version this workspace is built with
+-require-bnd:           "(version>=4.2.0)"
+
+################################################################################
+# We want to make everything right, don't we?
+# As this option is indeed very pedantic, it should be used mostly for testing
+# purposes.
+################################################################################
+#-pedantic:              true
+
+# Don't baseline Bundle-Version
+-diffignore:            Bundle-Version
+
+# Maven info. The maven artifactId defaults to Bundle-SymbolicName
+-groupid:               org.kromo.lambdabus
+
+Automatic-Module-Name:  ${def;bsn}
+
+Bundle-Version:         ${base.version}
+Bundle-Vendor:          kromo.org
+SPDX-License-Identifier: EPL-2.0 or GPL-2.0 WITH Classpath-exception-2.0
+Bundle-License:         "${SPDX-License-Identifier}";\
+                        description="This program and the accompanying materials are made available under the terms of the Eclipse Public License 2.0, or the GNU General Public License, version 2 with the GNU Classpath Exception.";\
+                        link="https://opensource.org/licenses/EPL-2.0"
+Bundle-SCM:             url=https://github.com/ViToni/lambdabus,\
+                        connection=scm:git:https://github.com/ViToni/lambdabus.git,\
+                        developerConnection=scm:git:git@github.com:ViToni/lambdabus.git,\
+                        tag=${base.version}${if;${def;-snapshot;SNAPSHOT};-${def;-snapshot;SNAPSHOT}}
+Bundle-Developers: \
+    vitoni; \
+        email=Victor.Toni@gmail.com; \
+        name="Victor Toni"; \
+        roles="developer"; \
+        timezone=1
+
+# keep it small - don't include sources by default
+-sources:               false
+
+# exclude these files from created JAR
+-donotcopy:             \.gitignore|\.gitkeep|\.DS_Store
+
+# hide extra headers such as CREATED_BY, TOOL or BND_LASTMODIFIED
+-noextraheaders:        true
+
+# the content of the JAR will have always the some order regardless of what
+# the filesystem returns
+-reproducible:          true
+
+# no OSGi tests, can be overrriden by projects, if needed
+-nojunitosgi:           true
+
+# Gradle output directories
+gradle.bin.dir:         target/gradle/classes
+gradle.testbin.dir:     target/gradle/test-classes
+
+# output directories of other builders, eg. Eclipse
+other.bin.dir:          target/classes
+other.testbin.dir:      target/test-classes
+
+# using different output directories for Gradle and other builders, eg. Eclipse
+# to avoid clashes between Eclipse building automatically and Gradle builds
+bin.directory           ${if;${is;${driver};gradle};${gradle.bin.dir};${other.bin.dir}}
+testbin.directory:      ${if;${is;${driver};gradle};${gradle.testbin.dir};${other.testbin.dir}}
+
+# inverse logic, since we define which directories to ignore
+ignore.bin.dir:         ${if;${is;${driver};gradle};${other.bin.dir};${gradle.bin.dir}}
+ignore.testbin.dir:     ${if;${is;${driver};gradle};${other.testbin.dir};${gradle.testbin.dir}}
+
+# the builder should ignore files of the "other" builder
+-builderignore:         ${ignore.bin.dir},${ignore.testbin.dir}
+
+src:                    src/main/java
+-includeresource.all:   -src/main/resources
+bin:                    ${bin.directory}
+
+testsrc:                src/test/java
+testbin:                ${testbin.directory}
+target-dir:             target

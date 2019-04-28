@@ -9,4 +9,3 @@ task javadocJar(type: Jar) {
 }
 
 description = 'LambdaBus Examples'
-publishing.publications.maven.artifact(javadocJar)
