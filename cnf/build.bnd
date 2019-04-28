@@ -4,8 +4,22 @@
 
 ################################################################################
 # Full semantic version
+# the SNAPSHOT part can be overridden by the "-snapshot" instruction
 ################################################################################
 base.version:           ${major}.${minor}.${patch}.SNAPSHOT
+
+################################################################################
+# -snapshot unset (commented out) is a snapshot build. (e.g. 1.0.0-SNAPSHOT)
+#           bnd would set a value based on the timestamp
+# -snapshot set to a value (e.g. RC1) is a release build with the value as the
+#           Maven version qualifier. (e.g. 1.0.0-RC1)
+# -snapshot set to the empty string is a release build with no Maven version
+#           qualifier. (e.g. 1.0.0)
+################################################################################
+# -snapshot can be overriden on the command line using -D-snapshot=<other-value>
+# our default configured below is a timestamp with a granularity of minutes
+################################################################################
+-snapshot:              ${tstamp;yyyyMMdd-hhmm}
 
 ################################################################################
 # Java Compiler Options
