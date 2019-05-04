@@ -46,6 +46,17 @@ javac.encoding:         UTF-8
 # Maven info. The maven artifactId defaults to Bundle-SymbolicName
 -groupid:               org.kromo.lambdabus
 
+# sanitize version used for Maven artifacts as it's part of the JAR name
+# (whereas it's just a version for bnd and the versions 1.0 and 1.0.0 are sematically the same)
+# see: https://bnd.bndtools.org/macros/versionmask.html
+-pom:                   version=${if;${def;-snapshot};${versionmask;===;${@version}}-${def;-snapshot};${versionmask;===s;${@version}}}
+
+################################################################################
+# pom;path=JAR
+#   => use Maven POM from JAR
+################################################################################
+-maven-release:         pom;path=JAR
+
 Automatic-Module-Name:  ${def;bsn}
 
 Bundle-Version:         ${base.version}

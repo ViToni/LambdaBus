@@ -89,7 +89,9 @@ The build also
 ~$ ./gradlew release
 ```
 
-This build releases artifacts to the `dist` folder.
+This build releases artifacts to the `dist` folder including
+* the actual library JARs
+* the respective POMs for Maven
 
 As default SNAPSHOT versions are used.
 The SNAPSHOT can be overriden from the command line by assigning a value to the [`-snapshot`](https://bnd.bndtools.org/instructions/snapshot.html) instruction using e.g.
