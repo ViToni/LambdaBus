@@ -15,6 +15,9 @@ configure(javaProjects) { project ->
     // using bnd to get project description from bundle name
     description = project.bnd.get("Bundle-Name")
 
+    // bnd release also includes Javadoc which has to be built beforehand
+    release { dependsOn javadoc }
+
     task releaseClean(type: Delete) {
         doLast {
             // failOnError needed if 'distributionDir' directory does not exist

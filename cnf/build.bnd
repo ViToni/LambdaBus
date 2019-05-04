@@ -56,8 +56,10 @@ javac.encoding:         UTF-8
 #   => use Maven POM from JAR
 # sources;path="${src}"
 #   => get sources from "main" only (no tests)
+# javadoc;path="${target}/docs/javadoc"
+#   => get Javadoc from output location of Gradle javadoc task
 ################################################################################
--maven-release:         pom;path=JAR,sources;path="${src}"
+-maven-release:         pom;path=JAR,sources;path="${src}",javadoc;path="${target}/docs/javadoc"
 
 Automatic-Module-Name:  ${def;bsn}
 
