@@ -47,8 +47,29 @@ configure(javaProjects) { project ->
         source = sourceSets.main.allJava
         classpath = configurations.compileClasspath
 
+        options { setMemberLevel JavadocMemberLevel.PROTECTED }
+    }
+
+    task javadocCheck(type: Javadoc) {
+        source = sourceSets.main.allJava
+        source += sourceSets.test.allJava
+        classpath = sourceSets.main.compileClasspath
+        classpath += sourceSets.test.compileClasspath
+        // use a non-default destinationDir to avoid interfering with regular javadoc
+        destinationDir = file("${buildDir}/tmp/checks/javadoc")
+
+        // copy most options from regular javadoc task
+        options { setMemberLevel JavadocMemberLevel.PRIVATE }
+    }
+    // the Javadoc check should be included when doing final checks
+    check { dependsOn javadocCheck }
+    // before creating Javadoc we want to check all of it
+    // the dependency must be declared after the declaration of "javadocCheck", so that the task is already "known"
+    javadoc { dependsOn javadocCheck }
+
+    // common configuration for all Javadoc tasks
+    tasks.withType(Javadoc) {
         options {
-            setMemberLevel JavadocMemberLevel.PROTECTED
             author = true
             charSet = 'UTF-8'
             encoding = 'UTF-8'

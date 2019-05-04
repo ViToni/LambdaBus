@@ -84,6 +84,8 @@ The build creates the library JARs within each project's `target` folder.
 The build also
 
 * executes tests
+* creates Javadoc for all classes down to PROTECTED level
+* validates Javadoc for all classes  including private methods and test classes to check for consistent docs
 
 ```sh
 ~$ ./gradlew release
