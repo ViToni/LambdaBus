@@ -91,6 +91,7 @@ The build also
 
 This build releases artifacts to the `dist` folder including
 * the actual library JARs
+* JARs for source code
 * the respective POMs for Maven
 
 As default SNAPSHOT versions are used.

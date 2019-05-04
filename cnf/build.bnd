@@ -54,8 +54,10 @@ javac.encoding:         UTF-8
 ################################################################################
 # pom;path=JAR
 #   => use Maven POM from JAR
+# sources;path="${src}"
+#   => get sources from "main" only (no tests)
 ################################################################################
--maven-release:         pom;path=JAR
+-maven-release:         pom;path=JAR,sources;path="${src}"
 
 Automatic-Module-Name:  ${def;bsn}
 
