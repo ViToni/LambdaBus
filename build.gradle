@@ -41,6 +41,27 @@ configure(javaProjects) { project ->
         // log only this specific events for tests
         testLogging { events "skipped", "failed" }
     }
+
+    javadoc {
+        title = "${project.description} - v${version}"
+        source = sourceSets.main.allJava
+        classpath = configurations.compileClasspath
+
+        options {
+            setMemberLevel JavadocMemberLevel.PROTECTED
+            author = true
+            charSet = 'UTF-8'
+            encoding = 'UTF-8'
+            docEncoding = 'UTF-8'
+            use = true
+            splitIndex = true
+            noIndex = false
+            noNavBar = false
+            noTree = false
+
+            links "https://docs.oracle.com/javase/8/docs/api/"
+        }
+    }
 }
 
 task releaseClean(type: Delete) {
