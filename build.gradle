@@ -29,6 +29,9 @@ configure(javaProjects) { project ->
     }
     clean { dependsOn releaseClean }
 
+    apply plugin: 'jacoco'
+    jacoco { toolVersion = jacoco_version }
+
     // configure tests to use JUnit5
     tasks.withType(Test) {
 
@@ -40,6 +43,24 @@ configure(javaProjects) { project ->
 
         // log only this specific events for tests
         testLogging { events "skipped", "failed" }
+
+        jacocoTestReport {
+            // requires performed tests if called directly
+            dependsOn test
+
+            additionalSourceDirs.from   = files(sourceSets.main.allSource.srcDirs)
+            sourceDirectories.from      = files(sourceSets.main.allSource.srcDirs)
+            classDirectories.from       = files(sourceSets.main.output)
+
+            reports {
+                html.enabled = true
+                xml.enabled = true
+                csv.enabled = false
+            }
+        }
+
+        // report is always generated after tests ran
+        finalizedBy jacocoTestReport
     }
 
     javadoc {
