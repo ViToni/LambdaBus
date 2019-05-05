@@ -6,6 +6,7 @@ Bundle-Name:    LambdaBus Test
 
 -testpath: \
     src/test/resources;version=file,\
+    slf4j.simple,\
     ${junit5}
 
 -fixupmessages.test.resources: \

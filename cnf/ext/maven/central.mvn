@@ -15,11 +15,9 @@ org.osgi:osgi.annotation:7.0.0
 org.slf4j:slf4j-api:1.7.26
 
 ################################################################################
-# log4j based implementation for slf4j API
+# slf4j-simple used as implementation for slf4j API
 ################################################################################
-org.apache.logging.log4j:log4j-slf4j-impl:2.11.2
-org.apache.logging.log4j:log4j-core:2.11.2
-org.apache.logging.log4j:log4j-api:2.11.2
+org.slf4j:slf4j-simple:1.7.26
 
 ################################################################################
 # JUnit5

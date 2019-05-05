@@ -9,6 +9,7 @@ Bundle-Name:    LambdaBus Implementation
     src/test/resources;version=file,\
     org.kromo.lambdabus.api.test,\
     org.kromo.lambdabus.test,\
+    slf4j.simple,\
     ${junit5},\
     ${mockito}
 
