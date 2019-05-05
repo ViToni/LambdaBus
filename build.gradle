@@ -2,11 +2,18 @@ ext {
     // skipping cnf since it is a not a java project
     javaProjects = subprojects.findAll { it.name != "cnf" && it.plugins.hasPlugin('biz.aQute.bnd') }
 
+    // used to aggregate test coverage reports
+    testableProjects = javaProjects.findAll{ it.hasProperty('test') }
+
     // directory to gather artifacts
     distributionDir = rootProject.file("dist")
 }
 
 allprojects { repositories { mavenCentral() } }
+
+// required as jacocoRootReport belongs to root project
+apply plugin: 'jacoco'
+jacoco { toolVersion = jacoco_version }
 
 configure(javaProjects) { project ->
     // using bnd as source of truth regarding version (actually defined in "cnf/build.bnd")
@@ -102,6 +109,40 @@ configure(javaProjects) { project ->
             noTree = false
 
             links "https://docs.oracle.com/javase/8/docs/api/"
+        }
+    }
+}
+
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    description = 'Generates an aggregate report from all (testable) subprojects'
+
+    dependsOn testableProjects.test
+
+    additionalSourceDirs.from   = files(testableProjects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.from      = files(testableProjects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from       = files(testableProjects.sourceSets.main.output)
+
+    // ensure we care only about projects which have execution data
+    executionData.from          = files(testableProjects.jacocoTestReport.executionData).filter { f -> f.exists() }
+
+    reports {
+        html.enabled = true
+        xml.enabled = false
+        csv.enabled = false
+    }
+}
+
+task build { dependsOn javaProjects.build, jacocoRootReport }
+
+task release {
+    dependsOn javaProjects.release, jacocoRootReport
+
+    doLast {
+        copy {
+            from buildDir
+            include "reports/jacoco/**"
+            exclude "**/*.xml"
+            into distributionDir
         }
     }
 }

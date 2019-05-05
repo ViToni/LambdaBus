@@ -97,6 +97,7 @@ This build releases artifacts to the `dist` folder including
 * JARs for source code
 * Javadoc JARs
 * the respective POMs for Maven
+* and the aggregated test coverage report.
 
 As default SNAPSHOT versions are used.
 The SNAPSHOT can be overriden from the command line by assigning a value to the [`-snapshot`](https://bnd.bndtools.org/instructions/snapshot.html) instruction using e.g.
