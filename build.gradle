@@ -71,6 +71,29 @@ configure(javaProjects) { project ->
     }
 
     apply plugin: 'com.github.spotbugs'
+    spotbugs {
+        ignoreFailures = true
+        effort = 'max'
+        reportLevel = 'low'
+    }
+
+    spotbugsMain {
+        // activate SpotBugs only if there are sources
+        onlyIf { isNotEmpty(sourceSets.main.java) }
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+
+    spotbugsTest {
+        // activate SpotBugs only if there are sources
+        onlyIf { isNotEmpty(sourceSets.test.java) }
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
 
     javadoc {
         title = "${project.description} - v${version}"
@@ -113,6 +136,10 @@ configure(javaProjects) { project ->
             links "https://docs.oracle.com/javase/8/docs/api/"
         }
     }
+}
+
+def isNotEmpty(SourceDirectorySet sourceDirectorySet) {
+    return null != sourceDirectorySet && (0 < sourceDirectorySet.size())
 }
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {

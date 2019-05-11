@@ -1,2 +1,0 @@
-// no sources in test folder to inspect
-spotbugsTest.onlyIf { false }
