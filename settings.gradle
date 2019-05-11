@@ -1,9 +1,14 @@
 rootProject.name = 'org.kromo.lambdabus'
 
 buildscript {
-    repositories { mavenCentral() }
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
     dependencies {
         classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:${bnd_version}"
+        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:${spotbugs_version}"
     }
 
     // Add bnd gradle plugin to buildscript classpath of rootProject

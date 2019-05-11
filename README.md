@@ -87,6 +87,8 @@ The build also
 * creates Javadoc for all classes down to PROTECTED level
 * validates Javadoc for all classes  including private methods and test classes to check for consistent docs
 * collects test coverage using [JaCoCo](https://github.com/jacoco/jacoco) (builtin Gradle plugin)
+* performs static code analysis using
+  * [SpotBugs](https://github.com/spotbugs/spotbugs)
 
 ```sh
 ~$ ./gradlew release

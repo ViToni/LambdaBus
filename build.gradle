@@ -70,6 +70,8 @@ configure(javaProjects) { project ->
         finalizedBy jacocoTestReport
     }
 
+    apply plugin: 'com.github.spotbugs'
+
     javadoc {
         title = "${project.description} - v${version}"
         source = sourceSets.main.allJava
