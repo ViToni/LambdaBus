@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter
+              xmlns="https://github.com/spotbugs/filter/3.0.0"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+    <Match>
+        <!-- It's OK for test classes to set null explicitly to test parameter validation -->
+        <!-- NP: Load of known null value -->
+        <!-- https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html#np-load-of-known-null-value-np-load-of-known-null-value -->
+        <Or>
+            <And>
+                <Class name="org.kromo.lambdabus.dispatcher.impl.QueuedEventDispatcherTest" />
+                <Or>
+                    <Method name="constructorNullExecutorServiceThrowsNPE" />
+                    <Method name="constructorNullThreadingModeThrowsNPE" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.dispatcher.impl.ThreadedEventDispatcherTest" />
+                <Method name="constructorNullExecutorServiceThrowsNPE" />
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.impl.concurrent.DaemonThreadFactoryTest" />
+                <Or>
+                    <Method name="constructorFactoryNameAndNullThreadGroup" />
+                    <Method name="constructorNullFactoryName" />
+                </Or>
+        </And>
+            <And>
+                <Class name="org.kromo.lambdabus.impl.DefaultSubscriptionManagerTest" />
+                <Or>
+                    <Method name="constructorUsingNullSubscriberCollectionMapSupplier" />
+                    <Method name="constructorUsingNullSubscriberCollectionSupplier" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.impl.DispatchingLambdaBusTest" />
+                <Or>
+                    <Method name="constructorNullEventDispatcherThrowsNPE" />
+                    <Method name="constructorNullSubscriptionManagerThrowsNPE" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.impl.SubscriptionManagerContract" />
+                <Or>
+                    <Method name="subscribingWithNullClassThrowsNPE" />
+                    <Method name="subscribingWithNullHandlerThrowsNPE" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.test.util.MultithreadedTasksTest" />
+                <Method name="executeTaskThrowsNullPointerExceptionIfTaskIsNull" />
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.test.util.SimpleThreadFactoryTest" />
+                <Or>
+                    <Method name="nullThreadNamePrefix"/>
+                    <Method name="nullThreadNameSupplier" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.test.util.SimpleThreadFactoryTest$ThreadNameSupplierTest" />
+                <Method name="nullThreadNamePrefix" />
+            </And>
+        </Or>
+        <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
+    </Match>
+    <Match>
+        <!-- Redundant null check is OK in this case, for clarity  -->
+        <!-- RCN: Redundant nullcheck of value known to be non-null  -->
+        <!-- https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html#rcn-redundant-nullcheck-of-value-known-to-be-non-null-rcn-redundant-nullcheck-of-nonnull-value -->
+        <Or>
+            <And>
+                <Class name="org.kromo.lambdabus.dispatcher.impl.AbstractEventDispatcherTest" />
+                <Or>
+                    <Method name="constructorDefaultThreadingMode"/>
+                    <Method name="constructorDefaultThreadingModeAndSupportedThreadingModes" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.dispatcher.impl.QueuedEventDispatcherTest" />
+                <Or>
+                    <Method name="lambda$constructorNullExecutorServiceThrowsNPE$0"/>
+                    <Method name="lambda$constructorNullExecutorServiceThrowsNPE$1" />
+                    <Method name="lambda$constructorNullThreadingModeThrowsNPE$2" />
+                    <Method name="lambda$constructorNullThreadingModeThrowsNPE$3" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.impl.DefaultSubscriptionManagerTest" />
+                <Or>
+                    <Method name="lambda$constructorUsingNullSubscriberCollectionMapSupplier$2"/>
+                    <Method name="lambda$constructorUsingNullSubscriberCollectionSupplier$3" />
+                    <Method name="lambda$constructorUsingSupplier$1" />
+                    <Method name="lambda$defaultConstructor$0" />
+                </Or>
+            </And>
+            <And>
+                <Class name="org.kromo.lambdabus.impl.DispatchingLambdaBusTest" />
+                <Or>
+                    <Method name="lambda$constructorNullEventDispatcherThrowsNPE$3"/>
+                    <Method name="lambda$constructorNullSubscriptionManagerThrowsNPE$4" />
+                    <Method name="lambda$constructorUsingEventDispatcher$1" />
+                    <Method name="lambda$constructorUsingEventDispatcherAndSubscriptionManager$2" />
+                    <Method name="lambda$defaultConstructor$0" />
+                </Or>
+            </And>
+        </Or>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+    </Match>
+    <Match>
+        <!-- Especially when setting up mocks for tests, ignoring the return value is a common pattern -->
+        <!-- RV: Return value ignored, but method has no side effect  -->
+        <!-- https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html#rv-return-value-of-method-without-side-effect-is-ignored-rv-return-value-ignored-no-side-effect -->
+        <Class name="org.kromo.lambdabus.impl.DispatchingLambdaBusTest" />
+        <Method name="createMockEventDispatcher"/>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT" />
+    </Match>
+</FindBugsFilter>

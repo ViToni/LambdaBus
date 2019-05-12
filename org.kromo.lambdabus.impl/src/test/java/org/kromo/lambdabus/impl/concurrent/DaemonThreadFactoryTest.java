@@ -57,7 +57,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("Constructor with factoryName")
-    public void constructor_factoryName() {
+    public void constructorFactoryName() {
         final String factoryName = getClass().getSimpleName();
         assertDoesNotThrow(
                 () -> new DaemonThreadFactory(factoryName));
@@ -65,7 +65,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("Constructor with null factoryName")
-    public void constructor_with_null_factoryName() {
+    public void constructorNullFactoryName() {
         final String nullFactoryName = null;
         assertThrows(
                 NullPointerException.class,
@@ -74,7 +74,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("Constructor with factoryName and ThreadGroup")
-    public void constructor_with_factoryName_and_threadGroup() {
+    public void constructorFactoryNameAndThreadGroup() {
         final String factoryName = getClass().getSimpleName();
         final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
         new DaemonThreadFactory(factoryName, threadGroup);
@@ -82,7 +82,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("Constructor with factoryName and null ThreadGroup")
-    public void constructor_with_factoryName_and_null_threadGroup() {
+    public void constructorFactoryNameAndNullThreadGroup() {
         final String factoryName = getClass().getSimpleName();
         final ThreadGroup nullThreadGroup = null;
         assertThrows(
@@ -92,7 +92,7 @@ public class DaemonThreadFactoryTest {
 
     @Test
     @DisplayName("Constructor with factoryName and priority")
-    public void constructor_with_factoryName_and_priority() {
+    public void constructorFactoryNameAndPriority() {
         final String factoryName = getClass().getSimpleName();
 
         for (int i = Thread.MIN_PRIORITY; i <= Thread.MAX_PRIORITY; i++) {
@@ -100,12 +100,11 @@ public class DaemonThreadFactoryTest {
             assertDoesNotThrow(
                     () -> new DaemonThreadFactory(factoryName, priority));
         }
-
     }
 
     @Test
     @DisplayName("Constructor with factoryName, ThreadGroup and priority")
-    public void constructor_with_factoryName_threadGroup_and_priority() {
+    public void constructorFactoryNameAndThreadGroupAndPriority() {
         final String factoryName = getClass().getSimpleName();
         final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
 

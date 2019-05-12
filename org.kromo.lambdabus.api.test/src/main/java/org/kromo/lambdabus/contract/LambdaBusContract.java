@@ -159,7 +159,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Helper for parallel dispatching.
      */
-    private MultithreadedTasks parallelTasks;
+    private MultithreadedTasks parallelTasks = null;
 
     /**
      * Initialize all counter used before each test.

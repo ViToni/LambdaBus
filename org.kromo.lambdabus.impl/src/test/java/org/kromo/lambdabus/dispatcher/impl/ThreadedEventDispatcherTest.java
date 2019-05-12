@@ -55,7 +55,7 @@ public class ThreadedEventDispatcherTest
 
     @Test
     @DisplayName("Constructor with ExecutorService")
-    public void constructor_with_ExecutorService() {
+    public void constructorWithExecutorService() {
         final ExecutorService executorService = Executors.newSingleThreadExecutor();
         try (final EventDispatcher ed = new ThreadedEventDispatcher(executorService)) {
             assertFalse(ed.isClosed(), "Created 'ThreadedEventDispatcher' must not be closed.");
@@ -66,7 +66,7 @@ public class ThreadedEventDispatcherTest
 
     @Test
     @DisplayName("Constructor with null ExecutorService throws NullPointerException")
-    public void constructor_null_ExecutorService_throws_NPE() {
+    public void constructorNullExecutorServiceThrowsNPE() {
         final ExecutorService nullExecutorService = null;
         assertThrows(
                 NullPointerException.class,

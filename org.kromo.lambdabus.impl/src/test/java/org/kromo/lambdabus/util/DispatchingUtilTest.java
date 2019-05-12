@@ -102,7 +102,7 @@ public class DispatchingUtilTest {
     // ##########################################################################
 
     @Nested
-    public class dispatchEventSafelyTest {
+    public static class DispatchEventSafelyTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -228,7 +228,7 @@ public class DispatchingUtilTest {
     // ##########################################################################
 
     @Nested
-    public class dispatchEventToSubscriberTest {
+    public static class DispatchEventToSubscriberTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -289,7 +289,7 @@ public class DispatchingUtilTest {
             final Set<Integer> threadHashCodes = ConcurrentHashMap.newKeySet();
 
             final Consumer<String> eventConsumer = (dispatchedEvent) -> {
-                final int n = Integer.valueOf(dispatchedEvent);
+                final int n = Integer.parseInt(dispatchedEvent);
                 final boolean even = isEven(n);
                 threadHashCodes.add(Thread.currentThread()
                         .hashCode());
@@ -409,7 +409,7 @@ public class DispatchingUtilTest {
     // ##########################################################################
 
     @Nested
-    public class dispatchEventToSubscriberThreadedPerEventTest {
+    public static class DispatchEventToSubscriberThreadedPerEventTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -605,7 +605,7 @@ public class DispatchingUtilTest {
 
                 randomDelay(subscriberCount);
 
-                final int n = Integer.valueOf(dispatchedEvent.id);
+                final int n = Integer.parseInt(dispatchedEvent.id);
                 final boolean even = isEven(n);
                 if (even) {
                     evenCounter.incrementAndGet();
@@ -762,7 +762,7 @@ public class DispatchingUtilTest {
     // ##########################################################################
 
     @Nested
-    public class dispatchEventToSubscriberThreadedPerSubscriberTest {
+    public static class DispatchEventToSubscriberThreadedPerSubscriberTest {
 
         private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -969,7 +969,7 @@ public class DispatchingUtilTest {
 
                 randomDelay(subscriberCount);
 
-                final int n = Integer.valueOf(dispatchedEvent.id);
+                final int n = Integer.parseInt(dispatchedEvent.id);
                 final boolean even = isEven(n);
                 if (even) {
                     evenCounter.incrementAndGet();
@@ -1233,6 +1233,27 @@ public class DispatchingUtilTest {
 
             return tmpHashCode;
         }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+
+            if (obj == null) {
+                return false;
+            }
+
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+
+            final TestEvent other = (TestEvent) obj;
+            return (dispatchedLatch.equals(other.dispatchedLatch)) &&
+                    (exceptionLatch.equals(other.exceptionLatch)) &&
+                    (id.equals(other.id));
+        }
+
     }
 
 }

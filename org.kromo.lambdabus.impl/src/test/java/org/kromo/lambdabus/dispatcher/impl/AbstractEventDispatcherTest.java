@@ -56,7 +56,7 @@ public class AbstractEventDispatcherTest
     @ParameterizedTest(name = "Constructor with default ThreadingMode.{0}")
     @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor with default ThreadingMode")
-    public void constructor_with_defaultThreadingMode(
+    public void constructorDefaultThreadingMode(
             final ThreadingMode threadingMode) {
         try (final EventDispatcher ed = new TestingAbstractEventDispatcher(threadingMode)) {
         }
@@ -66,7 +66,7 @@ public class AbstractEventDispatcherTest
         name = "Constructor with default ThreadingMode.{0} and supported EnumSet.of(ThreadingMode.{0})")
     @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor with default ThreadingMode and supported ThreadingModes")
-    public void constructor_with_defaultThreadingMode_and_supportedThreadingModes(
+    public void constructorDefaultThreadingModeAndSupportedThreadingModes(
             final ThreadingMode threadingMode) {
         final Set<ThreadingMode> supportedThreadingModes = EnumSet.of(threadingMode);
         try (final EventDispatcher ed = new TestingAbstractEventDispatcher(threadingMode,
@@ -76,7 +76,7 @@ public class AbstractEventDispatcherTest
 
     @Test
     @DisplayName("Constructor - Setting null default ThreadingMode throws NullPointerException")
-    public void constructor_null_defaultThreadingMode_throws_NPE() {
+    public void constructorNullDefaultThreadingModeThrowsNPE() {
         assertThrows(
                 NullPointerException.class,
                 () -> new TestingAbstractEventDispatcher(ThreadingMode.SYNC, null));
@@ -84,7 +84,7 @@ public class AbstractEventDispatcherTest
 
     @Test
     @DisplayName("Constructor - Setting null supported ThreadingModes throws NullPointerException")
-    public void constructor_null_supportedThreadingModes_throws_NPE() {
+    public void constructorNullSupportedThreadingModesThrowsNPE() {
         assertThrows(
                 NullPointerException.class,
                 () -> new TestingAbstractEventDispatcher(ThreadingMode.SYNC, null));
@@ -94,7 +94,7 @@ public class AbstractEventDispatcherTest
         name = "Constructor - Setting unsupported default ThreadingMode.{0} throws IllegalArgumentException")
     @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting unsupported default ThreadingMode throws IllegalArgumentException")
-    public void constructor_unsupported_ThreadingMode_throws_exception(
+    public void constructorUnsupportedThreadingModeThrowsException(
             final ThreadingMode threadingMode) {
         final Set<ThreadingMode> allOtherThreadingModes = EnumSet.allOf(ThreadingMode.class);
         allOtherThreadingModes.remove(threadingMode);
@@ -107,7 +107,7 @@ public class AbstractEventDispatcherTest
         name = "Constructor - {0} - Setting null supportedThreadingModes throws NullPointerException")
     @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting null supportedThreadingModes throws NullPointerException")
-    public void constructor_null_supportedThreadingModes_throws_NPE(
+    public void constructorNullSupportedThreadingModesThrowsNPE(
             final ThreadingMode threadingMode) {
         assertThrows(
                 NullPointerException.class,
@@ -118,7 +118,7 @@ public class AbstractEventDispatcherTest
         name = "Constructor - {0} - Setting empty supportedThreadingModes throws IllegalArgumentException")
     @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting empty supportedThreadingModes throws IllegalArgumentException")
-    public void constructor_null_supportedThreadingModes_throws_exception(
+    public void constructorNullSupportedThreadingModesThrowsException(
             final ThreadingMode threadingMode) {
         assertThrows(
                 IllegalArgumentException.class,
@@ -130,7 +130,7 @@ public class AbstractEventDispatcherTest
         name = "Constructor - {0} - Setting supportedThreadingModes containing null ThreadingMode throws NullPointerException")
     @EnumSource(value = ThreadingMode.class)
     @DisplayName("Constructor - Setting supportedThreadingModes containing null ThreadingMode throws NullPointerException")
-    public void constructor_supportedThreadingModes_with_null_ThreadingMode_throws_NPE(
+    public void constructorSupportedThreadingModesWithNullThreadingModeThrowsNPE(
             final ThreadingMode threadingMode) {
         final Set<ThreadingMode> allThreadingModesAndNull = new HashSet<>(
                 EnumSet.allOf(ThreadingMode.class));

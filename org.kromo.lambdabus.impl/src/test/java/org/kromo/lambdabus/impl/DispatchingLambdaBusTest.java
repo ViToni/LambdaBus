@@ -89,7 +89,7 @@ public class DispatchingLambdaBusTest {
 
     @Test
     @DisplayName("Constructor with null EventDispatcher throws NullPointerException")
-    public void constructor_with_null_EventDispatcher_throws_NPE() {
+    public void constructorNullEventDispatcherThrowsNPE() {
         final EventDispatcher nullEventDispatcher = null;
         assertThrows(
                 NullPointerException.class,
@@ -102,7 +102,7 @@ public class DispatchingLambdaBusTest {
 
     @Test
     @DisplayName("Constructor with null SubscriptionManager throws NullPointerException")
-    public void constructor_with_null_SubscriptionManager_throws_NPE() {
+    public void constructorNullSubscriptionManagerThrowsNPE() {
         final EventDispatcher eventDispatcher = createMockEventDispatcher();
         final SubscriptionManager nullSubscriptionManager = null;
         assertThrows(

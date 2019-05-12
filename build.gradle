@@ -7,6 +7,9 @@ ext {
 
     // directory to gather artifacts
     distributionDir = rootProject.file("dist")
+
+    // some SpotBugs finding can be ignored / excluded
+    spotbugsExcludeFilterFile = rootProject.file('gradle/spotbugs/excludeFilter.xml')
 }
 
 allprojects { repositories { mavenCentral() } }
@@ -75,6 +78,7 @@ configure(javaProjects) { project ->
         ignoreFailures = true
         effort = 'max'
         reportLevel = 'low'
+        excludeFilter = spotbugsExcludeFilterFile
     }
 
     spotbugsMain {

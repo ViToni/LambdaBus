@@ -107,7 +107,7 @@ public class SimpleThreadFactoryTest {
     }
 
     @Nested
-    public class ThreadNameSupplierTest {
+    public static class ThreadNameSupplierTest {
 
         @Test
         public void constructor() {

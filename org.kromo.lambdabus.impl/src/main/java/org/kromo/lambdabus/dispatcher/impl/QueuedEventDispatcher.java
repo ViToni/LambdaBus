@@ -48,7 +48,7 @@ import org.kromo.lambdabus.impl.DispatchingLambdaBus;
  * @author Victor Toni - initial implementation
  *
  */
-public class QueuedEventDispatcher
+public final class QueuedEventDispatcher
         extends AbstractEventDispatcher {
 
     private static final ThreadingMode DEFAULT_THREADING_MODE = ThreadingMode.ASYNC;
