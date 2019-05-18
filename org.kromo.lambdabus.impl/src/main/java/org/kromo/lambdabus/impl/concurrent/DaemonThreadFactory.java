@@ -54,11 +54,6 @@ public class DaemonThreadFactory
     private final ThreadGroup threadGroup;
 
     /**
-     * Priority created threads will be set to.
-     */
-    private final int threadPriority;
-
-    /**
      * The factory name is used as a prefix for created threads.
      */
     private final String factoryName;
@@ -80,25 +75,6 @@ public class DaemonThreadFactory
      *
      * @param factoryName
      *            will be the prefix of the created {@link Thread}s name
-     * @param threadPriority
-     *            priority for threads created by this instance
-     * @throws NullPointerException
-     *             if {@code factoryName} is {@code null}
-     * @throws IllegalArgumentException
-     *             if {@code threadPriority} is not in the range between
-     *             {@link Thread#MIN_PRIORITY} and {@link Thread#MAX_PRIORITY}
-     */
-    public DaemonThreadFactory(
-            final String factoryName,
-            final int threadPriority) {
-        this(factoryName, getThreadGroupToBeUsed(), threadPriority);
-    }
-
-    /**
-     * Creates a new instance.
-     *
-     * @param factoryName
-     *            will be the prefix of the created {@link Thread}s name
      * @param threadGroup
      *            the thread group threads created by this instance should belong to
      * @throws NullPointerException
@@ -107,45 +83,8 @@ public class DaemonThreadFactory
     public DaemonThreadFactory(
             final String factoryName,
             final ThreadGroup threadGroup) {
-        this(factoryName, threadGroup, Thread.NORM_PRIORITY);
-    }
-
-    /**
-     * Creates a new instance.
-     *
-     * @param factoryName
-     *            will be the prefix of the created {@link Thread}s name
-     * @param threadGroup
-     *            the thread group threads created by this instance should belong to
-     * @param threadPriority
-     *            priority for threads created by this instance
-     * @throws NullPointerException
-     *             if {@code factoryName} or {@code threadGroup} is {@code null}
-     * @throws IllegalArgumentException
-     *             if {@code threadPriority} is not in the range between
-     *             {@link Thread#MIN_PRIORITY} and {@link Thread#MAX_PRIORITY}
-     */
-    public DaemonThreadFactory(
-            final String factoryName,
-            final ThreadGroup threadGroup,
-            final int threadPriority) {
-        Objects.requireNonNull(factoryName, "'factoryName' must not be null");
-        Objects.requireNonNull(threadGroup, "'threadGroup' must not be null");
-        if (threadPriority < Thread.MIN_PRIORITY) {
-            throw new IllegalArgumentException(
-                    "'threadPriority' must not be less than Thread.MIN_PRIORITY: "
-                            + Thread.MIN_PRIORITY);
-        }
-        if (Thread.MAX_PRIORITY < threadPriority) {
-            throw new IllegalArgumentException(
-                    "'threadPriority' must not be greater than Thread.MAX_PRIORITY: "
-                            + Thread.MAX_PRIORITY);
-        }
-
-        this.factoryName = factoryName;
-
-        this.threadGroup = threadGroup;
-        this.threadPriority = threadPriority;
+        this.factoryName = Objects.requireNonNull(factoryName, "'factoryName' must not be null");
+        this.threadGroup = Objects.requireNonNull(threadGroup, "'threadGroup' must not be null");
     }
 
     @Override
@@ -160,8 +99,6 @@ public class DaemonThreadFactory
 
         thread.setDaemon(true);
 
-        adjustThreadPriority(thread);
-
         logger.trace("Created thread: {}", thread);
 
         return thread;
@@ -169,12 +106,6 @@ public class DaemonThreadFactory
 
     private ThreadGroup getThreadGroup() {
         return threadGroup;
-    }
-
-    private void adjustThreadPriority(final Thread thread) {
-        if (thread.getPriority() != threadPriority) {
-            thread.setPriority(threadPriority);
-        }
     }
 
     private static ThreadGroup getThreadGroupToBeUsed() {

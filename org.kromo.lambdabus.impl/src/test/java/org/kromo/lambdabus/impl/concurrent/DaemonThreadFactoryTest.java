@@ -37,13 +37,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for the {@link DaemonThreadFactory}.
@@ -88,83 +85,6 @@ public class DaemonThreadFactoryTest {
         assertThrows(
                 NullPointerException.class,
                 () -> new DaemonThreadFactory(factoryName, nullThreadGroup));
-    }
-
-    @Test
-    @DisplayName("Constructor with factoryName and priority")
-    public void constructorFactoryNameAndPriority() {
-        final String factoryName = getClass().getSimpleName();
-
-        for (int i = Thread.MIN_PRIORITY; i <= Thread.MAX_PRIORITY; i++) {
-            final int priority = i;
-            assertDoesNotThrow(
-                    () -> new DaemonThreadFactory(factoryName, priority));
-        }
-    }
-
-    @Test
-    @DisplayName("Constructor with factoryName, ThreadGroup and priority")
-    public void constructorFactoryNameAndThreadGroupAndPriority() {
-        final String factoryName = getClass().getSimpleName();
-        final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
-
-        for (int i = Thread.MIN_PRIORITY; i <= Thread.MAX_PRIORITY; i++) {
-            final int priority = i;
-            assertDoesNotThrow(
-                    () -> new DaemonThreadFactory(factoryName, threadGroup, priority));
-        }
-    }
-
-    @Test
-    @DisplayName("Constructor with illegal priority")
-    public void constructor_with_illegal_priority() {
-        final String factoryName = getClass().getSimpleName();
-
-        final int priorityTooLow = Thread.MIN_PRIORITY - 1;
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, priorityTooLow));
-
-        final int priorityTooHigh = Thread.MAX_PRIORITY + 1;
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, priorityTooHigh));
-
-        final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, threadGroup, priorityTooLow));
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new DaemonThreadFactory(factoryName, threadGroup, priorityTooHigh));
-    }
-
-    @Test
-    @DisplayName("ThreadPriority is not inherited and set to custom value")
-    public void ThreadPriority_is_not_inherited_and_set_to_custom_value() {
-        final String factoryName = getClass().getSimpleName();
-        final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
-        final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName, threadGroup);
-
-        final Runnable runnable = () -> {};
-        {
-            Thread.currentThread()
-                    .setPriority(Thread.MIN_PRIORITY);
-            final Thread thread = threadFactory.newThread(runnable);
-            assertEquals(threadGroup, thread.getThreadGroup());
-            assertEquals(Thread.NORM_PRIORITY, thread.getPriority());
-            assertTrue(thread.isDaemon());
-        }
-        {
-            Thread.currentThread()
-                    .setPriority(Thread.MAX_PRIORITY);
-            final Thread thread = threadFactory.newThread(runnable);
-            assertEquals(threadGroup, thread.getThreadGroup());
-            assertEquals(Thread.NORM_PRIORITY, thread.getPriority());
-            assertTrue(thread.isDaemon());
-        }
     }
 
     @Test
@@ -245,18 +165,15 @@ public class DaemonThreadFactoryTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("priorityRange")
+    @Test
     @DisplayName("Threads created and setup with corrected defaults")
-    public void newThread_creates_thread_and_sets_it_up(
-            final int priority) throws InterruptedException {
+    public void newThread_creates_thread_and_sets_it_up() throws InterruptedException {
         final int count = 10;
 
         final String factoryName = getClass().getSimpleName();
-        final ThreadGroup threadGroup = new ThreadGroup(
-                factoryName + "-thread-group--priority-" + priority);
-        final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName, threadGroup,
-                priority);
+        final ThreadGroup threadGroup = new ThreadGroup(factoryName + "-thread-group");
+        final DaemonThreadFactory threadFactory = new DaemonThreadFactory(factoryName,
+                threadGroup);
 
         final AtomicInteger counter = new AtomicInteger();
         final CountDownLatch doneLatch = new CountDownLatch(count);
@@ -268,7 +185,6 @@ public class DaemonThreadFactoryTest {
             };
             final Thread thread = threadFactory.newThread(runnable);
             assertEquals(threadGroup, thread.getThreadGroup());
-            assertEquals(priority, thread.getPriority());
             assertTrue(thread.isDaemon());
             assertTrue(threadNames.add(thread.getName()));
 
@@ -364,7 +280,4 @@ public class DaemonThreadFactoryTest {
         }
     }
 
-    static IntStream priorityRange() {
-        return IntStream.range(Thread.MIN_PRIORITY, Thread.MAX_PRIORITY);
-    }
 }

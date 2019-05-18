@@ -70,7 +70,6 @@ public class SimpleThreadFactory
         final Thread thread = new Thread(runnable, threadName);
 
         thread.setDaemon(true);
-        thread.setPriority(Thread.NORM_PRIORITY);
 
         return thread;
     }
