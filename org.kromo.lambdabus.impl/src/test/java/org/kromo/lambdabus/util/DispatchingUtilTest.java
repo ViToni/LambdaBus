@@ -1016,7 +1016,6 @@ public class DispatchingUtilTest {
                         event, eventHandlerCollection,
                         loopIndex,
                         handledCounter, exceptionCounter,
-                        threadHashCodesMap,
                         useDefaultLogger,
                         testExceptionToo, RuntimeException.class, exceptionThrowingSubscriberCount,
                         executorService);
@@ -1052,7 +1051,6 @@ public class DispatchingUtilTest {
                 final int loopIndex,
                 final AtomicInteger handledCounter,
                 final AtomicInteger exceptionCounter,
-                final Map<T, Set<Integer>> threadHashCodesMap,
                 final boolean useDefaultLogger,
                 final boolean testExceptionToo,
                 final Class<? extends Exception> exceptionClass,
@@ -1114,6 +1112,9 @@ public class DispatchingUtilTest {
         }
 
         private <T> void assertThreadHandling(final Map<T, Set<Integer>> threadHashCodesMap) {
+            // dispatched more than one event
+            assertTrue(0 < threadHashCodesMap.size());
+
             final int thisThreadHashCode = Thread.currentThread()
                     .hashCode();
             for (final Map.Entry<T, Set<Integer>> threadHashCodesEntry : threadHashCodesMap
