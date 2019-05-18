@@ -1245,14 +1245,14 @@ public class DispatchingUtilTest {
                 return false;
             }
 
-            if (getClass() != obj.getClass()) {
-                return false;
+            if (obj instanceof TestEvent) {
+                final TestEvent other = (TestEvent) obj;
+                return dispatchedLatch.equals(other.dispatchedLatch) &&
+                        exceptionLatch.equals(other.exceptionLatch) &&
+                        id.equals(other.id);
             }
 
-            final TestEvent other = (TestEvent) obj;
-            return (dispatchedLatch.equals(other.dispatchedLatch)) &&
-                    (exceptionLatch.equals(other.exceptionLatch)) &&
-                    (id.equals(other.id));
+            return false;
         }
 
     }
