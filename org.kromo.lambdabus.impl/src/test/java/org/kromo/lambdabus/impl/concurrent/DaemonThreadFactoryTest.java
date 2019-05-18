@@ -53,7 +53,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 public class DaemonThreadFactoryTest {
 
-    protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
+    protected static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(2);
 
     @Test
     @DisplayName("Constructor with factoryName")

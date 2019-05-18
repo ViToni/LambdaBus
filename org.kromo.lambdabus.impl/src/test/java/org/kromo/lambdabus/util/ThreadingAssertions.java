@@ -58,7 +58,7 @@ public final class ThreadingAssertions {
     /**
      * Timeout used to wait for published events to complete
      */
-    private static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(2);
 
     private static final AtomicInteger INSTANCE_COUNT = new AtomicInteger();
 

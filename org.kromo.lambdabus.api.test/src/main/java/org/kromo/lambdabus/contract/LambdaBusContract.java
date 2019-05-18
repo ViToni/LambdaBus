@@ -68,7 +68,7 @@ public abstract class LambdaBusContract<LambdaBusType extends LambdaBus> {
     /**
      * Timeout used to wait for published events to complete
      */
-    protected static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(2_000);
+    protected static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(2);
 
     /**
      * Number of threads to use for multithreaded dispatching
