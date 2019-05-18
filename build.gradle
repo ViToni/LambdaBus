@@ -99,6 +99,9 @@ configure(javaProjects) { project ->
         }
     }
 
+    apply plugin: 'net.ltgt.errorprone'
+    dependencies { errorproneJavac("com.google.errorprone:error_prone_core:${errorprone_version}") }
+
     javadoc {
         title = "${project.description} - v${version}"
         source = sourceSets.main.allJava

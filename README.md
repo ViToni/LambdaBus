@@ -88,6 +88,7 @@ The build also
 * validates Javadoc for all classes  including private methods and test classes to check for consistent docs
 * collects test coverage using [JaCoCo](https://github.com/jacoco/jacoco) (builtin Gradle plugin)
 * performs static code analysis using
+  * [Error Prone](https://github.com/google/error-prone)
   * [SpotBugs](https://github.com/spotbugs/spotbugs)
 
 ```sh
