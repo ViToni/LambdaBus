@@ -32,6 +32,14 @@ allprojects {
             indentWithSpaces(2)
             endWithNewline()
         }
+        groovyGradle {
+            target '*.gradle'
+            greclipse().configFile(rootProject.file("gradle/spotless/org.kromo.gradleformat.properties"))
+            indentWithSpaces(4)
+            endWithNewline()
+            // helps debugging formatting issues
+            paddedCell()
+        }
     }
 }
 
