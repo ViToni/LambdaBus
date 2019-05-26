@@ -25,6 +25,11 @@ allprojects {
             indentWithSpaces(4)
             endWithNewline()
         }
+        format 'markdown', {
+            target '**/*.md'
+            indentWithSpaces(2)
+            endWithNewline()
+        }
     }
 }
 
