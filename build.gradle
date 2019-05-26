@@ -1,3 +1,5 @@
+buildscript { repositories { mavenCentral() } }
+
 ext {
     // skipping cnf since it is a not a java project
     javaProjects = subprojects.findAll { it.name != "cnf" && it.plugins.hasPlugin('biz.aQute.bnd') }
@@ -120,6 +122,18 @@ configure(javaProjects) { project ->
 
     apply plugin: 'net.ltgt.errorprone'
     dependencies { errorproneJavac("com.google.errorprone:error_prone_core:${errorprone_version}") }
+
+    spotless {
+        java {
+            trimTrailingWhitespace()
+            removeUnusedImports()
+            eclipse("${eclipse_version}").configFile    rootProject.file(spotlessDir + "org.kromo.eclipseformat.xml")
+            importOrderFile                             rootProject.file(spotlessDir + "org.kromo.importorder")
+            licenseHeaderFile                           rootProject.file(spotlessDir + "license.txt")
+            // helps debugging formatting issues
+            paddedCell()
+        }
+    }
 
     javadoc {
         title = "${project.description} - v${version}"
