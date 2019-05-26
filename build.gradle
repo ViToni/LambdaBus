@@ -10,9 +10,16 @@ ext {
 
     // some SpotBugs finding can be ignored / excluded
     spotbugsExcludeFilterFile = rootProject.file('gradle/spotbugs/excludeFilter.xml')
+
+    // will hold configurations files for invidual formatters
+    spotlessDir = "$rootDir/gradle/spotless/"
 }
 
-allprojects { repositories { mavenCentral() } }
+allprojects {
+    repositories { mavenCentral() }
+
+    apply plugin: com.diffplug.gradle.spotless.SpotlessPlugin
+}
 
 // required as jacocoRootReport belongs to root project
 apply plugin: 'jacoco'
@@ -168,7 +175,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     }
 }
 
-task build { dependsOn javaProjects.build, jacocoRootReport }
+tasks.named('build') { dependsOn javaProjects.build, jacocoRootReport }
 
 task release {
     dependsOn javaProjects.release, jacocoRootReport
@@ -194,4 +201,4 @@ task releaseClean(type: Delete) {
     }
 }
 
-task clean { dependsOn releaseClean }
+tasks.named('clean') { dependsOn releaseClean }

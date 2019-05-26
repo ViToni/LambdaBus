@@ -90,6 +90,7 @@ The build also
 * performs static code analysis using
   * [Error Prone](https://github.com/google/error-prone)
   * [SpotBugs](https://github.com/spotbugs/spotbugs)
+* checks code formatting using [Spotless](https://github.com/diffplug/spotless)
 
 ```sh
 ~$ ./gradlew release

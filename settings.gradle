@@ -10,6 +10,7 @@ buildscript {
         classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:${bnd_version}"
         classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:${spotbugs_version}"
         classpath "net.ltgt.gradle:gradle-errorprone-plugin:${errorprone_plugin_version}"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:${spotless_version}"
     }
 
     // Add bnd gradle plugin to buildscript classpath of rootProject
