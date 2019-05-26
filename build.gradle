@@ -19,6 +19,13 @@ allprojects {
     repositories { mavenCentral() }
 
     apply plugin: com.diffplug.gradle.spotless.SpotlessPlugin
+    spotless {
+        format 'bnd', {
+            target '**/*.bnd', '**/*.bndrun'
+            indentWithSpaces(4)
+            endWithNewline()
+        }
+    }
 }
 
 // required as jacocoRootReport belongs to root project
