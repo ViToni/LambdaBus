@@ -169,9 +169,10 @@ public class DispatchingLambdaBusTest {
             try (final DispatchingLambdaBus lb = new DispatchingLambdaBus(eventDispatcher)) {
                 lb.close();
 
+                final Runnable runnableForNullEvents = () -> {};
                 assertThrows(
                         IllegalStateException.class,
-                        () -> lb.setRunnableForNullEvent(System.out::println));
+                        () -> lb.setRunnableForNullEvent(runnableForNullEvents));
             }
         }
     }
