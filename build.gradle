@@ -81,7 +81,19 @@ configure(javaProjects) { project ->
         useJUnitPlatform()
 
         // log only this specific events for tests
-        testLogging { events "skipped", "failed" }
+        testLogging {
+            events "skipped", "failed"
+
+            // enable stacktraces for tests
+
+            showExceptions              true
+            showStackTraces             true
+            showCauses                  true
+            showStandardStreams         true
+
+            exceptionFormat             org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+            stackTraceFilters           org.gradle.api.tasks.testing.logging.TestStackTraceFilter.ENTRY_POINT
+        }
 
         jacocoTestReport {
             // requires performed tests if called directly
