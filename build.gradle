@@ -15,6 +15,9 @@ ext {
 
     // will hold configurations files for invidual formatters
     spotlessDir = "$rootDir/gradle/spotless/"
+
+    // points to our maven dependencies (stored as GAV)
+    mavenGAV = "$rootDir/cnf/ext/maven/central.mvn"
 }
 
 allprojects {
@@ -219,6 +222,81 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         xml.enabled = false
         csv.enabled = false
     }
+}
+
+task buildPom {
+    description 'Compiles GAV depndecies into a root level pom.xml which can be parsed by bnd-agnostic tools'
+    dependsOn javaProjects.classes
+
+    File gavFile = new File(mavenGAV)
+    inputs.file gavFile
+
+    def pomFile = rootProject.file("pom.xml")
+    outputs.file pomFile
+
+    StringBuilder sb = new StringBuilder()
+
+    sb.append("<?xml version='1.0' encoding='UTF-8'?>")
+    sb.append("\n<project")
+    sb.append("\n        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'")
+    sb.append("\n        xmlns='http://maven.apache.org/POM/4.0.0'")
+    sb.append("\n        xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>")
+    sb.append("\n    <modelVersion>4.0.0</modelVersion>")
+    sb.append("\n")
+    sb.append("\n    <groupId>${rootProject.name}</groupId>")
+    sb.append("\n    <artifactId>dependecies</artifactId>")
+    sb.append("\n    <version>1.0.0</version>")
+    sb.append("\n    <name>${rootProject.name} depedencies</name>")
+    sb.append("\n")
+    sb.append("\n    <dependencies>")
+
+    String[] gavFileLines = gavFile
+    int line = 0
+    StringBuilder errors = new StringBuilder()
+    for(String gavFileLine in gavFileLines) {
+        line++
+        String gavLine = gavFileLine.split("#", 2)[0].trim()
+        if (!gavLine.isEmpty()) {
+            if (gavLine.indexOf(":") == -1) {
+                def msg = "Invalid GAV '${gavLine}', line: ${line}. No colon found! File: ${gavFile}"
+                errors.append("\n  ").append(msg)
+                continue
+            }
+
+            final String[] gav = gavLine.split(":", -1)
+            if (gav.length != 3) {
+                def msg = "Invalid GAV '${gavLine}', line: ${line}. Needs 3 parts, found: " + gav.length + " File: ${gavFile}"
+                errors.append("\n  ").append(msg)
+                continue
+            }
+
+            String groupId = gav[0].trim()
+            String artifactId = gav[1].trim()
+            String version = gav[2].trim()
+
+            sb.append("\n        <dependency>")
+            sb.append("\n            <groupId>${groupId}</groupId>")
+            sb.append("\n            <artifactId>${artifactId}</artifactId>")
+            sb.append("\n            <version>${version}</version>")
+            sb.append("\n        </dependency>")
+        }
+    }
+
+    if (0 < errors.length()) {
+        errors.insert(0, "Failed to parse Maven GAV coordinates, file: ${fileName}")
+        throw new IllegalArgumentException(errors.toString())
+    }
+
+    sb.append("\n    </dependencies>")
+    sb.append("\n")
+    sb.append("\n</project>\n")
+
+    pomFile.write sb.toString()
+}
+// execute task after we were able to compile projects
+task classes {
+    dependsOn javaProjects.classes
+    finalizedBy buildPom
 }
 
 tasks.named('build') { dependsOn javaProjects.build, jacocoRootReport }

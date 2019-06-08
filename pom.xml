@@ -1,619 +1,91 @@
-<!--
-    Copyright (c) 2019: Victor Toni
-   
-    This program and the accompanying materials are made available under the
-    terms of the Eclipse Public License 2.0 which is available at
-    http://www.eclipse.org/legal/epl-2.0.
-   
-    This Source Code may also be made available under the following Secondary
-    Licenses when the conditions for such availability set forth in the Eclipse
-    Public License, v. 2.0 are satisfied:
-        GNU General Public License, version 2 with the GNU Classpath Exception
-    which is available at
-        https://www.gnu.org/software/classpath/license.html
-   
-    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-   
-    Contributors:
-        Victor Toni - initial setup
- -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://maven.apache.org/POM/4.0.0'
+        xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.kromo.lambdabus</groupId>
-    <artifactId>lambdabus-root</artifactId>
-    <version>0.12.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-
-    <name>LambdaBus</name>
-    <description>Tiny event bus using lambda expressions and method references</description>
-    <url>https://github.com/ViToni/lambdabus</url>
-    <inceptionYear>2017</inceptionYear>
-    <scm>
-        <url>https://github.com/ViToni/lambdabus</url>
-        <connection>scm:git:https://github.com/ViToni/lambdabus.git</connection>
-        <developerConnection>scm:git:git@github.com:ViToni/lambdabus.git</developerConnection>
-    </scm>
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/ViToni/lambdabus/issues</url>
-    </issueManagement>
-    <licenses>
-        <license>
-            <name>Eclipse Public License 2.0</name>
-            <url>http://www.eclipse.org/legal/epl-2.0</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <organization>
-        <name>kromo.org</name>
-        <url>https://github.com/ViToni</url>
-    </organization>
-
-    <developers>
-        <developer>
-            <id>vitoni</id>
-            <name>Victor Toni</name>
-            <email>victor.toni@gmail.com</email>
-        </developer>
-    </developers>
-
-    <modules>
-        <module>org.kromo.lambdabus.api</module>
-        <module>org.kromo.lambdabus.api.test</module>
-        <module>org.kromo.lambdabus.impl</module>
-        <module>org.kromo.lambdabus.test</module>
-        <module>org.kromo.lambdabus.coverage</module>
-        <module>org.kromo.lambdabus.examples</module>
-    </modules>
-
-    <properties>
-
-        <!-- Everything should be treated and created as UTF-8 -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- Configure Java 1.8 globally -->
-        <jvm.version>1.8</jvm.version>
-        <maven.compiler.source>${jvm.version}</maven.compiler.source>
-        <maven.compiler.target>${jvm.version}</maven.compiler.target>
-
-        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-
-        <lambdabus.version>${project.version}</lambdabus.version>
-        <lambdabus.test.version>${lambdabus.version}</lambdabus.test.version>
-        <lambdabus.api.version>${lambdabus.version}</lambdabus.api.version>
-        <lambdabus.impl.version>${lambdabus.version}</lambdabus.impl.version>
-
-        <!-- overwriting username for manifest file -->
-        <user.name>kromo.org</user.name>
-
-        <!-- JARs should be copied to this directory -->
-        <lib.directory>${root.project.basedir}/target/lib</lib.directory>
-
-        <!-- JavaDoc JARs should be copied to this directory -->
-        <javadoc.directory>${root.project.basedir}/target/javadoc</javadoc.directory>
-
-        <!-- make target site local links work -->
-        <deployment.url>file://${project.build.directory}/staging/</deployment.url>
-
-        <!-- dependency versions -->
-        <sl4j.version>1.7.26</sl4j.version>
-
-        <!-- dependency versions for tests and examples-->
-        <log4j.version>2.11.2</log4j.version>
-
-        <!-- dependency versions for tests only -->
-        <junit.jupiter.version>5.4.2</junit.jupiter.version>
-        <junit.platform.version>1.4.2</junit.platform.version>
-        <mockito.version>2.27.0</mockito.version>
-        <spotbugs.version>3.1.12</spotbugs.version>
-        <jacoco.version>0.8.3</jacoco.version>
-
-        <!-- SpotBugs options -->
-        <spotbugs.effort>Max</spotbugs.effort>
-        <spotbugs.threshold>Low</spotbugs.threshold>
-
-        <!-- plugin versions -->
-        <maven.enforcer.plugin.version>3.0.0-M2</maven.enforcer.plugin.version>
-        <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
-        <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
-        <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
-        <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
-        <maven.assembly.plugin.version>3.1.1</maven.assembly.plugin.version>
-        <maven.install.plugin.version>3.0.0-M1</maven.install.plugin.version>
-        <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
-        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
-        <maven.site.plugin.version>3.7.1</maven.site.plugin.version>
-        <maven.project.info.reports.plugin.version>3.0.0</maven.project.info.reports.plugin.version>
-
-        <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
-        <maven.surefire.report.plugin.version>3.0.0-M3</maven.surefire.report.plugin.version>
-
-        <maven.failsafe.plugin.version>3.0.0-M3</maven.failsafe.plugin.version>
-
-        <!-- versions for additional plugins -->
-        <bnd.maven.plugin.version>4.3.0</bnd.maven.plugin.version>
-        <spotbugs.maven.plugin.version>3.1.11</spotbugs.maven.plugin.version>
-        <versions.maven.plugin.version>2.7</versions.maven.plugin.version>
-        <directory.maven.plugin.version>0.3.1</directory.maven.plugin.version>
-
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${sl4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit.jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-params</artifactId>
-                <version>${junit.jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit.jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-runner</artifactId>
-                <version>${junit.platform.version}</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>junit</groupId>
-                        <artifactId>junit</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <artifactId>dependecies</artifactId>
+    <version>1.0.0</version>
+    <name>org.kromo.lambdabus depedencies</name>
 
     <dependencies>
-        <!-- needed just for running Junit5 test in the IDE -->
         <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
-            <scope>test</scope>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.annotation</artifactId>
+            <version>7.0.0</version>
         </dependency>
-        <!-- needed just for running Junit5 test in the IDE -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.4.2</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
+            <version>5.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apiguardian</groupId>
+            <artifactId>apiguardian-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opentest4j</groupId>
+            <artifactId>opentest4j</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.27.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.9.12</version>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>1.9.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>3.0.1</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <!-- configured plugins -->
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>${maven.enforcer.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>enforce-java</id>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                            <configuration>
-                                <rules>
-                                    <requireMavenVersion>
-                                        <!-- we use `${maven.multiModuleProjectDirectory}` which was just intorduced with Maven 3.3.1  -->
-                                        <version>[3.3.1,)</version>
-                                        <message>
-                                            [ERROR] OLD MAVEN [${maven.version}] in use,
-                                            LambdaBus ${project.version} requires Maven 3.3.1 or newer
-                                        </message>
-                                    </requireMavenVersion>
-                                    <requireJavaVersion>
-                                        <version>[1.8,)</version>
-                                        <message>
-                                            [ERROR] OLD JDK [${java.version}] in use.
-                                            LambdaBus ${project.version} requires JDK 1.8.0 or newer
-                                        </message>
-                                    </requireJavaVersion>
-                                </rules>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.commonjava.maven.plugins</groupId>
-                    <artifactId>directory-maven-plugin</artifactId>
-                    <version>${directory.maven.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>directories</id>
-                            <phase>initialize</phase>
-                            <goals>
-                                <goal>directory-of</goal>
-                            </goals>
-                            <configuration>
-                                <property>root.project.basedir</property>
-                                <project>
-                                    <groupId>org.kromo.lambdabus</groupId>
-                                    <artifactId>lambdabus-root</artifactId>
-                                </project>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>directories-site</id>
-                            <phase>pre-site</phase>
-                            <goals>
-                                <goal>directory-of</goal>
-                            </goals>
-                            <configuration>
-                                <property>root.project.site.basedir</property>
-                                <project>
-                                    <groupId>org.kromo.lambdabus</groupId>
-                                    <artifactId>lambdabus-root</artifactId>
-                                </project>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>${maven.project.info.reports.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${maven.assembly.plugin.version}</version>
-                    <configuration>
-                        <descriptorRefs>
-                            <descriptorRef>jar-with-dependencies</descriptorRef>
-                        </descriptorRefs>
-                        <archive>
-                            <addMavenDescriptor>false</addMavenDescriptor>
-                            <manifestEntries>
-                                <Built-By>kromo.org</Built-By>
-                            </manifestEntries>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>${maven.jar.plugin.version}</version>
-                    <configuration>
-                        <archive>
-                            <addMavenDescriptor>false</addMavenDescriptor>
-                            <!-- define common values -->
-                            <manifestEntries>
-                                <Built-By>${project.organization.name}</Built-By>
-                                <Implementation-Date>${maven.build.timestamp}</Implementation-Date>
-                                <!-- Add the Maven coordinates in the manifest -->
-                                <Maven-Group-Id>${project.groupId}</Maven-Group-Id>
-                                <Maven-Artifact-Id>${project.artifactId}</Maven-Artifact-Id>
-                                <Maven-Version>${maven.version}</Maven-Version>
-                            </manifestEntries>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>biz.aQute.bnd</groupId>
-                    <artifactId>bnd-maven-plugin</artifactId>
-                    <version>${bnd.maven.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven.source.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                                <goal>test-jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <attach>true</attach>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${maven.javadoc.plugin.version}</version>
-                    <configuration>
-                        <show>protected</show>
-                        <nohelp>true</nohelp>
-                        <quiet>true</quiet>
-                        <reportSets>
-                            <reportSet><!-- by default, id = "default" -->
-                                <reports><!-- select non-aggregate reports -->
-                                    <report>javadoc</report>
-                                    <report>test-javadoc</report>
-                                </reports>
-                            </reportSet>
-                            <reportSet>
-                                <!-- aggregate reportSet, to define in poms having modules -->
-                                <id>aggregate</id>
-                                <inherited>false</inherited><!-- don't run aggregate in child modules -->
-                                <reports>
-                                    <report>aggregate</report>
-                                    <report>test-aggregate</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                                <goal>test-jar</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>aggregate</id>
-                            <phase>site</phase>
-                            <goals>
-                                <goal>aggregate</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>${maven.dependency.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>analyze</id>
-                            <goals>
-                                <goal>analyze-only</goal>
-                            </goals>
-                            <configuration>
-                                <failOnWarning>true</failOnWarning>
-                                <!--
-                                There is no "test-runtime" scope but there
-                                are some (test) runtime only dependencies e.g.
-                                a logging implementation.
-                                -->
-                                <ignoreNonCompile>true</ignoreNonCompile>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <!-- groupId: org.apache.maven.plugins is assumed by default. -->
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven.surefire.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>${maven.surefire.report.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>report-only</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                  </plugin>
-                 <plugin>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${maven.failsafe.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>${maven.install.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jxr-plugin</artifactId>
-                    <version>${maven.jxr.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>${maven.site.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>
-                <configuration>
-                    <append>true</append>
-                </configuration>
-                <executions>
-                    <!-- activate the JaCoCo agent so that it runs during all tests -->
-                    <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>versions-maven-plugin</artifactId>
-                    <version>${versions.maven.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.github.spotbugs</groupId>
-                    <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>${spotbugs.maven.plugin.version}</version>
-                    <configuration>
-                        <effort>${spotbugs.effort}</effort>
-                        <threshold>${spotbugs.threshold}</threshold>
-                        <xmlOutput>false</xmlOutput>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>do-spotbugs-scan</id>
-                            <phase>verify</phase>
-                            <goals>
-                               <goal>spotbugs</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <!-- overwrite dependency on spotbugs if you want to specify the 
-                            version of spotbugs -->
-                        <dependency>
-                            <groupId>com.github.spotbugs</groupId>
-                            <artifactId>spotbugs</artifactId>
-                            <version>${spotbugs.version}</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.commonjava.maven.plugins
-                                        </groupId>
-                                        <artifactId>
-                                            directory-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [0.3.1,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>directory-of</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <!-- common plugins to run -->
-        <plugins>
-            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
-
-            <!-- enforce required version of JDK and Maven -->
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.commonjava.maven.plugins</groupId>
-                <artifactId>directory-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <!-- required to enable support of "bundle" packaging -->
-            <plugin>
-                <groupId>biz.aQute.bnd</groupId>
-                <artifactId>bnd-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <executions>
-                    <!-- activate the JaCoCo agent so that it runs during all tests -->
-                    <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-        <defaultGoal>clean install</defaultGoal>
-    </build>
-
-    <reporting>
-        <plugins>
-            <!-- groupId: org.apache.maven.plugins is assumed by default. -->
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <configuration>
-                    <!-- we want to have all reports of the modules -->
-                    <aggregate>true</aggregate>
-                    <!-- also set this to link to generated source reports -->
-                    <linkXRef>true</linkXRef>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
-
-    <distributionManagement>
-        <site>
-            <id>local.site.repo</id>
-            <name>Local Site</name>
-            <!-- make target site local links work -->
-            <url>${deployment.url}</url>
-        </site>
-    </distributionManagement>
 
 </project>
