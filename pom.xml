@@ -103,4 +103,20 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <!-- Using rules to exclude alpha/beta/milestone/RC versions -->
+                    <rulesUri>file:///${project.basedir}/version-rules.xml</rulesUri>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <defaultGoal>versions:display-dependency-updates</defaultGoal>
+    </build>
+
 </project>

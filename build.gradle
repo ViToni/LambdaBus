@@ -254,6 +254,23 @@ task buildPom {
 
     sb.append("\n    </dependencies>")
     sb.append("\n")
+    sb.append("\n    <build>")
+    sb.append("\n        <plugins>")
+    sb.append("\n            <plugin>")
+    sb.append("\n                <groupId>org.codehaus.mojo</groupId>")
+    sb.append("\n                <artifactId>versions-maven-plugin</artifactId>")
+    sb.append("\n                <version>${versions_maven_plugin_version}</version>")
+    sb.append("\n                <configuration>")
+    sb.append("\n                    <!-- Using rules to exclude alpha/beta/milestone/RC versions -->")
+    // using single quotes since the variable is to be expanded by Maven and NOT Gradle
+    sb.append('\n                    <rulesUri>file:///${project.basedir}/version-rules.xml</rulesUri>')
+    sb.append("\n                </configuration>")
+    sb.append("\n            </plugin>")
+    sb.append("\n        </plugins>")
+    sb.append("\n")
+    sb.append("\n        <defaultGoal>versions:display-dependency-updates</defaultGoal>")
+    sb.append("\n    </build>")
+    sb.append("\n")
     sb.append("\n</project>\n")
 
     pomFile.write sb.toString()
