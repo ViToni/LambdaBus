@@ -15,76 +15,91 @@
             <groupId>org.osgi</groupId>
             <artifactId>osgi.annotation</artifactId>
             <version>7.0.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.26</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.26</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.4.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.4.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <version>5.4.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-commons</artifactId>
             <version>1.4.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-engine</artifactId>
             <version>1.4.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <version>1.4.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apiguardian</groupId>
             <artifactId>apiguardian-api</artifactId>
             <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.opentest4j</groupId>
             <artifactId>opentest4j</artifactId>
             <version>1.1.1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>2.27.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
             <version>1.9.12</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>
             <version>1.9.12</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.objenesis</groupId>
             <artifactId>objenesis</artifactId>
             <version>3.0.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

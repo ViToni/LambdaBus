@@ -250,6 +250,21 @@ task buildPom {
     sb.append("\n")
     sb.append("\n    <dependencies>")
 
+    addGAVFileAsMavenDependencies(sb, gavFile, "compile")
+
+    sb.append("\n    </dependencies>")
+    sb.append("\n")
+    sb.append("\n</project>\n")
+
+    pomFile.write sb.toString()
+}
+// execute task after we were able to compile projects
+task classes {
+    dependsOn javaProjects.classes
+    finalizedBy buildPom
+}
+
+def addGAVFileAsMavenDependencies(StringBuilder sb, File gavFile, String scope) {
     String[] gavFileLines = gavFile
     int line = 0
     StringBuilder errors = new StringBuilder()
@@ -278,6 +293,7 @@ task buildPom {
             sb.append("\n            <groupId>${groupId}</groupId>")
             sb.append("\n            <artifactId>${artifactId}</artifactId>")
             sb.append("\n            <version>${version}</version>")
+            sb.append("\n            <scope>${scope}</scope>")
             sb.append("\n        </dependency>")
         }
     }
@@ -286,17 +302,6 @@ task buildPom {
         errors.insert(0, "Failed to parse Maven GAV coordinates, file: ${fileName}")
         throw new IllegalArgumentException(errors.toString())
     }
-
-    sb.append("\n    </dependencies>")
-    sb.append("\n")
-    sb.append("\n</project>\n")
-
-    pomFile.write sb.toString()
-}
-// execute task after we were able to compile projects
-task classes {
-    dependsOn javaProjects.classes
-    finalizedBy buildPom
 }
 
 tasks.named('build') { dependsOn javaProjects.build, jacocoRootReport }
