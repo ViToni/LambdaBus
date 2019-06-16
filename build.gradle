@@ -50,6 +50,8 @@ allprojects {
 apply plugin: 'jacoco'
 jacoco { toolVersion = jacoco_version }
 
+apply plugin: "com.dorongold.task-tree"
+
 configure(javaProjects) { project ->
     // using bnd as source of truth regarding version (actually defined in "cnf/build.bnd")
     version = project.bnd.get("base.version")
